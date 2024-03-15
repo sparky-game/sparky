@@ -21,6 +21,14 @@
 
 #pragma once
 
-#define SPARKY_CLIENT_NAME "sparky-client"
+typedef enum {
+  LOG_LEVEL_ERROR,
+  LOG_LEVEL_WARN,
+  LOG_LEVEL_INFO
+} log_level;
 
-int sparky_client_run(void);
+#define SPARKY_LOG_ERROR(msg, ...) sparky_log(LOG_LEVEL_ERROR, msg, ##__VA_ARGS__)
+#define SPARKY_LOG_WARN(msg, ...) sparky_log(LOG_LEVEL_WARN, msg, ##__VA_ARGS__)
+#define SPARKY_LOG_INFO(msg, ...) sparky_log(LOG_LEVEL_INFO, msg, ##__VA_ARGS__)
+
+void sparky_log(log_level level, const char *msg, ...);

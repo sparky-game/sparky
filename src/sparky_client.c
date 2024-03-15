@@ -19,6 +19,7 @@
  */
 
 
+#include <sparky_log.h>
 #include <sparky_client.h>
 #include <sparky_config.h>
 #include <sparky_client_renderer.h>
@@ -41,10 +42,12 @@ static void sparky_client_init(void) {
 static int sparky_client_shutdown(void) {
   CloseWindow();
   player = (Player) {0};
+  SPARKY_LOG_INFO("%s closed successfully", SPARKY_CLIENT_NAME);
   return 0;
 }
 
 int sparky_client_run(void) {
+  SPARKY_LOG_INFO("Initializing %s", SPARKY_CLIENT_NAME);
   sparky_client_init();
   sparky_client_renderer_loop {
     sparky_client_renderer_update(&player);

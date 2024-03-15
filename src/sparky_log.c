@@ -19,8 +19,32 @@
  */
 
 
-#pragma once
+#include <stdio.h>
+#include <string.h>
+#include <stdarg.h>
+#include <sparky_log.h>
 
-#define SPARKY_CLIENT_NAME "sparky-client"
+#define LOG_MSG_SIZE_LIMIT 32000
 
-int sparky_client_run(void);
+static void strfmt_v(char *dest, const char *fmt, void *va_list) {
+  if (!dest) return;
+  char buf[LOG_MSG_SIZE_LIMIT];
+  int bytes = vsnprintf(buf, LOG_MSG_SIZE_LIMIT, fmt, va_list);
+  buf[bytes] = 0;
+  memcpy(dest, buf, bytes + 1);
+}
+
+void sparky_log(log_level level, const char *msg, ...) {
+  const char *level_strs[] = {
+    "ERROR",
+    "WARN",
+    "INFO"
+  };
+  char out_msg[LOG_MSG_SIZE_LIMIT] = {0};
+  __builtin_va_list arg_ptr;
+  va_start(arg_ptr, msg);
+  strfmt_v(out_msg, msg, arg_ptr);
+  va_end(arg_ptr);
+  if (level < LOG_LEVEL_WARN) fprintf(stderr, "%s: %s\n", level_strs[level], out_msg);
+  else printf("%s: %s\n", level_strs[level], out_msg);
+}

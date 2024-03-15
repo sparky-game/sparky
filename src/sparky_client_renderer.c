@@ -20,12 +20,13 @@
 
 
 #include <sparky_config.h>
+#include <sparky_client.h>
 #include <sparky_client_renderer.h>
 
 void sparky_client_renderer_open_window(void) {
   InitWindow(SPARKY_CLIENT_WIN_WIDTH,
              SPARKY_CLIENT_WIN_HEIGHT,
-             "sparky-client");
+             SPARKY_CLIENT_NAME);
   SetTargetFPS(SPARKY_CLIENT_FPS);
   DisableCursor();
 }

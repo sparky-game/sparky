@@ -19,8 +19,23 @@
  */
 
 
+#include <string.h>
+#include <sparky_log.h>
 #include <sparky_client.h>
 
-int main(void) {
+int main(int argc, char **argv) {
+  if (argc > 2) {
+    SPARKY_LOG_ERROR("usage: %s [--server]", argv[0]);
+    return 1;
+  }
+  if (argc == 2 && !strcmp(argv[1], "--server")) {
+    SPARKY_LOG_WARN("Server not implemented yet. Exiting...");
+    return 0;
+  }
+  if (argc == 2 && (!strcmp(argv[1], "-h") || !strcmp(argv[1], "--help"))) {
+    SPARKY_LOG_INFO("usage: %s [--server]", argv[0]);
+    return 0;
+  }
+
   return sparky_client_run();
 }
