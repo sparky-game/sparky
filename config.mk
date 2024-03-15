@@ -28,3 +28,7 @@ EXTRAVERSION =
 Q = @
 # Optimize
 O =
+# Strip
+O_S =
+# Debug
+D =

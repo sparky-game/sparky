@@ -73,9 +73,18 @@ CPPFLAGS        = -I $(RAYLIB_SRC_DIR) -I $(HDR_DIR)
 ifdef O
   OPT = -pipe -O3
 endif
-RAYLIB_CFLAGS = $(OPT)
-CFLAGS        = -Wall -Wextra -pedantic -Werror -fanalyzer $(OPT)
-LDFLAGS       = -Wl,--build-id $(OPT) -L $(BUILD_DIR) -lraylib -lm
+ifdef O_S
+  OPT_STRIP = -s
+endif
+ifdef D
+  ifdef O_S
+    $(error Config options `O_S` and `D` are mutually exclusive)
+  endif
+  DEB = -ggdb
+endif
+RAYLIB_CFLAGS = $(DEB) $(OPT)
+CFLAGS        = -Wall -Wextra -pedantic -Werror -fanalyzer $(DEB) $(OPT)
+LDFLAGS       = -Wl,--build-id $(OPT_STRIP) $(OPT) -L $(BUILD_DIR) -lraylib -lm
 
 # Build output
 RAYLIB_OUT = $(BUILD_DIR)/libraylib.a
