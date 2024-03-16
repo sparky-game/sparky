@@ -73,15 +73,19 @@ void sparky_client_renderer_update(State *s) {
 
 static void sparky_client_renderer_draw_main_menu(void) {
   ClearBackground(BLACK);
-  DrawText("SPARKY",
-           SPARKY_CONFIG_CLIENT_WIN_WIDTH / 2,
-           SPARKY_CONFIG_CLIENT_WIN_HEIGHT / 2,
-           40,
+  const char *title = "SPARKY";
+  int title_size = 80;
+  const char *subtitle = "Press <ENTER> to start";
+  int subtitle_size = 30;
+  DrawText(title,
+           (GetScreenWidth() - MeasureText(title, title_size)) / 2,
+           (GetScreenHeight() - MeasureText(title, title_size)) / 2,
+           title_size,
            RAYWHITE);
-  DrawText("Press <ENTER> to start",
-           SPARKY_CONFIG_CLIENT_WIN_WIDTH / 0.9f,
-           SPARKY_CONFIG_CLIENT_WIN_HEIGHT / 0.9f,
-           14,
+  DrawText(subtitle,
+           (GetScreenWidth() - MeasureText(subtitle, subtitle_size)) / 2,
+           ((GetScreenHeight() - MeasureText(subtitle, subtitle_size)) / 2) + 115,
+           subtitle_size,
            RAYWHITE);
 }
 
