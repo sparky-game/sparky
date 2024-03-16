@@ -1,0 +1,81 @@
+#
+# GNU Sparky --- A 5v5 character-based libre tactical shooter
+# Copyright (C) 2024 Wasym A. Alonso
+#
+# This file is part of Sparky.
+#
+# Sparky is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# Sparky is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with Sparky.  If not, see <http://www.gnu.org/licenses/>.
+#
+
+
+#+AUTHOR: Wasym A. Alonso
+
+# Logo & Title
+#+begin_html
+<h1 align="center">
+<img src="assets/logo.png" alt="Sparky Logo">
+<br/>
+Sparky
+</h1>
+#+end_html
+
+# Subtitle
+#+begin_html
+<h4 align="center">
+A 5v5 character-based libre tactical shooter
+</h4>
+#+end_html
+
+# Buy Me A Coffee
+#+begin_html
+<p align="center">
+<a href="https://www.buymeacoffee.com/iwas.coder">
+<img src="https://cdn.buymeacoffee.com/buttons/default-yellow.png" alt="Buy Me A Coffee" height=41 width=174>
+</a>
+</p>
+#+end_html
+
+# Repository info badges
+#+begin_html
+<p align="center">
+<img src="https://img.shields.io/github/license/iwas-coder/sparky?color=blue" alt="License">
+<img src="https://img.shields.io/github/repo-size/iwas-coder/sparky?color=blue" alt="Size">
+<img src="https://img.shields.io/github/v/tag/iwas-coder/sparky?color=blue" alt="Release">
+</p>
+#+end_html
+
+(...)
+
+#+BEGIN_EXPORT markdown
+> [!IMPORTANT]
+> 🐰 This project is created and maintained in loving memory of **Sparky**, aka **Chispitas**, aka **Chispis**, in the hope he will became immortal and, eventually, one with the Force. To the moon and back, forever. 🐰
+#+END_EXPORT
+
+# GNU GPLv3+ License notice
+#+begin_quote
+Sparky is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version. @@html:<br>@@
+Sparky is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details. @@html:<br>@@
+You should have received a copy of the GNU General Public License along with Sparky. If not, see <https://www.gnu.org/licenses/>.
+#+end_quote
+
+* Table of Contents :toc:
+- [[#build][Build]]
+
+* Build
+
+(...)
+
+#+begin_src sh
+$  make
+#+end_src
