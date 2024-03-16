@@ -21,6 +21,4 @@
 
 #pragma once
 
-#define SPARKY_CLIENT_NAME "sparky-client"
-
 int sparky_client_run(void);

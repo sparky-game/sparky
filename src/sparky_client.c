@@ -20,28 +20,31 @@
 
 
 #include <sparky_log.h>
-#include <sparky_client.h>
 #include <sparky_config.h>
+#include <sparky_defines.h>
+#include <sparky_gametypes.h>
 #include <sparky_client_renderer.h>
 
-static Player player = {0};
+static State state = {0};
 
 static void sparky_client_init(void) {
-  player = (Player) {
+  state.player = (Entity) {
     .camera = (Camera3D) {
       .position = (Vector3) { 0.0f, 2.0f, 4.0f },
       .target = (Vector3) { 0.0f, 2.0f, 0.0f },
       .up = (Vector3) { 0.0f, 1.0f, 0.0f },
-      .fovy = SPARKY_CLIENT_FOV,
+      .fovy = SPARKY_CONFIG_CLIENT_FOV,
       .projection = CAMERA_PERSPECTIVE
     }
   };
+  state.current_scene = SCENE_MAIN_MENU;
   sparky_client_renderer_open_window();
+  state.player.model = LoadModelFromMesh(GenMeshCylinder(1, 2, 16));
 }
 
 static int sparky_client_shutdown(void) {
   CloseWindow();
-  player = (Player) {0};
+  state = (State) {0};
   SPARKY_LOG_INFO("%s closed successfully", SPARKY_CLIENT_NAME);
   return 0;
 }
@@ -50,8 +53,8 @@ int sparky_client_run(void) {
   SPARKY_LOG_INFO("Initializing %s", SPARKY_CLIENT_NAME);
   sparky_client_init();
   sparky_client_renderer_loop {
-    sparky_client_renderer_update(&player);
-    sparky_client_renderer_draw(&player);
+    sparky_client_renderer_update(&state);
+    sparky_client_renderer_draw(&state);
   }
   return sparky_client_shutdown();
 }

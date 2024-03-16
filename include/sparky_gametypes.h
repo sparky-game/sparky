@@ -22,10 +22,19 @@
 #pragma once
 
 #include <raylib.h>
-#include <sparky_gametypes.h>
 
-#define sparky_client_renderer_loop while (!WindowShouldClose())
+typedef enum {
+  SCENE_MAIN_MENU,
+  SCENE_GAMEPLAY
+} Scene;
 
-void sparky_client_renderer_open_window(void);
-void sparky_client_renderer_update(State *s);
-void sparky_client_renderer_draw(State *s);
+typedef struct {
+  Camera3D camera;
+  Model model;
+} Entity;
+
+typedef struct {
+  Scene current_scene;
+  Entity player;
+  Entity *enemies;
+} State;

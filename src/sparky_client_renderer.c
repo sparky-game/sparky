@@ -19,23 +19,31 @@
  */
 
 
+#include <stdio.h>
+#include <assert.h>
 #include <sparky_config.h>
-#include <sparky_client.h>
+#include <sparky_defines.h>
 #include <sparky_client_renderer.h>
 
 void sparky_client_renderer_open_window(void) {
-  InitWindow(SPARKY_CLIENT_WIN_WIDTH,
-             SPARKY_CLIENT_WIN_HEIGHT,
+  InitWindow(SPARKY_CONFIG_CLIENT_WIN_WIDTH,
+             SPARKY_CONFIG_CLIENT_WIN_HEIGHT,
              SPARKY_CLIENT_NAME);
-  SetTargetFPS(SPARKY_CLIENT_FPS);
-  DisableCursor();
+  SetTargetFPS(SPARKY_CONFIG_CLIENT_FPS);
 }
 
-void sparky_client_renderer_update(Player *p) {
+static void sparky_client_renderer_update_main_menu(State *s) {
+  if (IsKeyPressed(KEY_ENTER)) {
+    s->current_scene = SCENE_GAMEPLAY;
+    DisableCursor();
+  }
+}
+
+static void sparky_client_renderer_update_gameplay(State *s) {
   Vector2 dm = GetMouseDelta();
   float look_sens = 0.05f;
   float walk_sens = 0.1f;
-  UpdateCameraPro(&p->camera,
+  UpdateCameraPro(&s->player.camera,
                   (Vector3) {
                     IsKeyDown(KEY_W) * walk_sens - IsKeyDown(KEY_S) * walk_sens,
                     IsKeyDown(KEY_D) * walk_sens - IsKeyDown(KEY_A) * walk_sens,
@@ -49,13 +57,45 @@ void sparky_client_renderer_update(Player *p) {
                   0.0f);
 }
 
-static void sparky_client_renderer_draw_world(Player *p) {
-  BeginMode3D(p->camera);
+void sparky_client_renderer_update(State *s) {
+  switch (s->current_scene) {
+  case SCENE_MAIN_MENU:
+    sparky_client_renderer_update_main_menu(s);
+    break;
+  case SCENE_GAMEPLAY:
+    sparky_client_renderer_update_gameplay(s);
+    break;
+  default:
+    assert(0 && "sparky_client_renderer_update :: Unreachable");
+    break;
+  }
+}
+
+static void sparky_client_renderer_draw_main_menu(void) {
+  ClearBackground(BLACK);
+  DrawText("SPARKY",
+           SPARKY_CONFIG_CLIENT_WIN_WIDTH / 2,
+           SPARKY_CONFIG_CLIENT_WIN_HEIGHT / 2,
+           40,
+           RAYWHITE);
+  DrawText("Press <ENTER> to start",
+           SPARKY_CONFIG_CLIENT_WIN_WIDTH / 0.9f,
+           SPARKY_CONFIG_CLIENT_WIN_HEIGHT / 0.9f,
+           14,
+           RAYWHITE);
+}
+
+static void sparky_client_renderer_draw_gameplay_world(State *s) {
+  ClearBackground(SKYBLUE);
+  BeginMode3D(s->player.camera);
+  DrawModel(s->player.model,
+            (Vector3) { 0.0f, 0.0f, 0.0f },
+            1.0f, PURPLE);
   DrawPlane((Vector3) { 0.0f, 0.0f, 0.0f },
             (Vector2) { 32.0f, 32.0f },
             DARKGRAY);
   DrawCube((Vector3) { -16.0f, 2.5f, 0.0f },
-           1.0f, 5.0f, 32.0f, BLUE);
+           1.0f, 5.0f, 32.0f, RED);
   DrawCube((Vector3) { 16.0f, 2.5f, 0.0f },
            1.0f, 5.0f, 32.0f, LIME);
   DrawCube((Vector3) { 0.0f, 2.5f, 16.0f },
@@ -63,14 +103,26 @@ static void sparky_client_renderer_draw_world(Player *p) {
   EndMode3D();
 }
 
-static void sparky_client_renderer_draw_hud(void) {
+static void sparky_client_renderer_draw_gameplay_hud(void) {
   DrawFPS(10, 10);
+  char dt[10];
+  snprintf(dt, sizeof(dt), "%.4f ms", GetFrameTime() * 1000);
+  DrawText(dt, 10, 33, 20, LIME);
 }
 
-void sparky_client_renderer_draw(Player *p) {
+void sparky_client_renderer_draw(State *s) {
   BeginDrawing();
-  ClearBackground(BLACK);
-  sparky_client_renderer_draw_world(p);
-  sparky_client_renderer_draw_hud();
+  switch (s->current_scene) {
+  case SCENE_MAIN_MENU:
+    sparky_client_renderer_draw_main_menu();
+    break;
+  case SCENE_GAMEPLAY:
+    sparky_client_renderer_draw_gameplay_world(s);
+    sparky_client_renderer_draw_gameplay_hud();
+    break;
+  default:
+    assert(0 && "sparky_client_renderer_draw :: Unreachable");
+    break;
+  }
   EndDrawing();
 }
