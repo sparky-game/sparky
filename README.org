@@ -57,7 +57,7 @@ A 5v5 character-based libre tactical shooter
 
 # Dedication
 #+begin_quote
-🐰 This project is created and maintained in loving memory of *Sparky*, aka *Chispitas*, aka *Chispis*, in the hope he will became immortal and, eventually, one with the Force. 🐰 @@html:<br>@@
+🐰 This project is created and maintained in loving memory of *Sparky*, aka *Chispitas*, aka *Chispis*, in the hope he will become immortal and, eventually, one with the Force. 🐰 @@html:<br>@@
 /To the moon and back, forever ❤/
 #+end_quote
 
