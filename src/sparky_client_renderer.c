@@ -43,12 +43,11 @@ static void sparky_client_renderer_update_main_menu(State *s) {
   }
 }
 
-static void sparky_client_renderer_update_gameplay(State *s) {
-  Vector2 dm = GetMouseDelta();
+static float sparky_client_renderer_update_gameplay_cam_roll(State *s) {
   float cam_roll = 0;
   if (s->player.camera.up.y >= 0.98f) {
-    if (IsKeyDown(SPARKY_CONFIG_CLIENT_PEEK_LEFT))       cam_roll += CAM_ROLL_ACCELERATION;
-    else if (IsKeyDown(SPARKY_CONFIG_CLIENT_PEEK_RIGHT)) cam_roll -= CAM_ROLL_ACCELERATION;
+    if (IsKeyDown(SPARKY_CONFIG_CLIENT_PEEK_LEFT))       cam_roll -= CAM_ROLL_ACCELERATION;
+    else if (IsKeyDown(SPARKY_CONFIG_CLIENT_PEEK_RIGHT)) cam_roll += CAM_ROLL_ACCELERATION;
   }
   if (!IsKeyDown(SPARKY_CONFIG_CLIENT_PEEK_LEFT) &&
       !IsKeyDown(SPARKY_CONFIG_CLIENT_PEEK_RIGHT)) {
@@ -56,6 +55,11 @@ static void sparky_client_renderer_update_gameplay(State *s) {
     if (s->player.camera.up.x) s->player.camera.up.x *= 0.9f;
     if (s->player.camera.up.y < 1) s->player.camera.up.y = 1;
   }
+  return cam_roll;
+}
+
+static void sparky_client_renderer_update_gameplay(State *s) {
+  Vector2 dm = GetMouseDelta();
   UpdateCameraPro(&s->player.camera,
                   (Vector3) {
                     IsKeyDown(SPARKY_CONFIG_CLIENT_MOVE_FORWARD) * CAM_WALK_SENSITIVITY -
@@ -67,7 +71,7 @@ static void sparky_client_renderer_update_gameplay(State *s) {
                   (Vector3) {
                     dm.x * SPARKY_CONFIG_CLIENT_MOUSE_SENSITIVITY,
                     dm.y * SPARKY_CONFIG_CLIENT_MOUSE_SENSITIVITY,
-                    cam_roll
+                    sparky_client_renderer_update_gameplay_cam_roll(s)
                   },
                   0);
 }
