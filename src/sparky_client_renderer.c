@@ -45,7 +45,7 @@ static void sparky_client_renderer_update_main_menu(State *s) {
 
 static void sparky_client_renderer_update_gameplay(State *s) {
   Vector2 dm = GetMouseDelta();
-  float cam_roll = 0.0f;
+  float cam_roll = 0;
   if (s->player.camera.up.y >= 0.98f) {
     if (IsKeyDown(SPARKY_CONFIG_CLIENT_PEEK_LEFT))       cam_roll += CAM_ROLL_ACCELERATION;
     else if (IsKeyDown(SPARKY_CONFIG_CLIENT_PEEK_RIGHT)) cam_roll -= CAM_ROLL_ACCELERATION;
@@ -108,17 +108,17 @@ static void sparky_client_renderer_draw_gameplay_world(State *s) {
   ClearBackground(SKYBLUE);
   BeginMode3D(s->player.camera);
   DrawModel(s->player.model,
-            (Vector3) { 0.0f, 0.0f, 0.0f },
-            1.0f, PURPLE);
-  DrawPlane((Vector3) { 0.0f, 0.0f, 0.0f },
-            (Vector2) { 32.0f, 32.0f },
+            Vector3Subtract(s->player.camera.position, (Vector3) { 0, 2, 0 }),
+            1, PURPLE);
+  DrawPlane((Vector3) { 0, 0, 0 },
+            (Vector2) { 32, 32 },
             DARKGRAY);
-  DrawCube((Vector3) { -16.0f, 2.5f, 0.0f },
-           1.0f, 5.0f, 32.0f, RED);
-  DrawCube((Vector3) { 16.0f, 2.5f, 0.0f },
-           1.0f, 5.0f, 32.0f, LIME);
-  DrawCube((Vector3) { 0.0f, 2.5f, 16.0f },
-           32.0f, 5.0f, 1.0f, GOLD);
+  DrawCube((Vector3) { -16, 2.5f, 0 },
+           1, 5, 32, RED);
+  DrawCube((Vector3) { 16, 2.5f, 0 },
+           1, 5, 32, LIME);
+  DrawCube((Vector3) { 0, 2.5f, 16 },
+           32, 5, 1, GOLD);
   EndMode3D();
 }
 

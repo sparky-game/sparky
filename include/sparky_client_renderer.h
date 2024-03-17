@@ -22,6 +22,7 @@
 #pragma once
 
 #include <raylib.h>
+#include <raymath.h>
 #include <sparky_gametypes.h>
 
 #define sparky_client_renderer_loop while (!WindowShouldClose())
