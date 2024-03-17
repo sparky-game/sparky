@@ -28,18 +28,20 @@
 static State state = {0};
 
 static void sparky_client_init(void) {
-  state.player = (Entity) {
-    .camera = (Camera3D) {
-      .position = (Vector3) { 0.0f, 2.0f, 4.0f },
-      .target = (Vector3) { 0.0f, 2.0f, 0.0f },
-      .up = (Vector3) { 0.0f, 1.0f, 0.0f },
-      .fovy = SPARKY_CONFIG_CLIENT_FOV,
-      .projection = CAMERA_PERSPECTIVE
-    }
-  };
-  state.current_scene = SCENE_MAIN_MENU;
   sparky_client_renderer_open_window();
-  state.player.model = LoadModelFromMesh(GenMeshCylinder(1, 2, 16));
+  state = (State) {
+    .current_scene = SCENE_MAIN_MENU,
+    .player = (Player) {
+      .camera = (Camera3D) {
+        .position = (Vector3) { 0.0f, 2.0f, 4.0f },
+        .target = (Vector3) { 0.0f, 2.0f, 0.0f },
+        .up = (Vector3) { 0.0f, 1.0f, 0.0f },
+        .fovy = SPARKY_CONFIG_CLIENT_FOV,
+        .projection = CAMERA_PERSPECTIVE
+      },
+      .model = LoadModelFromMesh(GenMeshCylinder(1, 2, 16))
+    },
+  };
 }
 
 static int sparky_client_shutdown(void) {

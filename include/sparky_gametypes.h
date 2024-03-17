@@ -29,12 +29,16 @@ typedef enum {
 } Scene;
 
 typedef struct {
+  Model model;
+} Enemy;
+
+typedef struct {
   Camera3D camera;
   Model model;
-} Entity;
+} Player;
 
 typedef struct {
   Scene current_scene;
-  Entity player;
-  Entity *enemies;
+  Player player;
+  Enemy *enemies;
 } State;
