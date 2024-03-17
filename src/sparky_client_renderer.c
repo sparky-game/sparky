@@ -25,7 +25,11 @@
 #include <sparky_defines.h>
 #include <sparky_client_renderer.h>
 
+#define CAM_WALK_SENSITIVITY 0.1
+#define CAM_ROLL_ACCELERATION 1.5
+
 void sparky_client_renderer_open_window(void) {
+  SetConfigFlags(FLAG_MSAA_4X_HINT);
   InitWindow(SPARKY_CONFIG_CLIENT_WIN_WIDTH,
              SPARKY_CONFIG_CLIENT_WIN_HEIGHT,
              SPARKY_CLIENT_NAME);
@@ -41,20 +45,31 @@ static void sparky_client_renderer_update_main_menu(State *s) {
 
 static void sparky_client_renderer_update_gameplay(State *s) {
   Vector2 dm = GetMouseDelta();
-  float look_sens = 0.05f;
-  float walk_sens = 0.1f;
+  float cam_roll = 0.0f;
+  if (s->player.camera.up.y >= 0.98f) {
+    if (IsKeyDown(SPARKY_CONFIG_CLIENT_PEEK_LEFT))       cam_roll += CAM_ROLL_ACCELERATION;
+    else if (IsKeyDown(SPARKY_CONFIG_CLIENT_PEEK_RIGHT)) cam_roll -= CAM_ROLL_ACCELERATION;
+  }
+  if (!IsKeyDown(SPARKY_CONFIG_CLIENT_PEEK_LEFT) &&
+      !IsKeyDown(SPARKY_CONFIG_CLIENT_PEEK_RIGHT)) {
+    s->player.camera.up.z = 0;
+    if (s->player.camera.up.x) s->player.camera.up.x *= 0.9f;
+    if (s->player.camera.up.y < 1) s->player.camera.up.y = 1;
+  }
   UpdateCameraPro(&s->player.camera,
                   (Vector3) {
-                    IsKeyDown(KEY_W) * walk_sens - IsKeyDown(KEY_S) * walk_sens,
-                    IsKeyDown(KEY_D) * walk_sens - IsKeyDown(KEY_A) * walk_sens,
-                    0.0f
+                    IsKeyDown(SPARKY_CONFIG_CLIENT_MOVE_FORWARD) * CAM_WALK_SENSITIVITY -
+                    IsKeyDown(SPARKY_CONFIG_CLIENT_MOVE_BACKWARDS) * CAM_WALK_SENSITIVITY,
+                    IsKeyDown(SPARKY_CONFIG_CLIENT_MOVE_RIGHT) * CAM_WALK_SENSITIVITY -
+                    IsKeyDown(SPARKY_CONFIG_CLIENT_MOVE_LEFT) * CAM_WALK_SENSITIVITY,
+                    0
                   },
                   (Vector3) {
-                    dm.x * look_sens,
-                    dm.y * look_sens,
-                    0.0f
+                    dm.x * SPARKY_CONFIG_CLIENT_MOUSE_SENSITIVITY,
+                    dm.y * SPARKY_CONFIG_CLIENT_MOUSE_SENSITIVITY,
+                    cam_roll
                   },
-                  0.0f);
+                  0);
 }
 
 void sparky_client_renderer_update(State *s) {
