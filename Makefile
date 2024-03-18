@@ -26,13 +26,10 @@ NAME = sparky
 
 include config.mk
 
-# Dev version string appended if no EXTRAVERSION is defined
-ifndef EXTRAVERSION
-  IS_GIT = yes
-  EXTRAVERSION += $(or $(and $(wildcard .git/), -git+$$(git rev-parse --short HEAD)), -dev)
-endif
 # Version formatting
-ifdef IS_GIT
+EXTRAVERSION_COMPUTED := $(or $(and $(wildcard .git/), $(and $(shell which git 2>/dev/null), -git+$(shell which git &>/dev/null && git rev-parse --short HEAD))), -dev)
+ifndef EXTRAVERSION
+  EXTRAVERSION += $(EXTRAVERSION_COMPUTED)
   ifeq ($(SUBLEVEL), 0)
     DIST_VERSION = $(VERSION).$(PATCHLEVEL)
   else
@@ -40,8 +37,9 @@ ifdef IS_GIT
   endif
   FULL_VERSION = $(DIST_VERSION)$(EXTRAVERSION)
 else
-  DIST_VERSION = $(VERSION).$(PATCHLEVEL)$(EXTRAVERSION)
-  FULL_VERSION = $(DIST_VERSION)
+  EXTRAVERSION += $(EXTRAVERSION_COMPUTED)
+  DIST_VERSION  = $(VERSION).$(PATCHLEVEL)$(EXTRAVERSION)
+  FULL_VERSION  = $(DIST_VERSION)
 endif
 
 # Pretty Printing Output (PPO)
