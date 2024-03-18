@@ -86,7 +86,6 @@ void sparky_client_renderer_update(State *s) {
     break;
   default:
     assert(0 && "sparky_client_renderer_update :: Unreachable");
-    break;
   }
 }
 
@@ -145,7 +144,6 @@ void sparky_client_renderer_draw(State *s) {
     break;
   default:
     assert(0 && "sparky_client_renderer_draw :: Unreachable");
-    break;
   }
   EndDrawing();
 }
