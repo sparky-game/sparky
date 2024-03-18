@@ -71,12 +71,32 @@ You should have received a copy of the GNU General Public License along with Spa
 #+end_quote
 
 * Table of Contents :toc:
-- [[#build][Build]]
+- [[#build-from-source][Build from source]]
+  - [[#get-code][Get code]]
+  - [[#requirements][Requirements]]
+    - [[#debianubuntu][Debian/Ubuntu]]
 
-* Build
+* Build from source
+
+(...)
+
+** Get code
 
 (...)
 
 #+begin_src sh
-$  make
+$  git clone --recurse-submodules https://github.com/iWas-Coder/sparky
 #+end_src
+
+** Requirements
+
+(...)
+
+*** Debian/Ubuntu
+
+- ~build-essential~
+- ~libx11-dev~
+- ~libxcursor-dev~
+- ~libxrandr-dev~
+- ~libxinerama-dev~
+- ~libxi-dev~
