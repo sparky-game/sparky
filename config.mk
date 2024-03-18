@@ -26,9 +26,7 @@ SUBLEVEL     = 0
 EXTRAVERSION =
 # Quiet
 Q = @
-# Optimize
-O =
-# Strip
-O_S =
 # Debug
 D =
+# Strip
+S =
