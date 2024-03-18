@@ -82,8 +82,8 @@ endif
 ifdef S
   STRIP_OPTS = -s
 endif
-RAYLIB_CFLAGS = $(DEBUG_OPTS) $(RELEASE_OPTS)
-CFLAGS        = -Wall -Wextra -pedantic -Werror -fanalyzer $(DEBUG_OPTS) $(RELEASE_OPTS)
+RAYLIB_CFLAGS = -std=gnu99 $(DEBUG_OPTS) $(RELEASE_OPTS)
+CFLAGS        = -std=c17 -Wall -Wextra -pedantic -Werror -fanalyzer $(DEBUG_OPTS) $(RELEASE_OPTS)
 LDFLAGS       = -Wl,--build-id $(STRIP_OPTS) $(RELEASE_OPTS) -L $(BUILD_DIR) -lraylib -lm
 
 # Build output
