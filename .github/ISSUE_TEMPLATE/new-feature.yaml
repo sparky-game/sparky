@@ -1,0 +1,32 @@
+name: New Feature
+description: Suggest or request a new feature
+labels: ['✨ feature']
+body:
+  - type: markdown
+    attributes:
+      value: Please fill out the sections below to properly describe the new feature you are suggesting.
+  - type: textarea
+    id: description
+    attributes:
+      label: Describe the feature
+      placeholder: A new command that performs X task ...
+    validations:
+      required: true
+  - type: textarea
+    id: reason
+    attributes:
+      label: Why should it be implemented? (optional)
+      placeholder: It should be implemented because ...
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Do you think there is any alternative? (optional)
+      placeholder: It could be done X or Y instead of the proposed solution ...
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context (optional)
+      placeholder: Design screenshots, any other context ...
+  - type: markdown
+    attributes:
+      value: Thanks for your suggestion! Let's see together if it can be implemented.
