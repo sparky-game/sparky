@@ -32,9 +32,9 @@ static void sparky_client_init(void) {
     .current_scene = SCENE_MAIN_MENU,
     .player = (Player) {
       .camera = (Camera3D) {
-        .position = (Vector3) { 0.0f, 2.0f, 4.0f },
-        .target = (Vector3) { 0.0f, 2.0f, 0.0f },
-        .up = (Vector3) { 0.0f, 1.0f, 0.0f },
+        .position = (Vector3) { 0, SPARKY_CLIENT_PLAYER_HEIGHT, 4 },
+        .target = (Vector3) { 0, 2, 0 },
+        .up = (Vector3) { 0, 1, 0 },
         .fovy = SPARKY_CONFIG_CLIENT_FOV,
         .projection = CAMERA_PERSPECTIVE
       },

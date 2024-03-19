@@ -35,6 +35,7 @@ typedef struct {
 typedef struct {
   Camera3D camera;
   Model model;
+  float v_y;
 } Player;
 
 typedef struct {

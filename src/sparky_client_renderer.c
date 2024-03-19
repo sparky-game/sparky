@@ -25,6 +25,8 @@
 #include <sparky_defines.h>
 #include <sparky_client_renderer.h>
 
+#define GRAVITY 19
+#define JUMP_INIT_VELOCITY 9
 #define CAM_WALK_SENSITIVITY 0.1
 #define CAM_ROLL_ACCELERATION 1.5
 
@@ -43,6 +45,19 @@ static void sparky_client_renderer_update_main_menu(State *s) {
   }
 }
 
+static void sparky_client_renderer_update_gameplay_jump(State *s) {
+  float dt = GetFrameTime();
+  if (IsKeyPressed(SPARKY_CONFIG_CLIENT_JUMP) &&
+      s->player.camera.position.y <= SPARKY_CLIENT_PLAYER_HEIGHT) s->player.v_y = JUMP_INIT_VELOCITY;
+  s->player.v_y -= GRAVITY * dt;
+  s->player.camera.position.y += s->player.v_y * dt;
+  if (s->player.camera.position.y < SPARKY_CLIENT_PLAYER_HEIGHT) {
+    s->player.camera.position.y = SPARKY_CLIENT_PLAYER_HEIGHT;
+    s->player.v_y = 0;
+  }
+  else s->player.camera.target.y += s->player.v_y * dt;
+}
+
 static float sparky_client_renderer_update_gameplay_cam_roll(State *s) {
   float cam_roll = 0;
   if (s->player.camera.up.y >= 0.98f) {
@@ -59,6 +74,7 @@ static float sparky_client_renderer_update_gameplay_cam_roll(State *s) {
 }
 
 static void sparky_client_renderer_update_gameplay(State *s) {
+  sparky_client_renderer_update_gameplay_jump(s);
   Vector2 dm = GetMouseDelta();
   UpdateCameraPro(&s->player.camera,
                   (Vector3) {
@@ -111,7 +127,8 @@ static void sparky_client_renderer_draw_gameplay_world(State *s) {
   ClearBackground(SKYBLUE);
   BeginMode3D(s->player.camera);
   DrawModel(s->player.model,
-            Vector3Subtract(s->player.camera.position, (Vector3) { 0, 2, 0 }),
+            Vector3Subtract(s->player.camera.position,
+                            (Vector3) { 0, SPARKY_CLIENT_PLAYER_HEIGHT, 0 }),
             1, PURPLE);
   DrawPlane((Vector3) { 0, 0, 0 },
             (Vector2) { 32, 32 },
