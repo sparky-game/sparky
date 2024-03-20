@@ -61,7 +61,11 @@ A 5v5 character-based libre tactical shooter
 /To the moon and back, forever ❤/
 #+end_quote
 
-(...)
+*Defy the limits:* Blend your style and experience on a global, competitive stage. You have 13 rounds to attack and defend your side using sharp gunplay and tactical abilities. And, with one life per-round, you'll need to think faster than your opponent if you want to survive.
+
+*Creativity is your greatest weapon:* More than guns and bullets, you’ll choose a character armed with adaptive, swift, and lethal abilities that create opportunities to let your gunplay shine. No two characters play alike, just as no two highlight reels will look the same.
+
+*Fight around the world:* Each map is a playground to showcase your creative thinking. Purpose-built for team strategies, spectacular plays, and clutch moments. Make the play others will imitate for years to come.
 
 # GNU GPLv3+ License notice
 #+begin_quote
@@ -75,6 +79,7 @@ You should have received a copy of the GNU General Public License along with Spa
   - [[#get-code][Get code]]
   - [[#requirements][Requirements]]
     - [[#debianubuntu][Debian/Ubuntu]]
+    - [[#fedora][Fedora]]
 
 * Build from source
 
@@ -85,7 +90,7 @@ You should have received a copy of the GNU General Public License along with Spa
 (...)
 
 #+begin_src sh
-$  git clone --recurse-submodules https://github.com/iWas-Coder/sparky
+git clone --recurse-submodules https://github.com/iWas-Coder/sparky
 #+end_src
 
 ** Requirements
@@ -94,9 +99,28 @@ $  git clone --recurse-submodules https://github.com/iWas-Coder/sparky
 
 *** Debian/Ubuntu
 
-- ~build-essential~
+- ~gcc~
+- ~make~
 - ~libx11-dev~
 - ~libxcursor-dev~
 - ~libxrandr-dev~
 - ~libxinerama-dev~
 - ~libxi-dev~
+
+#+begin_src sh
+sudo apt install -y gcc make libx11-dev libxcursor-dev libxrandr-dev libxinerama-dev libxi-dev
+#+end_src
+
+*** Fedora
+
+- ~gcc~
+- ~make~
+- ~libX11-devel~
+- ~libXcursor-devel~
+- ~libXrandr-devel~
+- ~libXinerama-devel~
+- ~libXi-devel~
+
+#+begin_src sh
+sudo dnf install -y gcc make libX11-devel libXcursor-devel libXrandr-devel libXinerama-devel libXi-devel
+#+end_src
