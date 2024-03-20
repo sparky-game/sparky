@@ -21,4 +21,6 @@
 
 #pragma once
 
-int sparky_client_run(void);
+#include <sparky_defines.h>
+
+u8 sparky_client_run(void);

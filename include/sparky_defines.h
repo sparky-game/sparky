@@ -19,7 +19,13 @@
  */
 
 
+#pragma once
+
+#include <stdint.h>
+
 #define SPARKY_CLIENT_NAME                 "sparky-client"
 #define SPARKY_CLIENT_MAIN_MENU_TITLE      "SPARKY"
 #define SPARKY_CLIENT_MAIN_MENU_TITLE_SIZE 80
 #define SPARKY_CLIENT_PLAYER_HEIGHT 2
+
+typedef uint8_t u8;

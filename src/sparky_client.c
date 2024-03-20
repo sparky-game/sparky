@@ -20,13 +20,13 @@
 
 
 #include <sparky_config.h>
-#include <sparky_defines.h>
+#include <sparky_client.h>
 #include <sparky_gametypes.h>
 #include <sparky_client_renderer.h>
 
 static State state = {0};
 
-static void sparky_client_init(void) {
+static void init(void) {
   sparky_client_renderer_open_window();
   state = (State) {
     .current_scene = SCENE_MAIN_MENU,
@@ -43,19 +43,19 @@ static void sparky_client_init(void) {
   };
 }
 
-static int sparky_client_shutdown(void) {
+static u8 shutdown(void) {
   CloseWindow();
   state = (State) {0};
   TraceLog(LOG_INFO, "%s closed successfully", SPARKY_CLIENT_NAME);
   return 0;
 }
 
-int sparky_client_run(void) {
+u8 sparky_client_run(void) {
   TraceLog(LOG_INFO, "Initializing %s", SPARKY_CLIENT_NAME);
-  sparky_client_init();
+  init();
   sparky_client_renderer_loop {
     sparky_client_renderer_update(&state);
     sparky_client_renderer_draw(&state);
   }
-  return sparky_client_shutdown();
+  return shutdown();
 }

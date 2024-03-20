@@ -28,14 +28,14 @@ int main(int argc, char **argv) {
     TraceLog(LOG_ERROR, "usage: %s [--server]", argv[0]);
     return 1;
   }
-  if (argc == 2 && !strcmp(argv[1], "--server")) {
-    TraceLog(LOG_WARNING, "Server not implemented yet. Exiting...");
-    return 0;
-  }
   if (argc == 2 && (!strcmp(argv[1], "-h") || !strcmp(argv[1], "--help"))) {
     TraceLog(LOG_INFO, "usage: %s [--server]", argv[0]);
     return 0;
   }
 
-  return sparky_client_run();
+  if (argc == 2 && !strcmp(argv[1], "--server")) {
+    TraceLog(LOG_WARNING, "Server not implemented yet. Exiting...");
+    return 0;
+  }
+  else return sparky_client_run();
 }
