@@ -29,14 +29,14 @@
 #define CAM_WALK_SENSITIVITY 0.1
 #define CAM_ROLL_ACCELERATION 1.5
 
-static void update_main_menu(State *s) {
+static void __update_main_menu(State *s) {
   if (IsKeyPressed(KEY_ENTER)) {
     s->current_scene = SCENE_GAMEPLAY;
     DisableCursor();
   }
 }
 
-static void update_gameplay_jump(State *s) {
+static void __update_gameplay_jump(State *s) {
   float dt = GetFrameTime();
   if (IsKeyPressed(SPARKY_CONFIG_CLIENT_JUMP) &&
       s->player.camera.position.y <= SPARKY_CLIENT_PLAYER_HEIGHT) s->player.v_y = JUMP_INIT_VELOCITY;
@@ -49,7 +49,7 @@ static void update_gameplay_jump(State *s) {
   else s->player.camera.target.y += s->player.v_y * dt;
 }
 
-static float update_gameplay_cam_roll(State *s) {
+static float __update_gameplay_cam_roll(State *s) {
   float cam_roll = 0;
   if (s->player.camera.up.y >= 0.98f) {
     if (IsKeyDown(SPARKY_CONFIG_CLIENT_PEEK_LEFT))       cam_roll -= CAM_ROLL_ACCELERATION;
@@ -64,8 +64,8 @@ static float update_gameplay_cam_roll(State *s) {
   return cam_roll;
 }
 
-static void update_gameplay(State *s) {
-  update_gameplay_jump(s);
+static void __update_gameplay(State *s) {
+  __update_gameplay_jump(s);
   Vector2 dm = GetMouseDelta();
   UpdateCameraPro(&s->player.camera,
                   (Vector3) {
@@ -78,7 +78,7 @@ static void update_gameplay(State *s) {
                   (Vector3) {
                     dm.x * SPARKY_CONFIG_CLIENT_MOUSE_SENSITIVITY,
                     dm.y * SPARKY_CONFIG_CLIENT_MOUSE_SENSITIVITY,
-                    update_gameplay_cam_roll(s)
+                    __update_gameplay_cam_roll(s)
                   },
                   0);
 }
@@ -86,10 +86,10 @@ static void update_gameplay(State *s) {
 void sparky_client_renderer_update(State *s) {
   switch (s->current_scene) {
   case SCENE_MAIN_MENU:
-    update_main_menu(s);
+    __update_main_menu(s);
     break;
   case SCENE_GAMEPLAY:
-    update_gameplay(s);
+    __update_gameplay(s);
     break;
   default:
     assert(0 && "sparky_client_renderer_update :: Unreachable");

@@ -26,7 +26,7 @@
 
 static State state = {0};
 
-static void init(void) {
+static void __init(void) {
   sparky_client_renderer_open_window();
   state = (State) {
     .current_scene = SCENE_MAIN_MENU,
@@ -43,7 +43,8 @@ static void init(void) {
   };
 }
 
-static u8 shutdown(void) {
+static u8 __shutdown(void) {
+  UnloadModel(state.player.model);
   CloseWindow();
   state = (State) {0};
   TraceLog(LOG_INFO, "%s closed successfully", SPARKY_CLIENT_NAME);
@@ -52,10 +53,10 @@ static u8 shutdown(void) {
 
 u8 sparky_client_run(void) {
   TraceLog(LOG_INFO, "Initializing %s", SPARKY_CLIENT_NAME);
-  init();
+  __init();
   sparky_client_renderer_loop {
     sparky_client_renderer_update(&state);
     sparky_client_renderer_draw(&state);
   }
-  return shutdown();
+  return __shutdown();
 }

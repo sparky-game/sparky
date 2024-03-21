@@ -24,7 +24,7 @@
 #include <sparky_defines.h>
 #include <sparky_client_renderer.h>
 
-static void draw_main_menu(void) {
+static void __draw_main_menu(void) {
   ClearBackground(BLACK);
   const char *subtitle = "Press <ENTER> to start";
   u8 subtitle_size = 30;
@@ -42,7 +42,7 @@ static void draw_main_menu(void) {
            RAYWHITE);
 }
 
-static void draw_gameplay_world(State *s) {
+static void __draw_gameplay_world(State *s) {
   ClearBackground(SKYBLUE);
   BeginMode3D(s->player.camera);
   DrawModel(s->player.model,
@@ -61,7 +61,7 @@ static void draw_gameplay_world(State *s) {
   EndMode3D();
 }
 
-static void draw_gameplay_hud(void) {
+static void __draw_gameplay_hud(void) {
   DrawFPS(10, 10);
   char dt[10];
   snprintf(dt, sizeof(dt), "%.4f ms", GetFrameTime() * 1000);
@@ -72,11 +72,11 @@ void sparky_client_renderer_draw(State *s) {
   BeginDrawing();
   switch (s->current_scene) {
   case SCENE_MAIN_MENU:
-    draw_main_menu();
+    __draw_main_menu();
     break;
   case SCENE_GAMEPLAY:
-    draw_gameplay_world(s);
-    draw_gameplay_hud();
+    __draw_gameplay_world(s);
+    __draw_gameplay_hud();
     break;
   default:
     assert(0 && "sparky_client_renderer_draw :: Unreachable");
