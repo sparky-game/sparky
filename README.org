@@ -75,11 +75,16 @@ You should have received a copy of the GNU General Public License along with Spa
 #+end_quote
 
 * Table of Contents :toc:
+- [[#projects-roadmap][Project's Roadmap]]
 - [[#build-from-source][Build from source]]
   - [[#get-code][Get code]]
   - [[#requirements][Requirements]]
     - [[#debianubuntu][Debian/Ubuntu]]
     - [[#fedora][Fedora]]
+
+* Project's Roadmap
+
+For information about the detailed project roadmap, including delivered milestones, see [[https://github.com/users/iWas-Coder/projects/5][the Sparky Roadmap on GitHub]].
 
 * Build from source
 
