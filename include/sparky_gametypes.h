@@ -33,8 +33,14 @@ typedef struct {
 } Enemy;
 
 typedef struct {
+  Model model;
+  Sound sound_shoot;
+} Weapon;
+
+typedef struct {
   Camera3D camera;
   Model model;
+  Weapon weapon;
   float v_y;
 } Player;
 

@@ -27,6 +27,6 @@
 
 #define sparky_client_renderer_loop while (!WindowShouldClose())
 
-void sparky_client_renderer_open_window(void);
+void sparky_client_renderer_init(void);
 void sparky_client_renderer_update(State *s);
 void sparky_client_renderer_draw(State *s);

@@ -24,14 +24,16 @@
 #include <sparky_defines.h>
 #include <sparky_client_renderer.h>
 
-#define GRAVITY 19
-#define JUMP_INIT_VELOCITY 9
-#define CAM_WALK_SENSITIVITY 0.1
-#define CAM_ROLL_ACCELERATION 1.5
+static void __load_player(State *s) {
+  s->player.model = LoadModel("assets/models/jett/scene.gltf");
+  s->player.weapon.model = LoadModel("assets/models/7mm/scene.gltf");
+  s->player.weapon.sound_shoot = LoadSound("assets/sounds/7mm/shoot.wav");
+}
 
 static void __update_main_menu(State *s) {
   if (IsKeyPressed(KEY_ENTER)) {
     s->current_scene = SCENE_GAMEPLAY;
+    __load_player(s);
     DisableCursor();
   }
 }
@@ -39,8 +41,8 @@ static void __update_main_menu(State *s) {
 static void __update_gameplay_jump(State *s) {
   float dt = GetFrameTime();
   if (IsKeyPressed(SPARKY_CONFIG_CLIENT_JUMP) &&
-      s->player.camera.position.y <= SPARKY_CLIENT_PLAYER_HEIGHT) s->player.v_y = JUMP_INIT_VELOCITY;
-  s->player.v_y -= GRAVITY * dt;
+      s->player.camera.position.y <= SPARKY_CLIENT_PLAYER_HEIGHT) s->player.v_y = SPARKY_CLIENT_PLAYER_JUMP_INIT_VELOCITY;
+  s->player.v_y -= SPARKY_CLIENT_GRAVITY * dt;
   s->player.camera.position.y += s->player.v_y * dt;
   if (s->player.camera.position.y < SPARKY_CLIENT_PLAYER_HEIGHT) {
     s->player.camera.position.y = SPARKY_CLIENT_PLAYER_HEIGHT;
@@ -49,11 +51,17 @@ static void __update_gameplay_jump(State *s) {
   else s->player.camera.target.y += s->player.v_y * dt;
 }
 
+static void __update_gameplay_shoot(State *s) {
+  if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+    PlaySound(s->player.weapon.sound_shoot);
+  }
+}
+
 static float __update_gameplay_cam_roll(State *s) {
   float cam_roll = 0;
   if (s->player.camera.up.y >= 0.98f) {
-    if (IsKeyDown(SPARKY_CONFIG_CLIENT_PEEK_LEFT))       cam_roll -= CAM_ROLL_ACCELERATION;
-    else if (IsKeyDown(SPARKY_CONFIG_CLIENT_PEEK_RIGHT)) cam_roll += CAM_ROLL_ACCELERATION;
+    if (IsKeyDown(SPARKY_CONFIG_CLIENT_PEEK_LEFT))       cam_roll -= SPARKY_CLIENT_PLAYER_CAM_ROLL_ACCELERATION;
+    else if (IsKeyDown(SPARKY_CONFIG_CLIENT_PEEK_RIGHT)) cam_roll += SPARKY_CLIENT_PLAYER_CAM_ROLL_ACCELERATION;
   }
   if (!IsKeyDown(SPARKY_CONFIG_CLIENT_PEEK_LEFT) &&
       !IsKeyDown(SPARKY_CONFIG_CLIENT_PEEK_RIGHT)) {
@@ -66,13 +74,14 @@ static float __update_gameplay_cam_roll(State *s) {
 
 static void __update_gameplay(State *s) {
   __update_gameplay_jump(s);
+  __update_gameplay_shoot(s);
   Vector2 dm = GetMouseDelta();
   UpdateCameraPro(&s->player.camera,
                   (Vector3) {
-                    IsKeyDown(SPARKY_CONFIG_CLIENT_MOVE_FORWARD) * CAM_WALK_SENSITIVITY -
-                    IsKeyDown(SPARKY_CONFIG_CLIENT_MOVE_BACKWARDS) * CAM_WALK_SENSITIVITY,
-                    IsKeyDown(SPARKY_CONFIG_CLIENT_MOVE_RIGHT) * CAM_WALK_SENSITIVITY -
-                    IsKeyDown(SPARKY_CONFIG_CLIENT_MOVE_LEFT) * CAM_WALK_SENSITIVITY,
+                    IsKeyDown(SPARKY_CONFIG_CLIENT_MOVE_FORWARD)   * SPARKY_CLIENT_PLAYER_CAM_WALK_SENSITIVITY -
+                    IsKeyDown(SPARKY_CONFIG_CLIENT_MOVE_BACKWARDS) * SPARKY_CLIENT_PLAYER_CAM_WALK_SENSITIVITY,
+                    IsKeyDown(SPARKY_CONFIG_CLIENT_MOVE_RIGHT)     * SPARKY_CLIENT_PLAYER_CAM_WALK_SENSITIVITY -
+                    IsKeyDown(SPARKY_CONFIG_CLIENT_MOVE_LEFT)      * SPARKY_CLIENT_PLAYER_CAM_WALK_SENSITIVITY,
                     0
                   },
                   (Vector3) {
@@ -92,6 +101,6 @@ void sparky_client_renderer_update(State *s) {
     __update_gameplay(s);
     break;
   default:
-    assert(0 && "sparky_client_renderer_update :: Unreachable");
+    assert(0 && "Unreachable");
   }
 }

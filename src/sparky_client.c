@@ -27,7 +27,10 @@
 static State state = {0};
 
 static void __init(void) {
-  sparky_client_renderer_open_window();
+  if (!ChangeDirectory(GetApplicationDirectory())) {
+    TraceLog(LOG_WARNING, "Could not change CWD to the game's root directory");
+  }
+  sparky_client_renderer_init();
   state = (State) {
     .current_scene = SCENE_MAIN_MENU,
     .player = (Player) {
@@ -37,14 +40,16 @@ static void __init(void) {
         .up = (Vector3) { 0, 1, 0 },
         .fovy = SPARKY_CONFIG_CLIENT_FOV,
         .projection = CAMERA_PERSPECTIVE
-      },
-      .model = LoadModelFromMesh(GenMeshCylinder(1, 2, 16))
+      }
     },
   };
 }
 
 static u8 __shutdown(void) {
+  UnloadSound(state.player.weapon.sound_shoot);
+  UnloadModel(state.player.weapon.model);
   UnloadModel(state.player.model);
+  CloseAudioDevice();
   CloseWindow();
   state = (State) {0};
   TraceLog(LOG_INFO, "%s closed successfully", SPARKY_CLIENT_NAME);

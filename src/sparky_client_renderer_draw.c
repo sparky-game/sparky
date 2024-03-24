@@ -21,6 +21,7 @@
 
 #include <stdio.h>
 #include <assert.h>
+#include <sparky_config.h>
 #include <sparky_defines.h>
 #include <sparky_client_renderer.h>
 
@@ -42,30 +43,75 @@ static void __draw_main_menu(void) {
            RAYWHITE);
 }
 
+static inline void __draw_player(State *s) {
+  DrawModel(s->player.model,
+            (Vector3) {
+              s->player.camera.position.x - 4,
+              s->player.camera.position.y - SPARKY_CLIENT_PLAYER_HEIGHT,
+              s->player.camera.position.z
+            },
+            1,
+            WHITE);
+}
+
+static inline void __draw_weapon(State *s) {
+  DrawModelEx(s->player.weapon.model,
+              (Vector3) {
+                s->player.camera.position.x + 1,
+                s->player.camera.position.y - 1,
+                s->player.camera.position.z - 3
+              },
+              (Vector3) { 1, 0, 0 },
+              275,
+              (Vector3) { 0.5f, 0.5f, 0.5f },
+              WHITE);
+}
+
+static inline void __draw_floor(void) {
+  DrawPlane((Vector3) { 0, 0, 0 }, (Vector2) { 32, 32 }, DARKGRAY);
+}
+
+static inline void __draw_walls(void) {
+  DrawCube((Vector3) { -16, 2.5f, 0 }, 1, 5, 32, MAROON);
+  DrawCube((Vector3) { 16, 2.5f, 0 }, 1, 5, 32, LIME);
+  DrawCube((Vector3) { 0, 2.5f, 16 }, 32, 5, 1, GOLD);
+}
+
 static void __draw_gameplay_world(State *s) {
   ClearBackground(SKYBLUE);
   BeginMode3D(s->player.camera);
-  DrawModel(s->player.model,
-            Vector3Subtract(s->player.camera.position,
-                            (Vector3) { 0, SPARKY_CLIENT_PLAYER_HEIGHT, 0 }),
-            1, PURPLE);
-  DrawPlane((Vector3) { 0, 0, 0 },
-            (Vector2) { 32, 32 },
-            DARKGRAY);
-  DrawCube((Vector3) { -16, 2.5f, 0 },
-           1, 5, 32, RED);
-  DrawCube((Vector3) { 16, 2.5f, 0 },
-           1, 5, 32, LIME);
-  DrawCube((Vector3) { 0, 2.5f, 16 },
-           32, 5, 1, GOLD);
+  __draw_player(s);
+  __draw_weapon(s);
+  __draw_floor();
+  __draw_walls();
   EndMode3D();
 }
 
-static void __draw_gameplay_hud(void) {
+static inline void __draw_fps(void) {
   DrawFPS(10, 10);
+}
+
+static inline void __draw_frametime(void) {
   char dt[10];
   snprintf(dt, sizeof(dt), "%.4f ms", GetFrameTime() * 1000);
   DrawText(dt, 10, 33, 20, LIME);
+}
+
+static inline void __draw_crosshair(void) {
+  DrawCircle(GetScreenWidth() / 2,
+             GetScreenHeight() / 2,
+             SPARKY_CONFIG_CLIENT_CROSSHAIR_RADIUS,
+             BLACK);
+  DrawCircle(GetScreenWidth() / 2,
+             GetScreenHeight() / 2,
+             SPARKY_CONFIG_CLIENT_CROSSHAIR_RADIUS - 0.9f,
+             WHITE);
+}
+
+static void __draw_gameplay_hud(void) {
+  __draw_fps();
+  __draw_frametime();
+  __draw_crosshair();
 }
 
 void sparky_client_renderer_draw(State *s) {
@@ -79,7 +125,7 @@ void sparky_client_renderer_draw(State *s) {
     __draw_gameplay_hud();
     break;
   default:
-    assert(0 && "sparky_client_renderer_draw :: Unreachable");
+    assert(0 && "Unreachable");
   }
   EndDrawing();
 }
