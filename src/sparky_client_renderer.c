@@ -19,6 +19,7 @@
  */
 
 
+#include <assert.h>
 #include <sparky_config.h>
 #include <sparky_defines.h>
 #include <sparky_client_renderer.h>
@@ -28,5 +29,6 @@ void sparky_client_renderer_open_window(void) {
   InitWindow(SPARKY_CONFIG_CLIENT_WIN_WIDTH,
              SPARKY_CONFIG_CLIENT_WIN_HEIGHT,
              SPARKY_CLIENT_NAME);
+  assert(IsWindowReady());
   SetTargetFPS(SPARKY_CONFIG_CLIENT_FPS);
 }
