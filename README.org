@@ -40,7 +40,7 @@ A 5v5 character-based libre tactical shooter
 # Repository marketing badges
 #+begin_html
 <p align="center">
-<a href="https://iwas-coder.itch.io">
+<a href="https://iwas-coder.itch.io/sparky">
 <img src="https://static.itch.io/images/badge-color.svg" alt="itch.io" height=41>
 </a>
 <br/>
