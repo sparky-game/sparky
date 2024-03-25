@@ -35,6 +35,8 @@ jobs:
         uses: actions/checkout@v4
         with:
           submodules: recursive
+      - name: install-dependencies
+        run: sudo apt-get install -y libx11-dev libxcursor-dev libxrandr-dev libxinerama-dev libxi-dev
       - name: setup-codeql
         uses: github/codeql-action/init@v3
         with:
