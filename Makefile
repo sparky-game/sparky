@@ -66,20 +66,19 @@ OBJS        := $(patsubst $(SRC_DIR)/%.c, $(BUILD_DIR)/%.o, $(SRCS))
 # Build flags
 CC              = gcc
 AR              = ar -rc
-ifndef D
-  DISABLE_ASSERTS = -D NDEBUG
+ifdef D
+  DEBUG_SYM_OPTS = -ggdb
+else
+  DISABLE_ASSERTS_OPTS = -D NDEBUG
+  HIDE_WARNS_OPTS      = -w
+  RELEASE_OPTS         = -pipe -O3
+  STRIP_OPTS           = -s
 endif
 RAYLIB_CPPFLAGS = $(DISABLE_ASSERTS) -D PLATFORM_DESKTOP -I $(RAYLIB_SRC_DIR) -I $(RAYLIB_SRC_DIR)/external/glfw/$(HDR_DIR)
 CPPFLAGS        = $(DISABLE_ASSERTS) -I $(RAYLIB_SRC_DIR) -I $(HDR_DIR)
-ifdef D
-  DEBUG_OPTS = -ggdb
-else
-  RELEASE_OPTS = -pipe -O3
-  STRIP_OPTS = -s
-endif
-RAYLIB_CFLAGS = -std=gnu99 $(DEBUG_OPTS) $(RELEASE_OPTS)
-CFLAGS        = -std=c17 -Wall -Wextra -pedantic $(DEBUG_OPTS) $(RELEASE_OPTS)
-LDFLAGS       = -Wl,--build-id $(STRIP_OPTS) $(RELEASE_OPTS) -L $(BUILD_DIR) -lraylib -lm
+RAYLIB_CFLAGS   = -std=gnu99 $(HIDE_WARNS_OPTS) $(DEBUG_SYM_OPTS) $(RELEASE_OPTS)
+CFLAGS          = -std=c17 -Wall -Wextra -pedantic $(DEBUG_SYM_OPTS) $(RELEASE_OPTS)
+LDFLAGS         = -Wl,--build-id $(STRIP_OPTS) $(RELEASE_OPTS) -L $(BUILD_DIR) -lraylib -lm
 
 # Build output
 RAYLIB_OUT = $(BUILD_DIR)/libraylib.a
