@@ -34,6 +34,9 @@ typedef struct {
 
 typedef struct {
   Model model;
+  ModelAnimation *model_anims;
+  u8 model_anims_count;
+  u8 model_anim_frame_count;
   Sound sound_shoot;
 } Weapon;
 

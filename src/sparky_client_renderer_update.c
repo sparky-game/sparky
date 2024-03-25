@@ -24,10 +24,22 @@
 #include <sparky_defines.h>
 #include <sparky_client_renderer.h>
 
-static void __load_player(State *s) {
-  s->player.model = LoadModel("assets/models/jett/scene.gltf");
-  s->player.weapon.model = LoadModel("assets/models/7mm/scene.gltf");
-  s->player.weapon.sound_shoot = LoadSound("assets/sounds/7mm/shoot.wav");
+#define MODEL_PLAYER_JETT            "assets/models/jett/scene.gltf"
+#define MODEL_WEAPON_7MM             "assets/models/7mm.glb"
+#define MODEL_WEAPON_7MM_SOUND_SHOOT "assets/sounds/7mm/shoot.wav"
+
+static inline void __load_weapon(State *s) {
+  s->player.weapon.model = LoadModel(MODEL_WEAPON_7MM);
+  s->player.weapon.model_anims = LoadModelAnimations(MODEL_WEAPON_7MM, (int *) &s->player.weapon.model_anims_count);
+  assert(s->player.weapon.model_anims_count == 1);
+  assert(IsModelAnimationValid(s->player.weapon.model, s->player.weapon.model_anims[0]));
+  s->player.weapon.model_anim_frame_count = 0;
+  s->player.weapon.sound_shoot = LoadSound(MODEL_WEAPON_7MM_SOUND_SHOOT);
+}
+
+static inline void __load_player(State *s) {
+  s->player.model = LoadModel(MODEL_PLAYER_JETT);
+  __load_weapon(s);
 }
 
 static void __update_main_menu(State *s) {
@@ -53,6 +65,11 @@ static void __update_gameplay_jump(State *s) {
 
 static void __update_gameplay_shoot(State *s) {
   if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+    ++s->player.weapon.model_anim_frame_count;
+    UpdateModelAnimation(s->player.weapon.model, s->player.weapon.model_anims[0], s->player.weapon.model_anim_frame_count);
+    if (s->player.weapon.model_anim_frame_count >= s->player.weapon.model_anims[0].frameCount) {
+      s->player.weapon.model_anim_frame_count = 0;
+    }
     PlaySound(s->player.weapon.sound_shoot);
   }
 }

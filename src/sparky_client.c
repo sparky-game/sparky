@@ -47,6 +47,7 @@ static void __init(void) {
 
 static u8 __shutdown(void) {
   UnloadSound(state.player.weapon.sound_shoot);
+  UnloadModelAnimations(state.player.weapon.model_anims, state.player.weapon.model_anims_count);
   UnloadModel(state.player.weapon.model);
   UnloadModel(state.player.model);
   CloseAudioDevice();
