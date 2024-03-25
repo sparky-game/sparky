@@ -28,5 +28,3 @@ EXTRAVERSION =
 Q = @
 # Debug
 D =
-# Strip
-S =

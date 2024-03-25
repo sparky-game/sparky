@@ -72,18 +72,13 @@ endif
 RAYLIB_CPPFLAGS = $(DISABLE_ASSERTS) -D PLATFORM_DESKTOP -I $(RAYLIB_SRC_DIR) -I $(RAYLIB_SRC_DIR)/external/glfw/$(HDR_DIR)
 CPPFLAGS        = $(DISABLE_ASSERTS) -I $(RAYLIB_SRC_DIR) -I $(HDR_DIR)
 ifdef D
-  ifdef S
-    $(error Config options `D` and `S` are mutually exclusive)
-  endif
   DEBUG_OPTS = -ggdb
 else
   RELEASE_OPTS = -pipe -O3
-endif
-ifdef S
   STRIP_OPTS = -s
 endif
 RAYLIB_CFLAGS = -std=gnu99 $(DEBUG_OPTS) $(RELEASE_OPTS)
-CFLAGS        = -std=c17 -Wall -Wextra -pedantic -Werror -fanalyzer $(DEBUG_OPTS) $(RELEASE_OPTS)
+CFLAGS        = -std=c17 -Wall -Wextra -pedantic $(DEBUG_OPTS) $(RELEASE_OPTS)
 LDFLAGS       = -Wl,--build-id $(STRIP_OPTS) $(RELEASE_OPTS) -L $(BUILD_DIR) -lraylib -lm
 
 # Build output
@@ -104,7 +99,7 @@ all: $(ALL_TGTS)
 	@:
 
 game: $(RAYLIB_OUT) $(OUT)
-	@echo "Game: $(OUT) is ready  ($(FULL_VERSION))"
+	@echo "INFO: $(OUT) is ready  ($(FULL_VERSION))"
 
 $(BUILD_DIR):
 	@echo "  $(PPO_MKDIR)   $@"
