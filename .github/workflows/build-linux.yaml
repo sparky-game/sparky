@@ -1,4 +1,4 @@
-name: build
+name: build-linux
 
 on:
   push:
@@ -26,7 +26,7 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  build-linux:
+  build-analyze:
     permissions:
       security-events: write
     runs-on: ubuntu-latest
@@ -43,5 +43,3 @@ jobs:
         run: make
       - name: analyze
         uses: github/codeql-action/analyze@v3
-        with:
-          category: "build-linux"
