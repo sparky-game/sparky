@@ -1,0 +1,47 @@
+name: build
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - 'include/**'
+      - 'src/**'
+      - 'vendor/**'
+      - 'Makefile'
+      - 'config.mk'
+  pull_request:
+    branches: [master]
+    types: [opened, synchronize]
+    paths:
+      - 'include/**'
+      - 'src/**'
+      - 'vendor/**'
+      - 'Makefile'
+      - 'config.mk'
+  schedule:
+    - cron: '0 0 * * 1'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build-linux:
+    permissions:
+      security-events: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout-repo
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - name: setup-codeql
+        uses: github/codeql-action/init@v3
+        with:
+          languages: c-cpp
+      - name: build
+        run: make
+      - name: analyze
+        uses: github/codeql-action/analyze@v3
+        with:
+          category: "build-linux"
