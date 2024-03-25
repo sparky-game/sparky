@@ -59,6 +59,15 @@ A 5v5 character-based libre tactical shooter
 </p>
 #+end_html
 
+# Repository CI badges
+#+begin_html
+<p align="center">
+<a href="https://github.com/iWas-Coder/sparky/actions/workflows/build-linux.yaml">
+<img src="https://img.shields.io/github/actions/workflow/status/iWas-Coder/sparky/build-linux.yaml?logo=github&label=build-linux" alt="CI Build Linux">
+</a>
+</p>
+#+end_html
+
 # Dedication
 #+begin_quote
 🐰 This project is created and maintained in loving memory of *Sparky*, aka *Chispitas*, aka *Chispis*, in the hope he will become immortal and, eventually, one with the Force. 🐰 @@html:<br>@@
