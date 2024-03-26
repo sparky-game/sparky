@@ -20,15 +20,15 @@
 
 
 #include <assert.h>
-#include <sparky_config.h>
-#include <sparky_defines.h>
-#include <sparky_client_renderer.h>
+#include <sk_config.h>
+#include <sk_defines.h>
+#include <sk_client_renderer.h>
 
 static inline void __open_window(void) {
   SetConfigFlags(FLAG_MSAA_4X_HINT);
-  InitWindow(SPARKY_CONFIG_CLIENT_WIN_WIDTH,
-             SPARKY_CONFIG_CLIENT_WIN_HEIGHT,
-             SPARKY_CLIENT_NAME);
+  InitWindow(SK_CONFIG_CLIENT_WIN_WIDTH,
+             SK_CONFIG_CLIENT_WIN_HEIGHT,
+             SK_CLIENT_NAME);
   assert(IsWindowReady());
 }
 
@@ -36,8 +36,8 @@ static inline void __init_audio(void) {
   InitAudioDevice();
 }
 
-void sparky_client_renderer_init(void) {
+void sk_client_renderer_init(void) {
   __open_window();
   __init_audio();
-  SetTargetFPS(SPARKY_CONFIG_CLIENT_FPS);
+  SetTargetFPS(SK_CONFIG_CLIENT_FPS);
 }

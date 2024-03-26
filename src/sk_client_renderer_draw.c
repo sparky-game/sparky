@@ -21,20 +21,20 @@
 
 #include <stdio.h>
 #include <assert.h>
-#include <sparky_config.h>
-#include <sparky_defines.h>
-#include <sparky_client_renderer.h>
+#include <sk_config.h>
+#include <sk_defines.h>
+#include <sk_client_renderer.h>
 
 static void __draw_main_menu(void) {
   ClearBackground(BLACK);
   const char *subtitle = "Press <ENTER> to start";
   u8 subtitle_size = 30;
-  DrawText(SPARKY_CLIENT_MAIN_MENU_TITLE,
-           (GetScreenWidth() - MeasureText(SPARKY_CLIENT_MAIN_MENU_TITLE,
-                                           SPARKY_CLIENT_MAIN_MENU_TITLE_SIZE)) / 2,
-           (GetScreenHeight() - MeasureText(SPARKY_CLIENT_MAIN_MENU_TITLE,
-                                            SPARKY_CLIENT_MAIN_MENU_TITLE_SIZE)) / 2,
-           SPARKY_CLIENT_MAIN_MENU_TITLE_SIZE,
+  DrawText(SK_CLIENT_MAIN_MENU_TITLE,
+           (GetScreenWidth() - MeasureText(SK_CLIENT_MAIN_MENU_TITLE,
+                                           SK_CLIENT_MAIN_MENU_TITLE_SIZE)) / 2,
+           (GetScreenHeight() - MeasureText(SK_CLIENT_MAIN_MENU_TITLE,
+                                            SK_CLIENT_MAIN_MENU_TITLE_SIZE)) / 2,
+           SK_CLIENT_MAIN_MENU_TITLE_SIZE,
            RAYWHITE);
   DrawText(subtitle,
            (GetScreenWidth() - MeasureText(subtitle, subtitle_size)) / 2,
@@ -47,7 +47,7 @@ static inline void __draw_player(State *s) {
   DrawModel(s->player.model,
             (Vector3) {
               s->player.camera.position.x - 4,
-              s->player.camera.position.y - SPARKY_CLIENT_PLAYER_HEIGHT,
+              s->player.camera.position.y - SK_CLIENT_PLAYER_HEIGHT,
               s->player.camera.position.z
             },
             1,
@@ -100,11 +100,11 @@ static inline void __draw_frametime(void) {
 static inline void __draw_crosshair(void) {
   DrawCircle(GetScreenWidth() / 2,
              GetScreenHeight() / 2,
-             SPARKY_CONFIG_CLIENT_CROSSHAIR_RADIUS,
+             SK_CONFIG_CLIENT_CROSSHAIR_RADIUS,
              BLACK);
   DrawCircle(GetScreenWidth() / 2,
              GetScreenHeight() / 2,
-             SPARKY_CONFIG_CLIENT_CROSSHAIR_RADIUS - 0.9f,
+             SK_CONFIG_CLIENT_CROSSHAIR_RADIUS - 0.9f,
              WHITE);
 }
 
@@ -114,7 +114,7 @@ static void __draw_gameplay_hud(void) {
   __draw_crosshair();
 }
 
-void sparky_client_renderer_draw(State *s) {
+void sk_client_renderer_draw(State *s) {
   BeginDrawing();
   switch (s->current_scene) {
   case SCENE_MAIN_MENU:

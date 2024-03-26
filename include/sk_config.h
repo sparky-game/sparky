@@ -21,6 +21,16 @@
 
 #pragma once
 
-#include <sparky_defines.h>
-
-u8 sparky_client_run(void);
+#define SK_CONFIG_CLIENT_WIN_WIDTH         1280
+#define SK_CONFIG_CLIENT_WIN_HEIGHT        720
+#define SK_CONFIG_CLIENT_FPS               144
+#define SK_CONFIG_CLIENT_FOV               60
+#define SK_CONFIG_CLIENT_MOUSE_SENSITIVITY 0.05
+#define SK_CONFIG_CLIENT_CROSSHAIR_RADIUS  2.5
+#define SK_CONFIG_CLIENT_MOVE_FORWARD      KEY_W
+#define SK_CONFIG_CLIENT_MOVE_BACKWARDS    KEY_S
+#define SK_CONFIG_CLIENT_MOVE_LEFT         KEY_A
+#define SK_CONFIG_CLIENT_MOVE_RIGHT        KEY_D
+#define SK_CONFIG_CLIENT_PEEK_LEFT         KEY_Q
+#define SK_CONFIG_CLIENT_PEEK_RIGHT        KEY_E
+#define SK_CONFIG_CLIENT_JUMP              KEY_SPACE

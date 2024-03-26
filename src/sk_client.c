@@ -19,10 +19,10 @@
  */
 
 
-#include <sparky_config.h>
-#include <sparky_client.h>
-#include <sparky_gametypes.h>
-#include <sparky_client_renderer.h>
+#include <sk_config.h>
+#include <sk_client.h>
+#include <sk_gametypes.h>
+#include <sk_client_renderer.h>
 
 static State state = {0};
 
@@ -30,15 +30,15 @@ static void __init(void) {
   if (!ChangeDirectory(GetApplicationDirectory())) {
     TraceLog(LOG_WARNING, "Could not change CWD to the game's root directory");
   }
-  sparky_client_renderer_init();
+  sk_client_renderer_init();
   state = (State) {
     .current_scene = SCENE_MAIN_MENU,
     .player = (Player) {
       .camera = (Camera3D) {
-        .position = (Vector3) { 0, SPARKY_CLIENT_PLAYER_HEIGHT, 4 },
+        .position = (Vector3) { 0, SK_CLIENT_PLAYER_HEIGHT, 4 },
         .target = (Vector3) { 0, 2, 0 },
         .up = (Vector3) { 0, 1, 0 },
-        .fovy = SPARKY_CONFIG_CLIENT_FOV,
+        .fovy = SK_CONFIG_CLIENT_FOV,
         .projection = CAMERA_PERSPECTIVE
       }
     },
@@ -53,16 +53,16 @@ static u8 __shutdown(void) {
   CloseAudioDevice();
   CloseWindow();
   state = (State) {0};
-  TraceLog(LOG_INFO, "%s closed successfully", SPARKY_CLIENT_NAME);
+  TraceLog(LOG_INFO, "%s closed successfully", SK_CLIENT_NAME);
   return 0;
 }
 
-u8 sparky_client_run(void) {
-  TraceLog(LOG_INFO, "Initializing %s", SPARKY_CLIENT_NAME);
+u8 sk_client_run(void) {
+  TraceLog(LOG_INFO, "Initializing %s", SK_CLIENT_NAME);
   __init();
-  sparky_client_renderer_loop {
-    sparky_client_renderer_update(&state);
-    sparky_client_renderer_draw(&state);
+  sk_client_renderer_loop {
+    sk_client_renderer_update(&state);
+    sk_client_renderer_draw(&state);
   }
   return __shutdown();
 }

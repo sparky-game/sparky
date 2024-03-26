@@ -21,19 +21,6 @@
 
 #pragma once
 
-#include <stdint.h>
+#include <sk_defines.h>
 
-#define SPARKY_CLIENT_NAME                         "sparky-client"
-#define SPARKY_CLIENT_MAIN_MENU_TITLE              "SPARKY"
-#define SPARKY_CLIENT_MAIN_MENU_TITLE_SIZE         80
-#define SPARKY_CLIENT_GRAVITY                      19
-#define SPARKY_CLIENT_PLAYER_HEIGHT                2
-#define SPARKY_CLIENT_PLAYER_JUMP_INIT_VELOCITY    9
-#define SPARKY_CLIENT_PLAYER_CAM_WALK_SENSITIVITY  0.1
-#define SPARKY_CLIENT_PLAYER_CAM_ROLL_ACCELERATION 1.5
-
-#define SPARKY_SERVER_NAME      "sparky-server"
-#define SPARKY_SERVER_PORT      27015
-#define SPARKY_SERVER_TICK_RATE 128
-
-typedef uint8_t u8;
+u8 sk_client_run(void);
