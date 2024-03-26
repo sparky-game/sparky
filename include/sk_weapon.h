@@ -22,26 +22,29 @@
 #pragma once
 
 #include <raylib.h>
-#include <sk_weapon.h>
+#include <sk_defines.h>
+
+// fwd-decl
+struct Player;
+
+typedef struct {
+  Model model;
+  ModelAnimation *model_anims;
+  u8 model_anims_count;
+  u8 model_anim_frame_count;
+  Sound sound_shoot;
+} sk_weapon;
 
 typedef enum {
-  SCENE_MAIN_MENU,
-  SCENE_GAMEPLAY
-} Scene;
+  SK_WEAPON_KIND_7MM
+} sk_weapon_kind;
 
-typedef struct {
-  Model model;
-} Enemy;
+static const char * const sk_weapon_kinds[] = {
+  [SK_WEAPON_KIND_7MM] = "7mm"
+};
 
-typedef struct Player {
-  Camera3D camera;
-  Model model;
-  sk_weapon weapon;
-  float v_y;
-} Player;
+void sk_weapon_create(struct Player *p, sk_weapon_kind kind);
 
-typedef struct {
-  Scene current_scene;
-  Player player;
-  Enemy *enemies;
-} State;
+void sk_weapon_destroy(sk_weapon *w);
+
+void sk_weapon_shoot(sk_weapon *w);

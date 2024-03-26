@@ -24,22 +24,13 @@
 #include <sk_defines.h>
 #include <sk_client_renderer.h>
 
-#define MODEL_PLAYER_JETT            "assets/models/jett/scene.gltf"
-#define MODEL_WEAPON_7MM             "assets/models/7mm.glb"
-#define MODEL_WEAPON_7MM_SOUND_SHOOT "assets/sounds/7mm/shoot.wav"
-
-static inline void __load_weapon(State *s) {
-  s->player.weapon.model = LoadModel(MODEL_WEAPON_7MM);
-  s->player.weapon.model_anims = LoadModelAnimations(MODEL_WEAPON_7MM, (int *) &s->player.weapon.model_anims_count);
-  assert(s->player.weapon.model_anims_count == 1);
-  assert(IsModelAnimationValid(s->player.weapon.model, s->player.weapon.model_anims[0]));
-  s->player.weapon.model_anim_frame_count = 0;
-  s->player.weapon.sound_shoot = LoadSound(MODEL_WEAPON_7MM_SOUND_SHOOT);
-}
+#define MODEL_PLAYER_JETT "assets/models/jett/scene.gltf"
 
 static inline void __load_player(State *s) {
   s->player.model = LoadModel(MODEL_PLAYER_JETT);
-  __load_weapon(s);
+  sk_weapon_create(&s->player, SK_WEAPON_KIND_7MM);
+  assert(s->player.weapon.model_anims_count == 1);
+  assert(IsModelAnimationValid(s->player.weapon.model, s->player.weapon.model_anims[0]));
 }
 
 static void __update_main_menu(State *s) {
@@ -63,15 +54,8 @@ static void __update_gameplay_jump(State *s) {
   else s->player.camera.target.y += s->player.v_y * dt;
 }
 
-static void __update_gameplay_shoot(State *s) {
-  if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
-    ++s->player.weapon.model_anim_frame_count;
-    UpdateModelAnimation(s->player.weapon.model, s->player.weapon.model_anims[0], s->player.weapon.model_anim_frame_count);
-    if (s->player.weapon.model_anim_frame_count >= s->player.weapon.model_anims[0].frameCount) {
-      s->player.weapon.model_anim_frame_count = 0;
-    }
-    PlaySound(s->player.weapon.sound_shoot);
-  }
+static inline void __update_gameplay_shoot(State *s) {
+  if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) sk_weapon_shoot(&s->player.weapon);
 }
 
 static float __update_gameplay_cam_roll(State *s) {
