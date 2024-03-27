@@ -25,9 +25,14 @@
 #include <sk_defines.h>
 
 // fwd-decl
-struct Player;
+struct sk_player;
+
+typedef enum {
+  SK_WEAPON_KIND_7MM
+} sk_weapon_kind;
 
 typedef struct {
+  sk_weapon_kind kind;
   Model model;
   ModelAnimation *model_anims;
   u8 model_anims_count;
@@ -35,16 +40,14 @@ typedef struct {
   Sound sound_shoot;
 } sk_weapon;
 
-typedef enum {
-  SK_WEAPON_KIND_7MM
-} sk_weapon_kind;
-
 static const char * const sk_weapon_kinds[] = {
   [SK_WEAPON_KIND_7MM] = "7mm"
 };
 
-void sk_weapon_create(struct Player *p, sk_weapon_kind kind);
+void sk_weapon_create(struct sk_player *p, sk_weapon_kind kind);
 
 void sk_weapon_destroy(sk_weapon *w);
+
+void sk_weapon_draw(sk_weapon *w, Vector3 pos);
 
 void sk_weapon_shoot(sk_weapon *w);

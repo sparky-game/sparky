@@ -94,11 +94,13 @@ define RAYLIB_CFLAGS
   $(RELEASE_OPTS)
 endef
 define CFLAGS
-  -std=c17          \
-  -Wall             \
-  -Wextra           \
-  -pedantic         \
-  $(DEBUG_SYM_OPTS) \
+  -std=c17                              \
+  -Wall                                 \
+  -Wextra                               \
+  -pedantic                             \
+  -Werror=unused-parameter              \
+  -Werror=implicit-function-declaration \
+  $(DEBUG_SYM_OPTS)                     \
   $(RELEASE_OPTS)
 endef
 define LDFLAGS

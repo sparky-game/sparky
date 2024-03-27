@@ -31,23 +31,12 @@ static void __init(void) {
     TraceLog(LOG_WARNING, "Could not change CWD to the game's root directory");
   }
   sk_client_renderer_init();
-  state = (State) {
-    .current_scene = SCENE_MAIN_MENU,
-    .player = (Player) {
-      .camera = (Camera3D) {
-        .position = (Vector3) { 0, SK_CLIENT_PLAYER_HEIGHT, 4 },
-        .target = (Vector3) { 0, 2, 0 },
-        .up = (Vector3) { 0, 1, 0 },
-        .fovy = SK_CONFIG_CLIENT_FOV,
-        .projection = CAMERA_PERSPECTIVE
-      }
-    },
-  };
+  state.current_scene = SCENE_MAIN_MENU;
+  sk_player_create(&state, SK_PLAYER_KIND_JETT);
 }
 
 static u8 __shutdown(void) {
-  sk_weapon_destroy(&state.player.weapon);
-  UnloadModel(state.player.model);
+  sk_player_destroy(&state.player);
   CloseAudioDevice();
   CloseWindow();
   state = (State) {0};

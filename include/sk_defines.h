@@ -26,11 +26,6 @@
 #define SK_CLIENT_NAME                         "sparky-client"
 #define SK_CLIENT_MAIN_MENU_TITLE              "SPARKY"
 #define SK_CLIENT_MAIN_MENU_TITLE_SIZE         80
-#define SK_CLIENT_GRAVITY                      19
-#define SK_CLIENT_PLAYER_HEIGHT                2
-#define SK_CLIENT_PLAYER_JUMP_INIT_VELOCITY    9
-#define SK_CLIENT_PLAYER_CAM_WALK_SENSITIVITY  0.1
-#define SK_CLIENT_PLAYER_CAM_ROLL_ACCELERATION 1.5
 
 #define SK_SERVER_NAME      "sparky-server"
 #define SK_SERVER_PORT      27015

@@ -21,28 +21,40 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <assert.h>
 #include <sk_weapon.h>
-#include <sk_gametypes.h>
+#include <sk_player.h>
 
 #define FILEPATH_BUFFER_MAX_SIZE 64
 
-void sk_weapon_create(Player *p, sk_weapon_kind kind) {
+void sk_weapon_create(sk_player *p, sk_weapon_kind kind) {
   char filepath[FILEPATH_BUFFER_MAX_SIZE] = {0};
   sprintf(filepath, "assets/models/%s.glb", sk_weapon_kinds[kind]);
   p->weapon.model = LoadModel(filepath);
-  p->weapon.model_anims = LoadModelAnimations(filepath,
-                                             (int *) &p->weapon.model_anims_count);
+  p->weapon.model_anims = LoadModelAnimations(filepath, (int *) &p->weapon.model_anims_count);
+  assert(p->weapon.model_anims_count == 1);
+  assert(IsModelAnimationValid(p->weapon.model, p->weapon.model_anims[0]));
   p->weapon.model_anim_frame_count = 0;
   memset(filepath, 0, sizeof(filepath));
   sprintf(filepath, "assets/sounds/%s/shoot.wav", sk_weapon_kinds[kind]);
   p->weapon.sound_shoot = LoadSound(filepath);
+  p->weapon.kind = kind;
 }
 
 void sk_weapon_destroy(sk_weapon *w) {
   UnloadSound(w->sound_shoot);
   UnloadModelAnimations(w->model_anims, w->model_anims_count);
   UnloadModel(w->model);
-  *w = (sk_weapon) {0};
+  w = 0;
+}
+
+void sk_weapon_draw(sk_weapon *w, Vector3 pos) {
+  DrawModelEx(w->model,
+              pos,
+              (Vector3) { 1, 0, 0 },
+              275,
+              (Vector3) { 0.5f, 0.5f, 0.5f },
+              WHITE);
 }
 
 void sk_weapon_shoot(sk_weapon *w) {

@@ -22,26 +22,14 @@
 #pragma once
 
 #include <raylib.h>
-#include <sk_weapon.h>
+#include <sk_player.h>
 
 typedef enum {
   SCENE_MAIN_MENU,
   SCENE_GAMEPLAY
 } Scene;
 
-typedef struct {
-  Model model;
-} Enemy;
-
-typedef struct Player {
-  Camera3D camera;
-  Model model;
-  sk_weapon weapon;
-  float v_y;
-} Player;
-
-typedef struct {
+typedef struct State {
   Scene current_scene;
-  Player player;
-  Enemy *enemies;
+  sk_player player;
 } State;

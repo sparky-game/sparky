@@ -43,30 +43,6 @@ static void __draw_main_menu(void) {
            RAYWHITE);
 }
 
-static inline void __draw_player(State *s) {
-  DrawModel(s->player.model,
-            (Vector3) {
-              s->player.camera.position.x - 4,
-              s->player.camera.position.y - SK_CLIENT_PLAYER_HEIGHT,
-              s->player.camera.position.z
-            },
-            1,
-            WHITE);
-}
-
-static inline void __draw_weapon(State *s) {
-  DrawModelEx(s->player.weapon.model,
-              (Vector3) {
-                s->player.camera.position.x + 1,
-                s->player.camera.position.y - 1,
-                s->player.camera.position.z - 3
-              },
-              (Vector3) { 1, 0, 0 },
-              275,
-              (Vector3) { 0.5f, 0.5f, 0.5f },
-              WHITE);
-}
-
 static inline void __draw_floor(void) {
   DrawPlane((Vector3) { 0, 0, 0 }, (Vector2) { 32, 32 }, DARKGRAY);
 }
@@ -80,8 +56,12 @@ static inline void __draw_walls(void) {
 static void __draw_gameplay_world(State *s) {
   ClearBackground(SKYBLUE);
   BeginMode3D(s->player.camera);
-  __draw_player(s);
-  __draw_weapon(s);
+  sk_player_draw(&s->player);
+  sk_weapon_draw(&s->player.weapon, (Vector3) {
+      s->player.camera.position.x + 1,
+      s->player.camera.position.y - 1,
+      s->player.camera.position.z - 3
+    });
   __draw_floor();
   __draw_walls();
   EndMode3D();
