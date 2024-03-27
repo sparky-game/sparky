@@ -24,6 +24,11 @@
 #include <sk_client.h>
 
 int main(int argc, char **argv) {
+#ifndef NDEBUG
+  SetTraceLogLevel(LOG_DEBUG);
+  TraceLog(LOG_WARNING, "Debug mode is enabled");
+#endif
+
   if (argc == 2 && (!strcmp(argv[1], "-h") || !strcmp(argv[1], "--help"))) {
     TraceLog(LOG_INFO, "usage: %s [--server]", argv[0]);
     return 0;
