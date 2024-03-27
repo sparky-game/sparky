@@ -55,8 +55,10 @@ static u8 __shutdown(void) {
   return 0;
 }
 
-u8 sk_client_run(void) {
+u8 sk_client_run(const char *ip) {
   TraceLog(LOG_INFO, "Initializing %s", SK_CLIENT_NAME);
+  if (!ip) TraceLog(LOG_WARNING, "Running in offline mode");
+  else TraceLog(LOG_INFO, "Connected to server @ %s", ip);
   __init();
   sk_client_renderer_loop {
     sk_client_renderer_update(&state);

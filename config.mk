@@ -23,7 +23,7 @@
 VERSION      = 0
 PATCHLEVEL   = 1
 SUBLEVEL     = 0
-EXTRAVERSION =
+EXTRAVERSION = -alpha1
 # Quiet
 Q = @
 # Debug

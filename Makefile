@@ -27,20 +27,18 @@ NAME = sparky
 include config.mk
 
 # Version formatting
-EXTRAVERSION_COMPUTED := $(or $(and $(wildcard .git/), $(and $(shell which git 2>/dev/null), -git+$(shell which git &>/dev/null && git rev-parse --short HEAD))), -dev)
-ifndef EXTRAVERSION
-  EXTRAVERSION += $(EXTRAVERSION_COMPUTED)
-  ifeq ($(SUBLEVEL), 0)
-    DIST_VERSION = $(VERSION).$(PATCHLEVEL)
-  else
-    DIST_VERSION = $(VERSION).$(PATCHLEVEL).$(SUBLEVEL)
+ifeq ($(wildcard .git/), .git/)
+  ifneq ($(shell which git 2>/dev/null),)
+    GIT_SHA := -git+$(shell git rev-parse --short HEAD)
   endif
-  FULL_VERSION = $(DIST_VERSION)$(EXTRAVERSION)
-else
-  EXTRAVERSION += $(EXTRAVERSION_COMPUTED)
-  DIST_VERSION  = $(VERSION).$(PATCHLEVEL)$(EXTRAVERSION)
-  FULL_VERSION  = $(DIST_VERSION)
+  DEVEXTRAVERSION := $(or $(GIT_SHA), -dev)
 endif
+ifeq ($(SUBLEVEL), 0)
+  DIST_VERSION = $(VERSION).$(PATCHLEVEL)$(EXTRAVERSION)
+else
+  DIST_VERSION = $(VERSION).$(PATCHLEVEL).$(SUBLEVEL)$(EXTRAVERSION)
+endif
+FULL_VERSION = $(DIST_VERSION)$(DEVEXTRAVERSION)
 
 # Pretty Printing Output (PPO)
 PPO_MKDIR = MKDIR
@@ -54,6 +52,7 @@ SRC_DIR          = src
 HDR_DIR          = include
 BUILD_DIR        = build
 VENDOR_DIR       = vendor
+NBNET_DIR        = $(VENDOR_DIR)/nbnet
 RAYLIB_SRC_DIR   = $(VENDOR_DIR)/raylib/$(SRC_DIR)
 RAYLIB_BUILD_DIR = $(BUILD_DIR)/raylib
 
@@ -64,8 +63,8 @@ SRCS        := $(wildcard $(SRC_DIR)/*.c)
 OBJS        := $(patsubst $(SRC_DIR)/%.c, $(BUILD_DIR)/%.o, $(SRCS))
 
 # Build flags
-CC              = gcc
-AR              = ar -rc
+CC = gcc
+AR = ar -rc
 ifdef D
   DEBUG_SYM_OPTS = -ggdb
 else
@@ -74,11 +73,42 @@ else
   RELEASE_OPTS         = -pipe -O3
   STRIP_OPTS           = -s
 endif
-RAYLIB_CPPFLAGS = $(DISABLE_ASSERTS_OPTS) -D PLATFORM_DESKTOP -I $(RAYLIB_SRC_DIR) -I $(RAYLIB_SRC_DIR)/external/glfw/$(HDR_DIR)
-CPPFLAGS        = $(DISABLE_ASSERTS_OPTS) -I $(RAYLIB_SRC_DIR) -I $(HDR_DIR)
-RAYLIB_CFLAGS   = -std=gnu99 $(HIDE_WARNS_OPTS) $(DEBUG_SYM_OPTS) $(RELEASE_OPTS)
-CFLAGS          = -std=c17 -Wall -Wextra -pedantic $(DEBUG_SYM_OPTS) $(RELEASE_OPTS)
-LDFLAGS         = -Wl,--build-id $(STRIP_OPTS) $(RELEASE_OPTS) -L $(BUILD_DIR) -lraylib -lm
+define RAYLIB_CPPFLAGS
+  $(DISABLE_ASSERTS_OPTS)    \
+  -D PLATFORM_DESKTOP        \
+  -isystem $(RAYLIB_SRC_DIR) \
+  -isystem $(RAYLIB_SRC_DIR)/external/glfw/$(HDR_DIR)
+endef
+define CPPFLAGS
+  -D SK_VERSION=$(DIST_VERSION) \
+  $(DISABLE_ASSERTS_OPTS)       \
+  -D _POSIX_C_SOURCE=199309L    \
+  -isystem $(RAYLIB_SRC_DIR)    \
+  -isystem $(NBNET_DIR)         \
+  -I $(HDR_DIR)
+endef
+define RAYLIB_CFLAGS
+  -std=gnu99         \
+  $(HIDE_WARNS_OPTS) \
+  $(DEBUG_SYM_OPTS)  \
+  $(RELEASE_OPTS)
+endef
+define CFLAGS
+  -std=c17          \
+  -Wall             \
+  -Wextra           \
+  -pedantic         \
+  $(DEBUG_SYM_OPTS) \
+  $(RELEASE_OPTS)
+endef
+define LDFLAGS
+  -Wl,--build-id  \
+  $(STRIP_OPTS)   \
+  $(RELEASE_OPTS) \
+  -L $(BUILD_DIR) \
+  -lraylib        \
+  -lm
+endef
 
 # Build output
 RAYLIB_OUT = $(BUILD_DIR)/libraylib.a
@@ -150,8 +180,8 @@ help:
 	@echo "* game     :: Build the bare game"
 	@echo "  clean    :: Remove the 'build' directory"
 	@echo "  mrproper :: Remove and cleans everything"
-	@echo "  version  :: Shows the current version string"
-	@echo "  help     :: Shows this help and usage panel"
+	@echo "  version  :: Show the current version string"
+	@echo "  help     :: Show this help and usage panel"
 	@echo
 	@echo "Execute 'make' or 'make all' to build all targets marked with [*]"
 	@echo "For further info see the ./README.org file"

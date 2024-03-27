@@ -1,3 +1,6 @@
 [submodule "vendor/raylib"]
 	path = vendor/raylib
 	url = https://github.com/raysan5/raylib
+[submodule "vendor/nbnet"]
+	path = vendor/nbnet
+	url = https://github.com/nathhB/nbnet
