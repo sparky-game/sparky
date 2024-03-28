@@ -56,7 +56,7 @@ void sk_player_load(sk_player *p, sk_weapon_kind initial_weapon_kind) {
 }
 
 void sk_player_jump(sk_player *p) {
-  float dt = GetFrameTime();
+  f32 dt = GetFrameTime();
   if (IsKeyPressed(SK_CONFIG_CLIENT_JUMP) &&
       p->camera.position.y <= PLAYER_HEIGHT) p->v_y = JUMP_INIT_VELOCITY;
   p->v_y -= GRAVITY * dt;
@@ -68,8 +68,8 @@ void sk_player_jump(sk_player *p) {
   else p->camera.target.y += p->v_y * dt;
 }
 
-float sk_player_peek(sk_player *p) {
-  float cam_roll = 0;
+f32 sk_player_peek(sk_player *p) {
+  f32 cam_roll = 0;
   if (p->camera.up.y >= 0.98f) {
     if (IsKeyDown(SK_CONFIG_CLIENT_PEEK_LEFT))       cam_roll -= PEEK_ACCELERATION;
     else if (IsKeyDown(SK_CONFIG_CLIENT_PEEK_RIGHT)) cam_roll += PEEK_ACCELERATION;
@@ -83,7 +83,7 @@ float sk_player_peek(sk_player *p) {
   return cam_roll;
 }
 
-void sk_player_move(sk_player *p, float roll) {
+void sk_player_move(sk_player *p, f32 roll) {
   Vector2 dm = GetMouseDelta();
   UpdateCameraPro(&p->camera,
                   (Vector3) {

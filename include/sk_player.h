@@ -36,7 +36,7 @@ typedef struct sk_player {
   Camera3D camera;
   Model model;
   sk_weapon weapon;
-  float v_y;
+  f32 v_y;
 } sk_player;
 
 static const char * const sk_player_kinds[] = {
@@ -51,8 +51,8 @@ void sk_player_load(sk_player *p, sk_weapon_kind initial_weapon_kind);
 
 void sk_player_jump(sk_player *p);
 
-float sk_player_peek(sk_player *p);
+f32 sk_player_peek(sk_player *p);
 
-void sk_player_move(sk_player *p, float roll);
+void sk_player_move(sk_player *p, f32 roll);
 
 void sk_player_draw(sk_player *p);

@@ -23,6 +23,10 @@
 
 #include <sk_defines.h>
 
+#define SK_SERVER_NAME      "sparky-server"
+#define SK_SERVER_PORT      27015
+#define SK_SERVER_TICK_RATE 128
+
 #define NBN_LogTrace(...)   TraceLog(LOG_TRACE, __VA_ARGS__)
 #define NBN_LogDebug(...)   TraceLog(LOG_DEBUG, __VA_ARGS__)
 #define NBN_LogInfo(...)    TraceLog(LOG_INFO, __VA_ARGS__)

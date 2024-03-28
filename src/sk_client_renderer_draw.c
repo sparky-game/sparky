@@ -22,6 +22,7 @@
 #include <stdio.h>
 #include <assert.h>
 #include <sk_config.h>
+#include <sk_client.h>
 #include <sk_defines.h>
 #include <sk_client_renderer.h>
 

@@ -23,4 +23,8 @@
 
 #include <sk_defines.h>
 
+#define SK_CLIENT_NAME                 "sparky-client"
+#define SK_CLIENT_MAIN_MENU_TITLE      "SPARKY"
+#define SK_CLIENT_MAIN_MENU_TITLE_SIZE 80
+
 u8 sk_client_run(const char *ip);
