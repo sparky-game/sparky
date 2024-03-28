@@ -19,14 +19,25 @@
  */
 
 
-#pragma once
+#include <assert.h>
+#include <sk_config.h>
+#include <sk_client.h>
+#include <sk_renderer.h>
 
-#include <raylib.h>
-#include <raymath.h>
-#include <sk_gametypes.h>
+static inline void __open_window(void) {
+  SetConfigFlags(FLAG_MSAA_4X_HINT);
+  InitWindow(SK_CONFIG_CLIENT_WIN_WIDTH,
+             SK_CONFIG_CLIENT_WIN_HEIGHT,
+             SK_CLIENT_NAME);
+  assert(IsWindowReady());
+}
 
-#define sk_client_renderer_loop while (!WindowShouldClose())
+static inline void __init_audio(void) {
+  InitAudioDevice();
+}
 
-void sk_client_renderer_init(void);
-void sk_client_renderer_update(State *s);
-void sk_client_renderer_draw(State *s);
+void sk_renderer_init(void) {
+  __open_window();
+  __init_audio();
+  SetTargetFPS(SK_CONFIG_CLIENT_FPS);
+}

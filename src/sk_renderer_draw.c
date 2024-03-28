@@ -24,7 +24,7 @@
 #include <sk_config.h>
 #include <sk_client.h>
 #include <sk_defines.h>
-#include <sk_client_renderer.h>
+#include <sk_renderer.h>
 
 static void __draw_main_menu(void) {
   ClearBackground(BLACK);
@@ -95,7 +95,7 @@ static void __draw_gameplay_hud(void) {
   __draw_crosshair();
 }
 
-void sk_client_renderer_draw(State *s) {
+void sk_renderer_draw(State *s) {
   BeginDrawing();
   switch (s->current_scene) {
   case SCENE_MAIN_MENU:

@@ -21,21 +21,12 @@
 
 #include <sk_config.h>
 #include <sk_client.h>
+#include <sk_renderer.h>
 #include <sk_gametypes.h>
-#include <sk_client_renderer.h>
 
 static State state = {0};
 
-static void __init(void) {
-  if (!ChangeDirectory(GetApplicationDirectory())) {
-    TraceLog(LOG_WARNING, "Could not change CWD to the game's root directory");
-  }
-  sk_client_renderer_init();
-  state.current_scene = SCENE_MAIN_MENU;
-  sk_player_create(&state, SK_PLAYER_KIND_JETT);
-}
-
-static u8 __shutdown(void) {
+static u8 destroy(void) {
   sk_player_destroy(&state.player);
   CloseAudioDevice();
   CloseWindow();
@@ -48,10 +39,17 @@ u8 sk_client_run(const char *ip) {
   TraceLog(LOG_INFO, "Initializing %s", SK_CLIENT_NAME);
   if (!ip) TraceLog(LOG_WARNING, "Running in offline mode");
   else TraceLog(LOG_INFO, "Connected to server @ %s", ip);
-  __init();
-  sk_client_renderer_loop {
-    sk_client_renderer_update(&state);
-    sk_client_renderer_draw(&state);
+
+  if (!ChangeDirectory(GetApplicationDirectory())) {
+    TraceLog(LOG_WARNING, "Could not change CWD to the game's root directory");
   }
-  return __shutdown();
+  sk_renderer_init();
+  state.current_scene = SCENE_MAIN_MENU;
+  sk_player_create(&state, SK_PLAYER_KIND_JETT);
+
+  sk_renderer_loop {
+    sk_renderer_update(&state);
+    sk_renderer_draw(&state);
+  }
+  return destroy();
 }
