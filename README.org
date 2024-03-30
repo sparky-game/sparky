@@ -91,7 +91,7 @@ You should have received a copy of the GNU General Public License along with Spa
 - [[#projects-roadmap][Project's Roadmap]]
 - [[#build-from-source][Build from source]]
   - [[#get-code][Get code]]
-  - [[#dev-dependencies][~dev~ dependencies]]
+  - [[#dependencies][Dependencies]]
     - [[#debianubuntu][Debian/Ubuntu]]
     - [[#fedora][Fedora]]
 
@@ -111,7 +111,7 @@ For information about the detailed project roadmap, including delivered mileston
 git clone --recurse-submodules https://github.com/iWas-Coder/sparky
 #+end_src
 
-** ~dev~ dependencies
+** Dependencies
 
 (...)
 
