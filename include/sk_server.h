@@ -23,14 +23,10 @@
 
 #include <sk_defines.h>
 
-#define SK_SERVER_NAME      "sparky-server"
-#define SK_SERVER_PORT      27015
-#define SK_SERVER_TICK_RATE 128
-
-#define NBN_LogTrace(...)   TraceLog(LOG_TRACE, __VA_ARGS__)
-#define NBN_LogDebug(...)   TraceLog(LOG_DEBUG, __VA_ARGS__)
-#define NBN_LogInfo(...)    TraceLog(LOG_INFO, __VA_ARGS__)
-#define NBN_LogWarning(...) TraceLog(LOG_WARNING, __VA_ARGS__)
-#define NBN_LogError(...)   TraceLog(LOG_ERROR, __VA_ARGS__)
+#define SK_SERVER_NAME         "sparky-server"
+#define SK_SERVER_PORT         27015
+#define SK_SERVER_TICK_RATE    128
+#define SK_SERVER_MSG_CONN_REQ "ping::" SK_SERVER_NAME
+#define SK_SERVER_MSG_CONN_RES "pong::" SK_SERVER_NAME
 
 u8 sk_server_run(void);

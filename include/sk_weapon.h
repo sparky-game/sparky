@@ -24,9 +24,6 @@
 #include <raylib.h>
 #include <sk_defines.h>
 
-// fwd-decl
-struct sk_player;
-
 typedef enum {
   SK_WEAPON_KIND_7MM
 } sk_weapon_kind;
@@ -44,7 +41,7 @@ static const char * const sk_weapon_kinds[] = {
   [SK_WEAPON_KIND_7MM] = "7mm"
 };
 
-void sk_weapon_create(struct sk_player *p, sk_weapon_kind kind);
+sk_weapon sk_weapon_create(sk_weapon_kind kind);
 
 void sk_weapon_destroy(sk_weapon *w);
 

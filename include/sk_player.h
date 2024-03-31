@@ -24,14 +24,13 @@
 #include <raylib.h>
 #include <sk_weapon.h>
 
-// fwd-decl
-struct State;
-
 typedef enum {
   SK_PLAYER_KIND_JETT
 } sk_player_kind;
 
 typedef struct sk_player {
+  i8 lobby_id;
+  i8 lobby_slot_idx;
   sk_player_kind kind;
   Camera3D camera;
   Model model;
@@ -43,7 +42,7 @@ static const char * const sk_player_kinds[] = {
   [SK_PLAYER_KIND_JETT] = "jett"
 };
 
-void sk_player_create(struct State *s, sk_player_kind kind);
+sk_player sk_player_create(sk_player_kind kind);
 
 void sk_player_destroy(sk_player *p);
 

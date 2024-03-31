@@ -32,4 +32,5 @@ typedef enum {
 typedef struct State {
   Scene current_scene;
   sk_player player;
+  u8 is_online;
 } State;

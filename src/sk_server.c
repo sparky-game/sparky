@@ -19,13 +19,14 @@
  */
 
 
-#include <raylib.h>
+#include <errno.h>
+#include <string.h>
 #include <signal.h>
+#include <unistd.h>
+#include <raylib.h>
 #include <sk_server.h>
-
-#define NBNET_IMPL
-#include <nbnet.h>
-#include <net_drivers/udp.h>
+#include <arpa/inet.h>
+#include <sys/socket.h>
 
 #if defined(_WIN32) || defined(_WIN64)
 #include <windows.h>
@@ -35,13 +36,16 @@
 #include <time.h>
 #endif
 
-static volatile u8 running = 1;
+#define MAX_CLIENTS 2
 
-static inline void __handle_interrupt(int signum) {
+static volatile u8 running = 1;
+static volatile u8 clients = 0;
+
+static inline void handle_interrupt(int signum) {
   if (signum == SIGINT) running = 0;
 }
 
-static void __wait_next_tick(double t) {
+static void wait_next_tick(double t) {
 #if defined(_WIN32) || defined(_WIN64)
   Sleep(1000 * t);
 #else
@@ -54,24 +58,63 @@ static void __wait_next_tick(double t) {
 #endif
 }
 
-static inline u8 __shutdown(void) {
-  NBN_GameServer_Stop();
-  TraceLog(LOG_INFO, "%s closed successfully", SK_SERVER_NAME);
-  return 0;
-}
-
 u8 sk_server_run(void) {
   TraceLog(LOG_INFO, "Initializing %s", SK_SERVER_NAME);
-  NBN_UDP_Register();
-  if (NBN_GameServer_StartEx(SK_SERVER_NAME, SK_SERVER_PORT, 1) == -1) {
-    TraceLog(LOG_ERROR, "Unable to start the server");
+  const struct sockaddr_in server_addr = {
+    .sin_family = AF_INET,
+    .sin_port = htons(SK_SERVER_PORT),
+    .sin_addr.s_addr = inet_addr("127.0.0.1")
+  };
+  int sock_fd = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+  if (sock_fd == -1) {
+    TraceLog(LOG_ERROR, "socket(2) :: %s", strerror(errno));
     return 1;
   }
-  // TODO: register msgs
-  double dt = 1 / SK_SERVER_TICK_RATE;
-  signal(SIGINT, __handle_interrupt);
-  while (running) {
-    __wait_next_tick(dt);
+  if (bind(sock_fd, (const struct sockaddr *) &server_addr, sizeof(server_addr)) == -1) {
+    TraceLog(LOG_ERROR, "bind(2) :: %s", strerror(errno));
+    close(sock_fd);
+    return 1;
   }
-  return __shutdown();
+  TraceLog(LOG_INFO, "UDP socket binded to 127.0.0.1:%d", SK_SERVER_PORT);
+  double dt = 1 / SK_SERVER_TICK_RATE;
+  signal(SIGINT, handle_interrupt);
+  struct sockaddr_in client_addr;
+  socklen_t client_addr_len = sizeof(client_addr);
+  char msg[1024];
+  int msg_n = 0;
+  while (running) {
+    client_addr = (struct sockaddr_in) {0};
+    client_addr_len = sizeof(client_addr);
+    memset(msg, 0, sizeof(msg));
+    msg_n = 0;
+    msg_n = recvfrom(sock_fd,
+                     msg,
+                     sizeof(msg),
+                     MSG_WAITALL,
+                     (struct sockaddr *) &client_addr,
+                     &client_addr_len);
+    if (msg_n == -1) {
+      TraceLog(LOG_ERROR, "recvfrom(2) :: %s", strerror(errno));
+      continue;
+    }
+    msg[msg_n] = 0;
+    if (!strcmp(msg, SK_SERVER_MSG_CONN_REQ)) {
+      TraceLog(LOG_INFO, "Connection from client (%s:%d) requested", inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port));
+      if (sendto(sock_fd,
+                 SK_SERVER_MSG_CONN_RES,
+                 strlen(SK_SERVER_MSG_CONN_RES),
+                 0,
+                 (struct sockaddr *) &client_addr,
+                 client_addr_len) == -1) {
+        TraceLog(LOG_ERROR, "sendto(2) :: %s", strerror(errno));
+        continue;
+      }
+      TraceLog(LOG_INFO, "Connection from client (%s:%d) accepted", inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port));
+      // TODO: assign him a lobby with a free slot to be in
+    }
+    wait_next_tick(dt);
+  }
+  close(sock_fd);
+  TraceLog(LOG_INFO, "%s closed successfully", SK_SERVER_NAME);
+  return 0;
 }

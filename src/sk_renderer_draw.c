@@ -23,12 +23,13 @@
 #include <assert.h>
 #include <sk_config.h>
 #include <sk_client.h>
+#include <sk_server.h>
 #include <sk_defines.h>
 #include <sk_renderer.h>
 
 static void __draw_main_menu(void) {
   ClearBackground(BLACK);
-  const char *subtitle = "Press <ENTER> to start";
+  const char * const subtitle = "Press <ENTER> to start";
   u8 subtitle_size = 30;
   DrawText(SK_CLIENT_MAIN_MENU_TITLE,
            (GetScreenWidth() - MeasureText(SK_CLIENT_MAIN_MENU_TITLE,
@@ -41,6 +42,11 @@ static void __draw_main_menu(void) {
            (GetScreenWidth() - MeasureText(subtitle, subtitle_size)) / 2,
            ((GetScreenHeight() - MeasureText(subtitle, subtitle_size)) / 2) + 115,
            subtitle_size,
+           RAYWHITE);
+  DrawText("v" sk_xstr(SK_VERSION),
+           10,
+           GetScreenHeight() - 25,
+           20,
            RAYWHITE);
 }
 
@@ -73,9 +79,15 @@ static inline void __draw_fps(void) {
 }
 
 static inline void __draw_frametime(void) {
-  char dt[10];
-  snprintf(dt, sizeof(dt), "%.4f ms", GetFrameTime() * 1000);
-  DrawText(dt, 10, 33, 20, LIME);
+  DrawText(TextFormat("%.4f ms", GetFrameTime() * 1000), 10, 33, 20, LIME);
+}
+
+static inline void __draw_ping(void) {
+  DrawText(TextFormat("N/A ms"), 10, 50, 20, LIME);
+}
+
+static inline void __draw_bandwidth(void) {
+  DrawText(TextFormat("(d) N/A bps | (u) N/A bps"), 10, 70, 20, LIME);
 }
 
 static inline void __draw_crosshair(void) {
@@ -89,9 +101,13 @@ static inline void __draw_crosshair(void) {
              WHITE);
 }
 
-static void __draw_gameplay_hud(void) {
+static void __draw_gameplay_hud(State *s) {
   __draw_fps();
   __draw_frametime();
+  if (s->is_online) {
+    __draw_ping();
+    __draw_bandwidth();
+  }
   __draw_crosshair();
 }
 
@@ -103,7 +119,7 @@ void sk_renderer_draw(State *s) {
     break;
   case SCENE_GAMEPLAY:
     __draw_gameplay_world(s);
-    __draw_gameplay_hud();
+    __draw_gameplay_hud(s);
     break;
   default:
     assert(0 && "Unreachable");

@@ -22,7 +22,6 @@
 #include <stdio.h>
 #include <sk_player.h>
 #include <sk_config.h>
-#include <sk_gametypes.h>
 
 #define FILEPATH_BUFFER_MAX_SIZE 64
 #define PLAYER_HEIGHT            2
@@ -31,15 +30,19 @@
 #define PEEK_ACCELERATION        1.5
 #define WALK_VELOCITY            0.1
 
-void sk_player_create(State *s, sk_player_kind kind) {
-  s->player.camera = (Camera3D) {
-    .position = (Vector3) { 0, PLAYER_HEIGHT, 4 },
-    .target = (Vector3) { 0, 2, 0 },
-    .up = (Vector3) { 0, 1, 0 },
-    .fovy = SK_CONFIG_CLIENT_FOV,
-    .projection = CAMERA_PERSPECTIVE
+sk_player sk_player_create(sk_player_kind kind) {
+  return (sk_player) {
+    .lobby_id = -1,
+    .lobby_slot_idx = -1,
+    .kind = kind,
+    .camera = (Camera3D) {
+      .position = (Vector3) { 0, PLAYER_HEIGHT, 4 },
+      .target = (Vector3) { 0, 2, 0 },
+      .up = (Vector3) { 0, 1, 0 },
+      .fovy = SK_CONFIG_CLIENT_FOV,
+      .projection = CAMERA_PERSPECTIVE
+    }
   };
-  s->player.kind = kind;
 }
 
 void sk_player_destroy(sk_player *p) {
@@ -52,7 +55,7 @@ void sk_player_load(sk_player *p, sk_weapon_kind initial_weapon_kind) {
   char filepath[FILEPATH_BUFFER_MAX_SIZE] = {0};
   sprintf(filepath, "assets/models/%s.glb", sk_player_kinds[p->kind]);
   p->model = LoadModel(filepath);
-  sk_weapon_create(p, initial_weapon_kind);
+  p->weapon = sk_weapon_create(initial_weapon_kind);
 }
 
 void sk_player_jump(sk_player *p) {

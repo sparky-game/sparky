@@ -24,20 +24,18 @@
 #include <sk_client.h>
 #include <sk_renderer.h>
 
-static inline void __open_window(void) {
+void sk_renderer_create(void) {
   SetConfigFlags(FLAG_MSAA_4X_HINT);
   InitWindow(SK_CONFIG_CLIENT_WIN_WIDTH,
              SK_CONFIG_CLIENT_WIN_HEIGHT,
              SK_CLIENT_NAME);
   assert(IsWindowReady());
-}
-
-static inline void __init_audio(void) {
   InitAudioDevice();
+  assert(IsAudioDeviceReady());
+  SetTargetFPS(SK_CONFIG_CLIENT_FPS);
 }
 
-void sk_renderer_init(void) {
-  __open_window();
-  __init_audio();
-  SetTargetFPS(SK_CONFIG_CLIENT_FPS);
+void sk_renderer_destroy(void) {
+  CloseAudioDevice();
+  CloseWindow();
 }

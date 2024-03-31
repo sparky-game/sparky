@@ -23,6 +23,9 @@
 
 #include <stdint.h>
 
+#define sk_xstr(s) sk_str(s)
+#define sk_str(s) #s
+
 typedef uint8_t u8;
 typedef int8_t i8;
 typedef uint16_t u16;

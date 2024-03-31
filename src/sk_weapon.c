@@ -23,22 +23,23 @@
 #include <string.h>
 #include <assert.h>
 #include <sk_weapon.h>
-#include <sk_player.h>
 
 #define FILEPATH_BUFFER_MAX_SIZE 64
 
-void sk_weapon_create(sk_player *p, sk_weapon_kind kind) {
+sk_weapon sk_weapon_create(sk_weapon_kind kind) {
+  sk_weapon w = {0};
   char filepath[FILEPATH_BUFFER_MAX_SIZE] = {0};
   sprintf(filepath, "assets/models/%s.glb", sk_weapon_kinds[kind]);
-  p->weapon.model = LoadModel(filepath);
-  p->weapon.model_anims = LoadModelAnimations(filepath, (int *) &p->weapon.model_anims_count);
-  assert(p->weapon.model_anims_count == 1);
-  assert(IsModelAnimationValid(p->weapon.model, p->weapon.model_anims[0]));
-  p->weapon.model_anim_frame_count = 0;
+  w.model = LoadModel(filepath);
+  w.model_anims = LoadModelAnimations(filepath, (int *) &w.model_anims_count);
+  assert(w.model_anims_count == 1);
+  assert(IsModelAnimationValid(w.model, w.model_anims[0]));
+  w.model_anim_frame_count = 0;
   memset(filepath, 0, sizeof(filepath));
   sprintf(filepath, "assets/sounds/%s/shoot.wav", sk_weapon_kinds[kind]);
-  p->weapon.sound_shoot = LoadSound(filepath);
-  p->weapon.kind = kind;
+  w.sound_shoot = LoadSound(filepath);
+  w.kind = kind;
+  return w;
 }
 
 void sk_weapon_destroy(sk_weapon *w) {

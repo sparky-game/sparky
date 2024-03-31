@@ -52,7 +52,6 @@ SRC_DIR          = src
 HDR_DIR          = include
 BUILD_DIR        = build
 VENDOR_DIR       = vendor
-NBNET_DIR        = $(VENDOR_DIR)/nbnet
 RAYLIB_SRC_DIR   = $(VENDOR_DIR)/raylib/$(SRC_DIR)
 RAYLIB_BUILD_DIR = $(BUILD_DIR)/raylib
 
@@ -84,7 +83,6 @@ define CPPFLAGS
   $(DISABLE_ASSERTS_OPTS)       \
   -D _POSIX_C_SOURCE=199309L    \
   -isystem $(RAYLIB_SRC_DIR)    \
-  -isystem $(NBNET_DIR)         \
   -I $(HDR_DIR)
 endef
 define RAYLIB_CFLAGS

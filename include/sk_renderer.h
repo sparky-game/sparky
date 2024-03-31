@@ -26,6 +26,10 @@
 
 #define sk_renderer_loop while (!WindowShouldClose())
 
-void sk_renderer_init(void);
+void sk_renderer_create(void);
+
+void sk_renderer_destroy(void);
+
 void sk_renderer_update(State *s);
+
 void sk_renderer_draw(State *s);

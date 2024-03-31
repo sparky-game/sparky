@@ -26,9 +26,6 @@
 #include <sk_client.h>
 #include <sk_server.h>
 
-#define xstr(s) str(s)
-#define str(s) #s
-
 int main(int argc, char **argv) {
 #ifndef NDEBUG
 #define NBN_DEBUG
@@ -41,7 +38,7 @@ int main(int argc, char **argv) {
     return 0;
   }
   if (argc == 2 && (!strcmp(argv[1], "-v") || !strcmp(argv[1], "--version"))) {
-    printf(sk_text_version_msg, xstr(SK_VERSION));
+    printf(sk_text_version_msg, sk_xstr(SK_VERSION));
     return 0;
   }
   if (argc == 2 && (!strcmp(argv[1], "-s") || !strcmp(argv[1], "--server"))) return sk_server_run();
