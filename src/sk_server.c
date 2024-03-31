@@ -36,8 +36,6 @@
 #include <time.h>
 #endif
 
-#define MAX_CLIENTS 2
-
 static volatile u8 running = 1;
 static volatile u8 clients = 0;
 
@@ -80,7 +78,7 @@ u8 sk_server_run(void) {
   signal(SIGINT, handle_interrupt);
   struct sockaddr_in client_addr;
   socklen_t client_addr_len = sizeof(client_addr);
-  char msg[1024];
+  char msg[SK_SERVER_MSG_MAX_SIZE];
   int msg_n = 0;
   while (running) {
     client_addr = (struct sockaddr_in) {0};

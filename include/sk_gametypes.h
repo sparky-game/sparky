@@ -21,7 +21,6 @@
 
 #pragma once
 
-#include <raylib.h>
 #include <sk_player.h>
 
 typedef enum {

@@ -26,6 +26,7 @@
 #define SK_SERVER_NAME         "sparky-server"
 #define SK_SERVER_PORT         27015
 #define SK_SERVER_TICK_RATE    128
+#define SK_SERVER_MSG_MAX_SIZE 1024
 #define SK_SERVER_MSG_CONN_REQ "ping::" SK_SERVER_NAME
 #define SK_SERVER_MSG_CONN_RES "pong::" SK_SERVER_NAME
 

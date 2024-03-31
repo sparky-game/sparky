@@ -59,7 +59,7 @@ u8 sk_client_run(const char *ip) {
       close(sock_fd);
       return 1;
     }
-    char pong_msg[1024];
+    char pong_msg[SK_SERVER_MSG_MAX_SIZE];
     int pong_msg_n = recv(sock_fd, pong_msg, sizeof(pong_msg), MSG_WAITALL);
     if (pong_msg_n == -1) {
       TraceLog(LOG_ERROR, "recv(2) :: %s", strerror(errno));
