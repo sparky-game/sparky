@@ -60,7 +60,7 @@ static inline void __draw_walls(void) {
   DrawCube((Vector3) { 0, 2.5f, 16 }, 32, 5, 1, GOLD);
 }
 
-static void __draw_gameplay_world(State *s) {
+static void __draw_gameplay_world(sk_state *s) {
   ClearBackground(SKYBLUE);
   BeginMode3D(s->player.camera);
   sk_player_draw(&s->player);
@@ -101,7 +101,7 @@ static inline void __draw_crosshair(void) {
              WHITE);
 }
 
-static void __draw_gameplay_hud(State *s) {
+static void __draw_gameplay_hud(sk_state *s) {
   __draw_fps();
   __draw_frametime();
   if (s->is_online) {
@@ -111,13 +111,13 @@ static void __draw_gameplay_hud(State *s) {
   __draw_crosshair();
 }
 
-void sk_renderer_draw(State *s) {
+void sk_renderer_draw(sk_state *s) {
   BeginDrawing();
-  switch (s->current_scene) {
-  case SCENE_MAIN_MENU:
+  switch (s->curr_scene.kind) {
+  case SK_SCENE_KIND_MAIN_MENU:
     __draw_main_menu();
     break;
-  case SCENE_GAMEPLAY:
+  case SK_SCENE_KIND_GAMEPLAY:
     __draw_gameplay_world(s);
     __draw_gameplay_hud(s);
     break;

@@ -19,30 +19,25 @@
  */
 
 
-#include <assert.h>
-#include <sk_config.h>
-#include <sk_defines.h>
-#include <sk_renderer.h>
+#include <sk_state.h>
 
-static void __update_main_menu(sk_state *s) {
-  if (IsKeyPressed(KEY_ENTER)) {
-    s->curr_scene.kind = SK_SCENE_KIND_GAMEPLAY;
-    sk_player_load(&s->player, SK_WEAPON_KIND_7MM);
-    DisableCursor();
+sk_state sk_state_create(u8 is_online) {
+  sk_state s = {
+    .is_online = is_online,
+    .curr_scene = (sk_scene) { .kind = SK_SCENE_KIND_MAIN_MENU }
+  };
+  if (is_online) {
+    s.lobbies_count = 0;
+    for (u16 i = 0; i < SK_STATE_MAX_LOBBIES; ++i) {
+      s.lobbies[i] = sk_lobby_create(i);
+    }
   }
+  else {
+    s.player = sk_player_create(SK_PLAYER_KIND_JETT);
+  }
+  return s;
 }
 
-void sk_renderer_update(sk_state *s) {
-  switch (s->curr_scene.kind) {
-  case SK_SCENE_KIND_MAIN_MENU:
-    __update_main_menu(s);
-    break;
-  case SK_SCENE_KIND_GAMEPLAY:
-    if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) sk_weapon_shoot(&s->player.weapon);
-    sk_player_jump(&s->player);
-    sk_player_move(&s->player, sk_player_peek(&s->player));
-    break;
-  default:
-    assert(0 && "Unreachable");
-  }
+void sk_state_destroy(sk_state *s) {
+  (void) s;
 }

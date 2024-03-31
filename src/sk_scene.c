@@ -19,30 +19,4 @@
  */
 
 
-#include <assert.h>
-#include <sk_config.h>
-#include <sk_defines.h>
-#include <sk_renderer.h>
-
-static void __update_main_menu(sk_state *s) {
-  if (IsKeyPressed(KEY_ENTER)) {
-    s->curr_scene.kind = SK_SCENE_KIND_GAMEPLAY;
-    sk_player_load(&s->player, SK_WEAPON_KIND_7MM);
-    DisableCursor();
-  }
-}
-
-void sk_renderer_update(sk_state *s) {
-  switch (s->curr_scene.kind) {
-  case SK_SCENE_KIND_MAIN_MENU:
-    __update_main_menu(s);
-    break;
-  case SK_SCENE_KIND_GAMEPLAY:
-    if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) sk_weapon_shoot(&s->player.weapon);
-    sk_player_jump(&s->player);
-    sk_player_move(&s->player, sk_player_peek(&s->player));
-    break;
-  default:
-    assert(0 && "Unreachable");
-  }
-}
+#include <sk_scene.h>

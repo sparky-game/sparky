@@ -22,7 +22,7 @@
 #pragma once
 
 #include <raylib.h>
-#include <sk_gametypes.h>
+#include <sk_state.h>
 
 #define sk_renderer_loop while (!WindowShouldClose())
 
@@ -30,6 +30,6 @@ void sk_renderer_create(void);
 
 void sk_renderer_destroy(void);
 
-void sk_renderer_update(State *s);
+void sk_renderer_update(sk_state *s);
 
-void sk_renderer_draw(State *s);
+void sk_renderer_draw(sk_state *s);

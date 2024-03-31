@@ -23,18 +23,17 @@
 #include <string.h>
 #include <unistd.h>
 #include <raylib.h>
+#include <sk_state.h>
 #include <arpa/inet.h>
 #include <sk_config.h>
 #include <sk_client.h>
 #include <sk_server.h>
 #include <sys/socket.h>
 #include <sk_renderer.h>
-#include <sk_gametypes.h>
-
-static State state = {0};
 
 u8 sk_client_run(const char *ip) {
   TraceLog(LOG_INFO, "Initializing %s", SK_CLIENT_NAME);
+  u8 is_online = 0;
   int sock_fd;
   if (!ip) TraceLog(LOG_WARNING, "Running in offline mode");
   else {
@@ -68,9 +67,9 @@ u8 sk_client_run(const char *ip) {
     }
     pong_msg[pong_msg_n] = 0;
     if (!strcmp(pong_msg, SK_SERVER_MSG_CONN_RES)) {
-      state.is_online = 1;
+      is_online = 1;
     }
-    if (!state.is_online) {
+    if (!is_online) {
       TraceLog(LOG_ERROR, "Unable to communicate with `%s`. Exiting...", ip);
       close(sock_fd);
       return 1;
@@ -80,16 +79,20 @@ u8 sk_client_run(const char *ip) {
   if (!ChangeDirectory(GetApplicationDirectory())) {
     TraceLog(LOG_WARNING, "Could not change CWD to the game's root directory");
   }
-  sk_renderer_create();
-  state.current_scene = SCENE_MAIN_MENU;
-  state.player = sk_player_create(SK_PLAYER_KIND_JETT);
-  sk_renderer_loop {
-    sk_renderer_update(&state);
-    sk_renderer_draw(&state);
+  sk_state state = sk_state_create(is_online);
+  if (!is_online) {
+    sk_renderer_create();
+    sk_renderer_loop {
+      sk_renderer_update(&state);
+      sk_renderer_draw(&state);
+    }
+    sk_player_destroy(&state.player);
+    sk_renderer_destroy();
   }
-  sk_player_destroy(&state.player);
-  sk_renderer_destroy();
-  if (state.is_online) close(sock_fd);
+  else {
+    TraceLog(LOG_WARNING, "Not implemented yet");
+  }
+  if (is_online) close(sock_fd);
   TraceLog(LOG_INFO, "%s closed successfully", SK_CLIENT_NAME);
   return 0;
 }

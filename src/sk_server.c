@@ -19,6 +19,7 @@
  */
 
 
+#include <stdio.h>
 #include <errno.h>
 #include <string.h>
 #include <signal.h>
@@ -98,8 +99,14 @@ u8 sk_server_run(void) {
     msg[msg_n] = 0;
     if (!strcmp(msg, SK_SERVER_MSG_CONN_REQ)) {
       TraceLog(LOG_INFO, "Connection from client (%s:%d) requested", inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port));
+      // TODO: check if there is a free slot in a lobby
+      u8 lobby_id = 0;
+      u8 lobby_slot_id = 0;
+      // TODO: assign him a lobby and a player slot inside it
+      memset(msg, 0, sizeof(msg));
+      sprintf(msg, SK_SERVER_MSG_CONN_RES, lobby_id, lobby_slot_id);
       if (sendto(sock_fd,
-                 SK_SERVER_MSG_CONN_RES,
+                 msg,
                  strlen(SK_SERVER_MSG_CONN_RES),
                  0,
                  (struct sockaddr *) &client_addr,
@@ -108,7 +115,6 @@ u8 sk_server_run(void) {
         continue;
       }
       TraceLog(LOG_INFO, "Connection from client (%s:%d) accepted", inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port));
-      // TODO: assign him a lobby with a free slot to be in
     }
     wait_next_tick(dt);
   }
