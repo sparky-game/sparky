@@ -89,15 +89,38 @@ You should have received a copy of the GNU General Public License along with Spa
 
 * Table of Contents :toc:
 - [[#projects-roadmap][Project's Roadmap]]
+- [[#usage][Usage]]
 - [[#build-from-source][Build from source]]
   - [[#get-the-code][Get the code]]
   - [[#dependencies][Dependencies]]
     - [[#debianubuntu][Debian/Ubuntu]]
     - [[#fedora][Fedora]]
+    - [[#arch][Arch]]
+    - [[#gentoo][Gentoo]]
 
 * Project's Roadmap
 
 For information about the detailed project roadmap, including delivered milestones, see [[https://github.com/users/iWas-Coder/projects/5][the Sparky Roadmap on GitHub]].
+
+* Usage
+
+#+begin_example
+$ ./sparky -h
+Usage: ./sparky [OPTION]
+GNU Sparky --- A 5v5 character-based libre tactical shooter
+
+If no option is provided, the client will start in offline mode.
+
+Options:
+  -i, --ip <IP> 	start the client and connect to the server at <IP>
+  -s, --server 		start the server
+  -h, --help 		display this help and exit
+  -v, --version 	output version information and exit
+
+Report bugs to: <https://github.com/iWas-Coder/sparky/issues>
+GNU Sparky home page: <https://github.com/iWas-Coder/sparky>
+General help using GNU software: <https://www.gnu.org/gethelp/>
+#+end_example
 
 * Build from source
 
@@ -143,4 +166,32 @@ sudo apt install -y gcc make libx11-dev libxcursor-dev libxrandr-dev libxinerama
 
 #+begin_src sh
 sudo dnf install -y gcc make libX11-devel libXcursor-devel libXrandr-devel libXinerama-devel libXi-devel
+#+end_src
+
+*** Arch
+
+- ~gcc~
+- ~make~
+- ~libx11~
+- ~libxcursor~
+- ~libxrandr~
+- ~libxinerama~
+- ~libxi~
+
+#+begin_src sh
+sudo pacman -S gcc make libx11 libxcursor libxrandr libxinerama libxi
+#+end_src
+
+*** Gentoo
+
+- ~gcc~
+- ~make~
+- ~libX11~
+- ~libXcursor~
+- ~libXrandr~
+- ~libXinerama~
+- ~libXi~
+
+#+begin_src sh
+sudo emerge -va gcc make libX11 libXcursor libXrandr libXinerama libXi
 #+end_src
