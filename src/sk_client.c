@@ -70,7 +70,6 @@ static i8 online_mode(const char *ip) {
     return -1;
   }
   howdy_msg[howdy_msg_n] = 0;
-  SK_LOG_DEBUG(howdy_msg);
   // TODO: hardcoded now to 0/0 ... change this to save the received IDs
   if (strcmp(howdy_msg, TextFormat(SK_SERVER_MSG_HOWDY, 0, 0))) {
     SK_LOG_ERROR("Unable to communicate with `%s`. Exiting...", ip);
