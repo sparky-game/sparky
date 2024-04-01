@@ -22,7 +22,7 @@
 #include <errno.h>
 #include <string.h>
 #include <unistd.h>
-#include <raylib.h>
+#include <sk_log.h>
 #include <sk_state.h>
 #include <arpa/inet.h>
 #include <sk_config.h>
@@ -32,12 +32,12 @@
 #include <sk_renderer.h>
 
 u8 sk_client_run(const char *ip) {
-  TraceLog(LOG_INFO, "Initializing %s", SK_CLIENT_NAME);
+  SK_LOG_INFO("Initializing %s", SK_CLIENT_NAME);
   u8 is_online = 0;
   int sock_fd;
-  if (!ip) TraceLog(LOG_WARNING, "Running in offline mode");
+  if (!ip) SK_LOG_WARN("Running in offline mode");
   else {
-    TraceLog(LOG_INFO, "Connecting to `%s` ...", ip);
+    SK_LOG_INFO("Connecting to `%s` ...", ip);
     const struct sockaddr_in server_addr = {
       .sin_family = AF_INET,
       .sin_port = htons(SK_SERVER_PORT),
@@ -45,7 +45,7 @@ u8 sk_client_run(const char *ip) {
     };
     sock_fd = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
     if (sock_fd == -1) {
-      TraceLog(LOG_ERROR, "socket(2) :: %s", strerror(errno));
+      SK_LOG_ERROR("socket(2) :: %s", strerror(errno));
       return 1;
     }
     if (sendto(sock_fd,
@@ -54,14 +54,14 @@ u8 sk_client_run(const char *ip) {
                0,
                (const struct sockaddr *) &server_addr,
                sizeof(server_addr)) == -1) {
-      TraceLog(LOG_ERROR, "sendto(2) :: %s", strerror(errno));
+      SK_LOG_ERROR("sendto(2) :: %s", strerror(errno));
       close(sock_fd);
       return 1;
     }
     char pong_msg[SK_SERVER_MSG_MAX_SIZE];
     int pong_msg_n = recv(sock_fd, pong_msg, sizeof(pong_msg), MSG_WAITALL);
     if (pong_msg_n == -1) {
-      TraceLog(LOG_ERROR, "recv(2) :: %s", strerror(errno));
+      SK_LOG_ERROR("recv(2) :: %s", strerror(errno));
       close(sock_fd);
       return 1;
     }
@@ -70,14 +70,14 @@ u8 sk_client_run(const char *ip) {
       is_online = 1;
     }
     if (!is_online) {
-      TraceLog(LOG_ERROR, "Unable to communicate with `%s`. Exiting...", ip);
+      SK_LOG_ERROR("Unable to communicate with `%s`. Exiting...", ip);
       close(sock_fd);
       return 1;
     }
-    TraceLog(LOG_INFO, "Connected successfully to `%s`", ip);
+    SK_LOG_INFO("Connected successfully to `%s`", ip);
   }
   if (!ChangeDirectory(GetApplicationDirectory())) {
-    TraceLog(LOG_WARNING, "Could not change CWD to the game's root directory");
+    SK_LOG_WARN("Could not change CWD to the game's root directory");
   }
   sk_state state = sk_state_create(is_online);
   if (!is_online) {
@@ -90,9 +90,9 @@ u8 sk_client_run(const char *ip) {
     sk_renderer_destroy();
   }
   else {
-    TraceLog(LOG_WARNING, "Not implemented yet");
+    SK_LOG_WARN("Not implemented yet");
   }
   if (is_online) close(sock_fd);
-  TraceLog(LOG_INFO, "%s closed successfully", SK_CLIENT_NAME);
+  SK_LOG_INFO("%s closed successfully", SK_CLIENT_NAME);
   return 0;
 }

@@ -19,6 +19,7 @@
  */
 
 
+#include <sk_log.h>
 #include <sk_lobby.h>
 
 sk_lobby sk_lobby_create(u8 id) {
@@ -41,7 +42,7 @@ void sk_lobby_destroy(sk_lobby *l) {
 
 u8 sk_lobby_add(sk_lobby *l, sk_player p) {
   if (l->players_count == SK_LOBBY_MAX_PLAYERS) {
-    TraceLog(LOG_DEBUG, "Lobby %u :: unable to add more players (full)", l->id);
+    SK_LOG_DEBUG("Lobby %u :: unable to add more players (full)", l->id);
     return false;
   }
   for (u8 i = 0; i < SK_LOBBY_MAX_PLAYERS; ++i) {
@@ -50,10 +51,10 @@ u8 sk_lobby_add(sk_lobby *l, sk_player p) {
     p.lobby_id = l->id;
     p.lobby_slot_idx = i;
     l->players[i] = p;
-    TraceLog(LOG_INFO, "Lobby %u :: added new player to slot %u/%u",
-             l->id,
-             i + 1,
-             SK_LOBBY_MAX_PLAYERS);
+    SK_LOG_INFO("Lobby %u :: added new player to slot %u/%u",
+                l->id,
+                i + 1,
+                SK_LOBBY_MAX_PLAYERS);
   }
   ++l->players_count;
   return true;
@@ -63,7 +64,7 @@ u8 sk_lobby_kick(sk_lobby *l, i8 p_idx) {
   if (p_idx >= l->players_count          ||
       l->players[p_idx].lobby_id != l->id ||
       l->players[p_idx].lobby_slot_idx != p_idx) {
-    TraceLog(LOG_DEBUG, "Lobby %u :: unable to kick non-existant player", l->id);
+    SK_LOG_DEBUG("Lobby %u :: unable to kick non-existant player", l->id);
     return false;
   }
   l->players[p_idx].lobby_id = -1;

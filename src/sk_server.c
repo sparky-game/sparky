@@ -24,7 +24,7 @@
 #include <string.h>
 #include <signal.h>
 #include <unistd.h>
-#include <raylib.h>
+#include <sk_log.h>
 #include <sk_server.h>
 #include <arpa/inet.h>
 #include <sys/socket.h>
@@ -58,7 +58,7 @@ static void wait_next_tick(double t) {
 }
 
 u8 sk_server_run(void) {
-  TraceLog(LOG_INFO, "Initializing %s", SK_SERVER_NAME);
+  SK_LOG_INFO("Initializing %s", SK_SERVER_NAME);
   const struct sockaddr_in server_addr = {
     .sin_family = AF_INET,
     .sin_port = htons(SK_SERVER_PORT),
@@ -66,15 +66,15 @@ u8 sk_server_run(void) {
   };
   int sock_fd = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
   if (sock_fd == -1) {
-    TraceLog(LOG_ERROR, "socket(2) :: %s", strerror(errno));
+    SK_LOG_ERROR("socket(2) :: %s", strerror(errno));
     return 1;
   }
   if (bind(sock_fd, (const struct sockaddr *) &server_addr, sizeof(server_addr)) == -1) {
-    TraceLog(LOG_ERROR, "bind(2) :: %s", strerror(errno));
+    SK_LOG_ERROR("bind(2) :: %s", strerror(errno));
     close(sock_fd);
     return 1;
   }
-  TraceLog(LOG_INFO, "UDP socket binded to 127.0.0.1:%d", SK_SERVER_PORT);
+  SK_LOG_INFO("UDP socket binded to 127.0.0.1:%d", SK_SERVER_PORT);
   double dt = 1 / SK_SERVER_TICK_RATE;
   signal(SIGINT, handle_interrupt);
   struct sockaddr_in client_addr;
@@ -93,12 +93,12 @@ u8 sk_server_run(void) {
                      (struct sockaddr *) &client_addr,
                      &client_addr_len);
     if (msg_n == -1) {
-      TraceLog(LOG_ERROR, "recvfrom(2) :: %s", strerror(errno));
+      SK_LOG_ERROR("recvfrom(2) :: %s", strerror(errno));
       continue;
     }
     msg[msg_n] = 0;
     if (!strcmp(msg, SK_SERVER_MSG_CONN_REQ)) {
-      TraceLog(LOG_INFO, "Connection from client (%s:%d) requested", inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port));
+      SK_LOG_INFO("Connection from client (%s:%d) requested", inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port));
       // TODO: check if there is a free slot in a lobby
       u8 lobby_id = 0;
       u8 lobby_slot_id = 0;
@@ -111,14 +111,14 @@ u8 sk_server_run(void) {
                  0,
                  (struct sockaddr *) &client_addr,
                  client_addr_len) == -1) {
-        TraceLog(LOG_ERROR, "sendto(2) :: %s", strerror(errno));
+        SK_LOG_ERROR("sendto(2) :: %s", strerror(errno));
         continue;
       }
-      TraceLog(LOG_INFO, "Connection from client (%s:%d) accepted", inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port));
+      SK_LOG_INFO("Connection from client (%s:%d) accepted", inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port));
     }
     wait_next_tick(dt);
   }
   close(sock_fd);
-  TraceLog(LOG_INFO, "%s closed successfully", SK_SERVER_NAME);
+  SK_LOG_INFO("%s closed successfully", SK_SERVER_NAME);
   return 0;
 }

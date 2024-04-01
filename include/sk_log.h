@@ -19,25 +19,12 @@
  */
 
 
-#include <assert.h>
-#include <sk_config.h>
-#include <sk_client.h>
-#include <sk_renderer.h>
+#pragma once
 
-void sk_renderer_create(void) {
-  SetConfigFlags(FLAG_MSAA_4X_HINT);
-  SetConfigFlags(FLAG_BORDERLESS_WINDOWED_MODE);
-  SetConfigFlags(FLAG_WINDOW_MOUSE_PASSTHROUGH);
-  InitWindow(SK_CONFIG_CLIENT_WIN_WIDTH,
-             SK_CONFIG_CLIENT_WIN_HEIGHT,
-             SK_CLIENT_NAME);
-  assert(IsWindowReady());
-  InitAudioDevice();
-  assert(IsAudioDeviceReady());
-  SetTargetFPS(SK_CONFIG_CLIENT_FPS);
-}
+#include <raylib.h>
 
-void sk_renderer_destroy(void) {
-  CloseAudioDevice();
-  CloseWindow();
-}
+#define SK_LOG_ENABLE_DEBUG_LEVEL SetTraceLogLevel(LOG_DEBUG)
+#define SK_LOG_DEBUG(...) TraceLog(LOG_DEBUG, __VA_ARGS__)
+#define SK_LOG_INFO(...)  TraceLog(LOG_INFO, __VA_ARGS__)
+#define SK_LOG_WARN(...)  TraceLog(LOG_WARNING, __VA_ARGS__)
+#define SK_LOG_ERROR(...) TraceLog(LOG_ERROR, __VA_ARGS__)

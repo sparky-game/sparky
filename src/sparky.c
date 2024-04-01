@@ -21,16 +21,15 @@
 
 #include <stdio.h>
 #include <string.h>
-#include <raylib.h>
+#include <sk_log.h>
 #include <sk_text.h>
 #include <sk_client.h>
 #include <sk_server.h>
 
 int main(int argc, char **argv) {
 #ifndef NDEBUG
-#define NBN_DEBUG
-  SetTraceLogLevel(LOG_DEBUG);
-  TraceLog(LOG_WARNING, "Running in debug mode");
+  SK_LOG_ENABLE_DEBUG_LEVEL;
+  SK_LOG_WARN("Running in debug mode");
 #endif
 
   if (argc == 2 && (!strcmp(argv[1], "-h") || !strcmp(argv[1], "--help"))) {
