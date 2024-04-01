@@ -90,7 +90,7 @@ You should have received a copy of the GNU General Public License along with Spa
 * Table of Contents :toc:
 - [[#projects-roadmap][Project's Roadmap]]
 - [[#build-from-source][Build from source]]
-  - [[#get-code][Get code]]
+  - [[#get-the-code][Get the code]]
   - [[#dependencies][Dependencies]]
     - [[#debianubuntu][Debian/Ubuntu]]
     - [[#fedora][Fedora]]
@@ -101,11 +101,13 @@ For information about the detailed project roadmap, including delivered mileston
 
 * Build from source
 
-(...)
+In order to build /Sparky/ from source, preparation is needed so as to the environment is properly setup and ready.
 
-** Get code
+** Get the code
 
-(...)
+First, download the codebase of the project. It's important to do so via the *OFFICIAL* Git repository hosted on [[https://github.com/iWas-Coder/sparky][GitHub]], and not through any tarball or compressed archive to ensure no tampering is done with the code. Appart from that, any ref can be checked out, being ~master~ (the trunk of all dev progress), a tagged commit (e.g. ~v1.0~), an actively maintained version branch (e.g. ~v1.0.y/stable~) or a LTS version branch (e.g. ~v1.0.y/lts~) the preferred ones.
+
+To clone the official repo as well as all its submodules, issue the following command:
 
 #+begin_src sh
 git clone --recurse-submodules https://github.com/iWas-Coder/sparky
@@ -113,7 +115,7 @@ git clone --recurse-submodules https://github.com/iWas-Coder/sparky
 
 ** Dependencies
 
-(...)
+These are the packages needed to be able to build /Sparky/ from source, they are divided by distribution/package manager. Also, a command for each one is added to make the installation of these development dependencies as easy and straightforward as possible.
 
 *** Debian/Ubuntu
 
