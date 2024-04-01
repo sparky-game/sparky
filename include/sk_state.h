@@ -42,6 +42,8 @@ typedef struct {
 
 sk_state_global sk_state_global_create(void);
 
+void sk_state_global_assign_lobby(sk_state_global *sg, i8 *lobby_id, i8 *lobby_slot_idx);
+
 sk_state sk_state_create_offline(void);
 
 sk_state sk_state_create_online(u8 lobby_id);

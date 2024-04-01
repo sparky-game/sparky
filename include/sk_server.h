@@ -28,7 +28,7 @@
 #define SK_SERVER_TICK_RATE    128
 #define SK_SERVER_MSG_MAX_SIZE 1024
 #define SK_SERVER_MSG_HELLO    SK_SERVER_NAME "::hello"
-#define SK_SERVER_MSG_HOWDY    SK_SERVER_NAME "::howdy::%u/%u"
+#define SK_SERVER_MSG_HOWDY    SK_SERVER_NAME "::howdy::%hhd/%hhd"
 
 i32 sk_server_socket_create(void);
 

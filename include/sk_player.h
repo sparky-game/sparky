@@ -42,7 +42,7 @@ static const char * const sk_player_kinds[] = {
   [SK_PLAYER_KIND_JETT] = "jett"
 };
 
-sk_player sk_player_create(sk_player_kind kind);
+sk_player sk_player_create(i8 lobby_id, i8 lobby_slot_idx, sk_player_kind kind);
 
 void sk_player_destroy(sk_player *p);
 

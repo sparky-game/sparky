@@ -19,14 +19,35 @@
  */
 
 
+#include <sk_log.h>
 #include <sk_state.h>
 
 sk_state_global sk_state_global_create(void) {
-  sk_state_global s = { .lobbies_count = 0 };
+  sk_state_global sg = { .lobbies_count = 0 };
   for (u16 i = 0; i < SK_STATE_MAX_LOBBIES; ++i) {
-    s.lobbies[i] = sk_lobby_create(i);
+    sg.lobbies[i] = sk_lobby_create(i);
   }
-  return s;
+  return sg;
+}
+
+void sk_state_global_assign_lobby(sk_state_global *sg, i8 *lobby_id, i8 *lobby_slot_idx) {
+  for (u16 i = 0; i < SK_STATE_MAX_LOBBIES; ++i) {
+    if (sg->lobbies[i].players_count == SK_LOBBY_MAX_PLAYERS) continue;
+    for (u8 j = 0; j < SK_LOBBY_MAX_PLAYERS; ++j) {
+      if (sg->lobbies[i].players[j].lobby_id == -1 &&
+          sg->lobbies[i].players[j].lobby_slot_idx == -1) {
+        *lobby_id = i;
+        *lobby_slot_idx = j;
+        SK_LOG_INFO("sk_state_global_assign_lobby :: assigned lobby %i, slot %i",
+                    *lobby_id,
+                    *lobby_slot_idx);
+        return;
+      }
+    }
+  }
+  *lobby_id = -1;
+  *lobby_slot_idx = -1;
+  SK_LOG_WARN("sk_state_global_assign_lobby :: all lobbies are full");
 }
 
 sk_state sk_state_create_online(u8 lobby_id) {
@@ -41,6 +62,6 @@ sk_state sk_state_create_offline(void) {
   return (sk_state) {
     .is_online = 0,
     .curr_scene = (sk_scene) { .kind = SK_SCENE_KIND_MAIN_MENU },
-    .player = sk_player_create(SK_PLAYER_KIND_JETT)
+    .player = sk_player_create(0, 0, SK_PLAYER_KIND_JETT)
   };
 }

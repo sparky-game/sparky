@@ -19,7 +19,9 @@
  */
 
 
+#include <stdio.h>
 #include <errno.h>
+#include <assert.h>
 #include <string.h>
 #include <unistd.h>
 #include <sk_log.h>
@@ -66,18 +68,22 @@ static i8 online_mode(const char *ip) {
   i32 howdy_msg_n = recv(sock_fd, howdy_msg, sizeof(howdy_msg), MSG_WAITALL);
   if (howdy_msg_n == -1) {
     SK_LOG_ERROR("recv(2) :: %s", strerror(errno));
-    close(sock_fd);
-    return -1;
-  }
-  howdy_msg[howdy_msg_n] = 0;
-  // TODO: hardcoded now to 0/0 ... change this to save the received IDs
-  if (strcmp(howdy_msg, TextFormat(SK_SERVER_MSG_HOWDY, 0, 0))) {
     SK_LOG_ERROR("Unable to communicate with `%s`. Exiting...", ip);
     close(sock_fd);
     return -1;
   }
-  SK_LOG_INFO("Connected successfully to `%s`", ip);
-  SK_LOG_WARN("Exit due to not being implemented yet");
+  howdy_msg[howdy_msg_n] = 0;
+  i8 assigned_lobby_id = -1;
+  i8 assigned_lobby_slot_idx = -1;
+  u8 matched_data = sscanf(howdy_msg, SK_SERVER_MSG_HOWDY, &assigned_lobby_id, &assigned_lobby_slot_idx);
+  assert(matched_data == 2);
+  if (assigned_lobby_id == -1 || assigned_lobby_slot_idx == -1) {
+    SK_LOG_ERROR("Connection rejected from `%s`. Exiting...", ip);
+    close(sock_fd);
+    return -1;
+  }
+  SK_LOG_INFO("Connected successfully to `%s` (lobby %i, slot %i)", ip, assigned_lobby_id, assigned_lobby_slot_idx);
+  SK_LOG_WARN("Exiting due to not being fully implemented yet");
   sk_server_socket_destroy(sock_fd);
   return 0;
 }

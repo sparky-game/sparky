@@ -20,20 +20,22 @@
 
 
 #include <stdio.h>
+#include <assert.h>
 #include <sk_player.h>
 #include <sk_config.h>
 
-#define FILEPATH_BUFFER_MAX_SIZE 64
 #define PLAYER_HEIGHT            2
 #define GRAVITY                  19
 #define JUMP_INIT_VELOCITY       9
 #define PEEK_ACCELERATION        1.5
 #define WALK_VELOCITY            0.1
 
-sk_player sk_player_create(sk_player_kind kind) {
+sk_player sk_player_create(i8 lobby_id, i8 lobby_slot_idx, sk_player_kind kind) {
+  assert(lobby_id != -1);
+  assert(lobby_slot_idx != -1);
   return (sk_player) {
-    .lobby_id = -1,
-    .lobby_slot_idx = -1,
+    .lobby_id = lobby_id,
+    .lobby_slot_idx = lobby_slot_idx,
     .kind = kind,
     .camera = (Camera3D) {
       .position = (Vector3) { 0, PLAYER_HEIGHT, 4 },
@@ -52,9 +54,7 @@ void sk_player_destroy(sk_player *p) {
 }
 
 void sk_player_load(sk_player *p, sk_weapon_kind initial_weapon_kind) {
-  char filepath[FILEPATH_BUFFER_MAX_SIZE] = {0};
-  sprintf(filepath, "assets/models/%s.glb", sk_player_kinds[p->kind]);
-  p->model = LoadModel(filepath);
+  p->model = LoadModel(TextFormat("assets/models/%s.glb", sk_player_kinds[p->kind]));
   p->weapon = sk_weapon_create(initial_weapon_kind);
 }
 

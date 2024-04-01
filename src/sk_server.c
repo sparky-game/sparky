@@ -25,6 +25,7 @@
 #include <signal.h>
 #include <unistd.h>
 #include <sk_log.h>
+#include <sk_state.h>
 #include <sk_server.h>
 #include <arpa/inet.h>
 #include <sys/socket.h>
@@ -83,12 +84,13 @@ i32 sk_server_socket_bind(i32 sock_fd) {
     SK_LOG_ERROR("sk_server_socket_bind :: %s", strerror(errno));
     sk_server_socket_destroy(sock_fd);
   }
-  else SK_LOG_INFO("UDP socket binded to 127.0.0.1:%d", SK_SERVER_PORT);
+  else SK_LOG_INFO("UDP socket binded to 127.0.0.1:%u", SK_SERVER_PORT);
   return result;
 }
 
 u8 sk_server_run(void) {
   SK_LOG_INFO("Initializing %s", SK_SERVER_NAME);
+  sk_state_global state_global = sk_state_global_create();
   i32 sock_fd = sk_server_socket_create();
   if (sock_fd == -1) return 1;
   if (sk_server_socket_bind(sock_fd) == -1) return 1;
@@ -115,22 +117,26 @@ u8 sk_server_run(void) {
     }
     msg[msg_n] = 0;
     if (!strcmp(msg, SK_SERVER_MSG_HELLO)) {
-      SK_LOG_INFO("Connection from client (%s:%d) requested", inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port));
-      u8 assigned_lobby_id = 0;
-      u8 assigned_lobby_slot_id = 0;
-      // TODO: check if there is a free slot in a lobby
-      // TODO: assign him a lobby and a player slot inside it
-      const char * const response = TextFormat(SK_SERVER_MSG_HOWDY, assigned_lobby_id, assigned_lobby_slot_id);
+      SK_LOG_INFO("Connection from client (%s:%u) requested", inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port));
+      i8 assigned_lobby_id = -1;
+      i8 assigned_lobby_slot_idx = -1;
+      sk_state_global_assign_lobby(&state_global, &assigned_lobby_id, &assigned_lobby_slot_idx);
       if (sendto(sock_fd,
-                 response,
-                 strlen(response),
+                 TextFormat(SK_SERVER_MSG_HOWDY, assigned_lobby_id, assigned_lobby_slot_idx),
+                 strlen(TextFormat(SK_SERVER_MSG_HOWDY, assigned_lobby_id, assigned_lobby_slot_idx)),
                  0,
                  (struct sockaddr *) &client_addr,
                  client_addr_len) == -1) {
         SK_LOG_ERROR("sendto(2) :: %s", strerror(errno));
+        SK_LOG_WARN("Connection from client (%s:%u) dropped", inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port));
         continue;
       }
-      SK_LOG_INFO("Connection from client (%s:%d) accepted", inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port));
+      if (assigned_lobby_id == -1 || assigned_lobby_slot_idx == -1) {
+        SK_LOG_INFO("Connection from client (%s:%u) rejected", inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port));
+        continue;
+      }
+      SK_LOG_INFO("Connection from client (%s:%u) accepted", inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port));
+      state_global.lobbies[assigned_lobby_id].players[assigned_lobby_slot_idx] = sk_player_create(assigned_lobby_id, assigned_lobby_slot_idx, SK_PLAYER_KIND_JETT);
     }
     wait_next_tick(dt);
   }

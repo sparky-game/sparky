@@ -24,20 +24,15 @@
 #include <assert.h>
 #include <sk_weapon.h>
 
-#define FILEPATH_BUFFER_MAX_SIZE 64
-
 sk_weapon sk_weapon_create(sk_weapon_kind kind) {
   sk_weapon w = {0};
-  char filepath[FILEPATH_BUFFER_MAX_SIZE] = {0};
-  sprintf(filepath, "assets/models/%s.glb", sk_weapon_kinds[kind]);
-  w.model = LoadModel(filepath);
-  w.model_anims = LoadModelAnimations(filepath, (int *) &w.model_anims_count);
+  w.model = LoadModel(TextFormat("assets/models/%s.glb", sk_weapon_kinds[kind]));
+  w.model_anims = LoadModelAnimations(TextFormat("assets/models/%s.glb", sk_weapon_kinds[kind]),
+                                      (int *) &w.model_anims_count);
   assert(w.model_anims_count == 1);
   assert(IsModelAnimationValid(w.model, w.model_anims[0]));
   w.model_anim_frame_count = 0;
-  memset(filepath, 0, sizeof(filepath));
-  sprintf(filepath, "assets/sounds/%s/shoot.wav", sk_weapon_kinds[kind]);
-  w.sound_shoot = LoadSound(filepath);
+  w.sound_shoot = LoadSound(TextFormat("assets/sounds/%s/shoot.wav", sk_weapon_kinds[kind]));
   w.kind = kind;
   return w;
 }
