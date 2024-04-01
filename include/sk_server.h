@@ -27,7 +27,13 @@
 #define SK_SERVER_PORT         27015
 #define SK_SERVER_TICK_RATE    128
 #define SK_SERVER_MSG_MAX_SIZE 1024
-#define SK_SERVER_MSG_CONN_REQ SK_SERVER_NAME "::ping"
-#define SK_SERVER_MSG_CONN_RES SK_SERVER_NAME "::pong::%u/%u"
+#define SK_SERVER_MSG_HELLO    SK_SERVER_NAME "::hello"
+#define SK_SERVER_MSG_HOWDY    SK_SERVER_NAME "::howdy::%u/%u"
+
+int sk_server_socket_create(void);
+
+void sk_server_socket_destroy(int sock_fd);
+
+int sk_server_socket_bind(int sock_fd);
 
 u8 sk_server_run(void);

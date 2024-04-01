@@ -27,19 +27,21 @@
 #define SK_STATE_MAX_LOBBIES 256
 
 typedef struct {
+  u8 lobbies_count;
+  sk_lobby lobbies[SK_STATE_MAX_LOBBIES];
+} sk_state_global;
+
+typedef struct {
   u8 is_online;
   sk_scene curr_scene;
   union {
-    struct {
-      u8 lobbies_count;
-      sk_lobby lobbies[SK_STATE_MAX_LOBBIES];
-    };
-    struct {
-      sk_player player;
-    };
+    sk_lobby lobby;
+    sk_player player;
   };
 } sk_state;
 
-sk_state sk_state_create(u8 is_online);
+sk_state_global sk_state_global_create(void);
 
-void sk_state_destroy(sk_state *s);
+sk_state sk_state_create_offline(void);
+
+sk_state sk_state_create_online(u8 lobby_id);

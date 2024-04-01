@@ -21,23 +21,26 @@
 
 #include <sk_state.h>
 
-sk_state sk_state_create(u8 is_online) {
-  sk_state s = {
-    .is_online = is_online,
-    .curr_scene = (sk_scene) { .kind = SK_SCENE_KIND_MAIN_MENU }
-  };
-  if (is_online) {
-    s.lobbies_count = 0;
-    for (u16 i = 0; i < SK_STATE_MAX_LOBBIES; ++i) {
-      s.lobbies[i] = sk_lobby_create(i);
-    }
-  }
-  else {
-    s.player = sk_player_create(SK_PLAYER_KIND_JETT);
+sk_state_global sk_state_global_create(void) {
+  sk_state_global s = { .lobbies_count = 0 };
+  for (u16 i = 0; i < SK_STATE_MAX_LOBBIES; ++i) {
+    s.lobbies[i] = sk_lobby_create(i);
   }
   return s;
 }
 
-void sk_state_destroy(sk_state *s) {
-  (void) s;
+sk_state sk_state_create_online(u8 lobby_id) {
+  return (sk_state) {
+    .is_online = 1,
+    .curr_scene = (sk_scene) { .kind = SK_SCENE_KIND_MAIN_MENU },
+    .lobby = sk_lobby_create(lobby_id)
+  };
+}
+
+sk_state sk_state_create_offline(void) {
+  return (sk_state) {
+    .is_online = 0,
+    .curr_scene = (sk_scene) { .kind = SK_SCENE_KIND_MAIN_MENU },
+    .player = sk_player_create(SK_PLAYER_KIND_JETT)
+  };
 }

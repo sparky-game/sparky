@@ -57,24 +57,41 @@ static void wait_next_tick(double t) {
 #endif
 }
 
-u8 sk_server_run(void) {
-  SK_LOG_INFO("Initializing %s", SK_SERVER_NAME);
-  const struct sockaddr_in server_addr = {
+int sk_server_socket_create(void) {
+  int sock_fd = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+  if (sock_fd == -1) SK_LOG_ERROR("sk_server_socket_create :: %s", strerror(errno));
+  else SK_LOG_INFO("UDP socket created");
+  return sock_fd;
+}
+
+void sk_server_socket_destroy(int sock_fd) {
+  if (sock_fd == -1) {
+    SK_LOG_WARN("sk_server_socket_destroy :: `sock_fd` not valid");
+    return;
+  }
+  close(sock_fd);
+}
+
+int sk_server_socket_bind(int sock_fd) {
+  const struct sockaddr_in addr = {
     .sin_family = AF_INET,
     .sin_port = htons(SK_SERVER_PORT),
     .sin_addr.s_addr = inet_addr("127.0.0.1")
   };
-  int sock_fd = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
-  if (sock_fd == -1) {
-    SK_LOG_ERROR("socket(2) :: %s", strerror(errno));
-    return 1;
+  int result = bind(sock_fd, (const struct sockaddr *) &addr, sizeof(addr));
+  if (result == -1) {
+    SK_LOG_ERROR("sk_server_socket_bind :: %s", strerror(errno));
+    sk_server_socket_destroy(sock_fd);
   }
-  if (bind(sock_fd, (const struct sockaddr *) &server_addr, sizeof(server_addr)) == -1) {
-    SK_LOG_ERROR("bind(2) :: %s", strerror(errno));
-    close(sock_fd);
-    return 1;
-  }
-  SK_LOG_INFO("UDP socket binded to 127.0.0.1:%d", SK_SERVER_PORT);
+  else SK_LOG_INFO("UDP socket binded to 127.0.0.1:%d", SK_SERVER_PORT);
+  return result;
+}
+
+u8 sk_server_run(void) {
+  SK_LOG_INFO("Initializing %s", SK_SERVER_NAME);
+  int sock_fd = sk_server_socket_create();
+  if (sock_fd == -1) return 1;
+  if (sk_server_socket_bind(sock_fd) == -1) return 1;
   double dt = 1 / SK_SERVER_TICK_RATE;
   signal(SIGINT, handle_interrupt);
   struct sockaddr_in client_addr;
@@ -97,17 +114,16 @@ u8 sk_server_run(void) {
       continue;
     }
     msg[msg_n] = 0;
-    if (!strcmp(msg, SK_SERVER_MSG_CONN_REQ)) {
+    if (!strcmp(msg, SK_SERVER_MSG_HELLO)) {
       SK_LOG_INFO("Connection from client (%s:%d) requested", inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port));
+      u8 assigned_lobby_id = 0;
+      u8 assigned_lobby_slot_id = 0;
       // TODO: check if there is a free slot in a lobby
-      u8 lobby_id = 0;
-      u8 lobby_slot_id = 0;
       // TODO: assign him a lobby and a player slot inside it
-      memset(msg, 0, sizeof(msg));
-      sprintf(msg, SK_SERVER_MSG_CONN_RES, lobby_id, lobby_slot_id);
+      const char * const response = TextFormat(SK_SERVER_MSG_HOWDY, assigned_lobby_id, assigned_lobby_slot_id);
       if (sendto(sock_fd,
-                 msg,
-                 strlen(SK_SERVER_MSG_CONN_RES),
+                 response,
+                 strlen(response),
                  0,
                  (struct sockaddr *) &client_addr,
                  client_addr_len) == -1) {
@@ -118,7 +134,7 @@ u8 sk_server_run(void) {
     }
     wait_next_tick(dt);
   }
-  close(sock_fd);
+  sk_server_socket_destroy(sock_fd);
   SK_LOG_INFO("%s closed successfully", SK_SERVER_NAME);
   return 0;
 }
