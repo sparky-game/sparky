@@ -53,7 +53,7 @@ u8 sk_client_run(const char *ip) {
       .sin_port = htons(SK_SERVER_PORT),
       .sin_addr.s_addr = inet_addr(ip)
     };
-    int sock_fd = sk_server_socket_create();
+    i32 sock_fd = sk_server_socket_create();
     if (sock_fd == -1) return 1;
     SK_LOG_INFO("Connecting to `%s` ...", ip);
     if (sendto(sock_fd,
@@ -67,7 +67,7 @@ u8 sk_client_run(const char *ip) {
       return 1;
     }
     char howdy_msg[SK_SERVER_MSG_MAX_SIZE];
-    int howdy_msg_n = recv(sock_fd, howdy_msg, sizeof(howdy_msg), MSG_WAITALL);
+    i32 howdy_msg_n = recv(sock_fd, howdy_msg, sizeof(howdy_msg), MSG_WAITALL);
     if (howdy_msg_n == -1) {
       SK_LOG_ERROR("recv(2) :: %s", strerror(errno));
       close(sock_fd);

@@ -30,10 +30,10 @@
 #define SK_SERVER_MSG_HELLO    SK_SERVER_NAME "::hello"
 #define SK_SERVER_MSG_HOWDY    SK_SERVER_NAME "::howdy::%u/%u"
 
-int sk_server_socket_create(void);
+i32 sk_server_socket_create(void);
 
-void sk_server_socket_destroy(int sock_fd);
+void sk_server_socket_destroy(i32 sock_fd);
 
-int sk_server_socket_bind(int sock_fd);
+i32 sk_server_socket_bind(i32 sock_fd);
 
 u8 sk_server_run(void);

@@ -40,7 +40,7 @@
 static volatile u8 running = 1;
 static volatile u8 clients = 0;
 
-static inline void handle_interrupt(int signum) {
+static inline void handle_interrupt(i32 signum) {
   if (signum == SIGINT) running = 0;
 }
 
@@ -57,14 +57,14 @@ static void wait_next_tick(double t) {
 #endif
 }
 
-int sk_server_socket_create(void) {
-  int sock_fd = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+i32 sk_server_socket_create(void) {
+  i32 sock_fd = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
   if (sock_fd == -1) SK_LOG_ERROR("sk_server_socket_create :: %s", strerror(errno));
   else SK_LOG_INFO("UDP socket created");
   return sock_fd;
 }
 
-void sk_server_socket_destroy(int sock_fd) {
+void sk_server_socket_destroy(i32 sock_fd) {
   if (sock_fd == -1) {
     SK_LOG_WARN("sk_server_socket_destroy :: `sock_fd` not valid");
     return;
@@ -72,13 +72,13 @@ void sk_server_socket_destroy(int sock_fd) {
   close(sock_fd);
 }
 
-int sk_server_socket_bind(int sock_fd) {
+i32 sk_server_socket_bind(i32 sock_fd) {
   const struct sockaddr_in addr = {
     .sin_family = AF_INET,
     .sin_port = htons(SK_SERVER_PORT),
     .sin_addr.s_addr = inet_addr("127.0.0.1")
   };
-  int result = bind(sock_fd, (const struct sockaddr *) &addr, sizeof(addr));
+  i32 result = bind(sock_fd, (const struct sockaddr *) &addr, sizeof(addr));
   if (result == -1) {
     SK_LOG_ERROR("sk_server_socket_bind :: %s", strerror(errno));
     sk_server_socket_destroy(sock_fd);
@@ -89,7 +89,7 @@ int sk_server_socket_bind(int sock_fd) {
 
 u8 sk_server_run(void) {
   SK_LOG_INFO("Initializing %s", SK_SERVER_NAME);
-  int sock_fd = sk_server_socket_create();
+  i32 sock_fd = sk_server_socket_create();
   if (sock_fd == -1) return 1;
   if (sk_server_socket_bind(sock_fd) == -1) return 1;
   double dt = 1 / SK_SERVER_TICK_RATE;
@@ -97,7 +97,7 @@ u8 sk_server_run(void) {
   struct sockaddr_in client_addr;
   socklen_t client_addr_len = sizeof(client_addr);
   char msg[SK_SERVER_MSG_MAX_SIZE];
-  int msg_n = 0;
+  i32 msg_n = 0;
   while (running) {
     client_addr = (struct sockaddr_in) {0};
     client_addr_len = sizeof(client_addr);
