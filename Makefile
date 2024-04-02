@@ -77,10 +77,10 @@ OBJS          := $(patsubst $(SRC_DIR)/%.c, $(BUILD_DIR)/%.o, $(SRCS))
 CC = gcc
 AR = ar -rc
 ifdef D
-  CARGO          = cargo build --target-dir $(LAUNCHER_BUILD_ROOT_DIR)
+  CARGO          = cargo b --target-dir $(LAUNCHER_BUILD_ROOT_DIR)
   DEBUG_SYM_OPTS = -ggdb
 else
-  CARGO                = cargo build -r --target-dir $(LAUNCHER_BUILD_ROOT_DIR)
+  CARGO                = cargo b -r --target-dir $(LAUNCHER_BUILD_ROOT_DIR)
   DISABLE_ASSERTS_OPTS = -D NDEBUG
   HIDE_WARNS_OPTS      = -w
   RELEASE_OPTS         = -pipe -O3
