@@ -23,14 +23,17 @@ use eframe::egui;
 extern crate eframe;
 
 #[no_mangle]
-pub extern "C" fn sk_launcher_run() -> () {
+pub extern "C" fn sk_launcher_run() -> u8 {
   let options = eframe::NativeOptions {
-    viewport: egui::ViewportBuilder::default().with_inner_size([320.0, 240.0]),
+    viewport: egui::ViewportBuilder::default()
+      .with_inner_size([400.0, 300.0])
+      .with_min_inner_size([300.0, 220.0]),
     ..Default::default()
   };
-  eframe::run_native("sparky-client::launcher", options, Box::new(|_cc| {
+  let _ = eframe::run_native("sparky-client::launcher", options, Box::new(|_cc| {
     Box::new(Launcher::default()) as Box<dyn eframe::App>
   }));
+  return 0;
 }
 
 struct Launcher {

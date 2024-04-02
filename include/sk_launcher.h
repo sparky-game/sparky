@@ -21,4 +21,6 @@
 
 #pragma once
 
-void sk_launcher_run(void);
+#include <sk_defines.h>
+
+u8 sk_launcher_run(void);

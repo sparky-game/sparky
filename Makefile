@@ -43,7 +43,7 @@ FULL_VERSION = $(DIST_VERSION)$(DEVEXTRAVERSION)
 # Pretty Printing Output (PPO)
 PPO_MKDIR = MKDIR
 PPO_CLEAN = CLEAN
-PPO_CARGO = CARGO
+PPO_RSC   = RSC
 PPO_CC    = CC
 PPO_AR    = AR
 PPO_LD    = LD
@@ -74,16 +74,22 @@ SRCS          := $(wildcard $(SRC_DIR)/*.c)
 OBJS          := $(patsubst $(SRC_DIR)/%.c, $(BUILD_DIR)/%.o, $(SRCS))
 
 # Build flags
-CC = gcc
-AR = ar -rc
+MAKEFLAGS_JOBS := $(patsubst -j%, %, $(filter -j%, $(MAKEFLAGS)))
+ifndef MAKEFLAGS_JOBS
+  CARGO_JOBS = -j1
+endif
+CC     = gcc
+AR     = ar -rc
+RSC    = cargo b -q --message-format=json --target-dir $(LAUNCHER_BUILD_ROOT_DIR) $(CARGO_JOBS) --locked
+JQ_RSC = jq -r 'if .reason == "compiler-artifact" and .fresh == false then "  $(PPO_RSC)     " + .target.name else empty end'
 ifdef D
-  CARGO          = cargo b --target-dir $(LAUNCHER_BUILD_ROOT_DIR)
   DEBUG_SYM_OPTS = -ggdb
 else
-  CARGO                = cargo b -r --target-dir $(LAUNCHER_BUILD_ROOT_DIR)
+  RSC                 += -r
   DISABLE_ASSERTS_OPTS = -D NDEBUG
   HIDE_WARNS_OPTS      = -w
-  RELEASE_OPTS         = -pipe -O3
+  HIDE_LTO_WARNS_OPTS  = -Wno-stringop-overflow
+  RELEASE_OPTS         = -pipe -O3 -fipa-pta -fuse-linker-plugin -flto=auto
   STRIP_OPTS           = -s
 endif
 define RAYLIB_CPPFLAGS
@@ -116,6 +122,7 @@ define CFLAGS
 endef
 define LDFLAGS
   -Wl,--build-id           \
+  $(HIDE_LTO_WARNS_OPTS)   \
   $(STRIP_OPTS)            \
   $(RELEASE_OPTS)          \
   -L $(BUILD_DIR)          \
@@ -173,8 +180,8 @@ $(RAYLIB_BUILD_DIR)/%.o: $(RAYLIB_SRC_DIR)/%.c
 -include $(RAYLIB_BUILD_DIR)/*.d
 
 $(LAUNCHER_OUT): $(LAUNCHER_SRCS)
-	@echo "  $(PPO_CARGO)   $@"
-	$(Q)$(CARGO) --lib
+	$(Q)$(RSC) --lib | $(JQ_RSC)
+	@echo "  $(PPO_RSC)     $@"
 
 -include $(LAUNCHER_BUILD_DIR)/*.d
 
@@ -191,9 +198,13 @@ clean:
 	fi
 
 mrproper: clean
-	@if [ -e $(OUT) ]; then           \
-	  echo "  $(PPO_CLEAN)   $(OUT)"; \
-	  rm $(OUT);                      \
+	@if [ -e $(NAME) ]; then           \
+	  echo "  $(PPO_CLEAN)   $(NAME)"; \
+	  rm $(NAME);                      \
+	fi
+	@if [ -e $(NAME)_debug ]; then           \
+	  echo "  $(PPO_CLEAN)   $(NAME)_debug"; \
+	  rm $(NAME)_debug;                      \
 	fi
 
 version:
