@@ -19,6 +19,20 @@
  */
 
 
-#pragma once
+#include <stdio.h>
+#include <sk_text.h>
 
-void sk_launcher_run(void);
+u8 sk_text_help(char *prog_name) {
+  printf(sk_text_help_msg, prog_name);
+  return 0;
+}
+
+u8 sk_text_version(void) {
+  printf(sk_text_version_msg, sk_xstr(SK_VERSION));
+  return 0;
+}
+
+u8 sk_text_unrecog_opt(char *prog_name) {
+  fprintf(stderr, sk_text_unrecog_opt_msg, prog_name, prog_name);
+  return 1;
+}

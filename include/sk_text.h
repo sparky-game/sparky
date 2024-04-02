@@ -21,6 +21,8 @@
 
 #pragma once
 
+#include <sk_defines.h>
+
 static const char * const sk_text_help_msg = "Usage: %s [OPTION]\n"
   "GNU Sparky --- A 5v5 character-based libre tactical shooter\n\n"
   "If no option is provided, the client will start in offline mode.\n\n"
@@ -43,3 +45,9 @@ static const char * const sk_text_version_msg = "GNU Sparky %s\n"
 
 static const char * const sk_text_unrecog_opt_msg = "%s: unrecognized option\n"
   "Try '%s --help' for more information.\n";
+
+u8 sk_text_help(char *prog_name);
+
+u8 sk_text_version(void);
+
+u8 sk_text_unrecog_opt(char *prog_name);
