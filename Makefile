@@ -43,30 +43,44 @@ FULL_VERSION = $(DIST_VERSION)$(DEVEXTRAVERSION)
 # Pretty Printing Output (PPO)
 PPO_MKDIR = MKDIR
 PPO_CLEAN = CLEAN
+PPO_CARGO = CARGO
 PPO_CC    = CC
 PPO_AR    = AR
 PPO_LD    = LD
 
 # Directories
-SRC_DIR          = src
-HDR_DIR          = include
-BUILD_DIR        = build
+SRC_DIR                 = src
+HDR_DIR                 = include
+BUILD_ROOT_DIR          = build
+BUILD_DEBUG_DIR         = $(BUILD_ROOT_DIR)/debug
+BUILD_RELEASE_DIR       = $(BUILD_ROOT_DIR)/release
+LAUNCHER_BUILD_ROOT_DIR = $(BUILD_ROOT_DIR)/$(NAME)_extras
+ifdef D
+  LAUNCHER_BUILD_DIR = $(LAUNCHER_BUILD_ROOT_DIR)/debug
+  BUILD_DIR          = $(BUILD_DEBUG_DIR)
+else
+  LAUNCHER_BUILD_DIR = $(LAUNCHER_BUILD_ROOT_DIR)/release
+  BUILD_DIR          = $(BUILD_RELEASE_DIR)
+endif
 VENDOR_DIR       = vendor
 RAYLIB_SRC_DIR   = $(VENDOR_DIR)/raylib/$(SRC_DIR)
 RAYLIB_BUILD_DIR = $(BUILD_DIR)/raylib
 
 # Files
-RAYLIB_SRCS := $(wildcard $(RAYLIB_SRC_DIR)/*.c)
-RAYLIB_OBJS := $(patsubst $(RAYLIB_SRC_DIR)/%.c, $(RAYLIB_BUILD_DIR)/%.o, $(RAYLIB_SRCS))
-SRCS        := $(wildcard $(SRC_DIR)/*.c)
-OBJS        := $(patsubst $(SRC_DIR)/%.c, $(BUILD_DIR)/%.o, $(SRCS))
+RAYLIB_SRCS   := $(wildcard $(RAYLIB_SRC_DIR)/*.c)
+RAYLIB_OBJS   := $(patsubst $(RAYLIB_SRC_DIR)/%.c, $(RAYLIB_BUILD_DIR)/%.o, $(RAYLIB_SRCS))
+LAUNCHER_SRCS := $(wildcard $(SRC_DIR)/sk_launcher*.rs)
+SRCS          := $(wildcard $(SRC_DIR)/*.c)
+OBJS          := $(patsubst $(SRC_DIR)/%.c, $(BUILD_DIR)/%.o, $(SRCS))
 
 # Build flags
 CC = gcc
 AR = ar -rc
 ifdef D
+  CARGO          = cargo build --target-dir $(LAUNCHER_BUILD_ROOT_DIR)
   DEBUG_SYM_OPTS = -ggdb
 else
+  CARGO                = cargo build -r --target-dir $(LAUNCHER_BUILD_ROOT_DIR)
   DISABLE_ASSERTS_OPTS = -D NDEBUG
   HIDE_WARNS_OPTS      = -w
   RELEASE_OPTS         = -pipe -O3
@@ -92,43 +106,46 @@ define RAYLIB_CFLAGS
   $(RELEASE_OPTS)
 endef
 define CFLAGS
-  -std=c17                              \
-  -Wall                                 \
-  -Wextra                               \
-  -pedantic                             \
-  -Werror=unused-parameter              \
-  -Werror=implicit-function-declaration \
-  $(DEBUG_SYM_OPTS)                     \
+  -std=c17          \
+  -Wall             \
+  -Wextra           \
+  -pedantic         \
+  -Werror           \
+  $(DEBUG_SYM_OPTS) \
   $(RELEASE_OPTS)
 endef
 define LDFLAGS
-  -Wl,--build-id  \
-  $(STRIP_OPTS)   \
-  $(RELEASE_OPTS) \
-  -L $(BUILD_DIR) \
-  -lraylib        \
-  -lm
+  -Wl,--build-id           \
+  $(STRIP_OPTS)            \
+  $(RELEASE_OPTS)          \
+  -L $(BUILD_DIR)          \
+  -L $(LAUNCHER_BUILD_DIR) \
+  -lraylib                 \
+  -lsk_launcher            \
+  -lm                      \
+  -static-libgcc
 endef
 
 # Build output
-RAYLIB_OUT = $(BUILD_DIR)/libraylib.a
-OUT        = $(NAME)
+LAUNCHER_OUT = $(LAUNCHER_BUILD_DIR)/libsk_launcher.a
+RAYLIB_OUT   = $(BUILD_DIR)/libraylib.a
+ifdef D
+  OUT = $(NAME)_debug
+else
+  OUT = $(NAME)
+endif
 
 # Build targets
-TGTS     = game
-ALL_TGTS = $(BUILD_DIR) $(RAYLIB_BUILD_DIR) $(TGTS)
+TGTS = $(BUILD_DIR) $(RAYLIB_BUILD_DIR) game
 
 
 ###################
 # === TARGETS === #
 ###################
-.PHONY: all $(TGTS) clean mrproper version help
+.PHONY: all game clean mrproper version help
 
-all: $(ALL_TGTS)
+all: $(TGTS)
 	@:
-
-game: $(RAYLIB_OUT) $(OUT)
-	@echo "INFO: $(OUT) is ready  ($(FULL_VERSION))"
 
 $(BUILD_DIR):
 	@echo "  $(PPO_MKDIR)   $@"
@@ -138,19 +155,28 @@ $(RAYLIB_BUILD_DIR):
 	@echo "  $(PPO_MKDIR)   $@"
 	$(Q)mkdir -p $@
 
+game: $(OUT)
+	@echo "INFO: $(OUT) is ready  ($(FULL_VERSION))"
+
+$(OUT): $(RAYLIB_OUT) $(LAUNCHER_OUT) $(OBJS)
+	@echo "  $(PPO_LD)      $@"
+	$(Q)$(CC) $(OBJS) $(LDFLAGS) -o $@
+
 $(RAYLIB_OUT): $(RAYLIB_OBJS)
 	@echo "  $(PPO_AR)      $@"
 	$(Q)$(AR) $@ $^
-
-$(OUT): $(OBJS)
-	@echo "  $(PPO_LD)      $@"
-	$(Q)$(CC) $^ $(LDFLAGS) -o $@
 
 $(RAYLIB_BUILD_DIR)/%.o: $(RAYLIB_SRC_DIR)/%.c
 	@echo "  $(PPO_CC)      $@"
 	$(Q)$(CC) $(RAYLIB_CPPFLAGS) $(RAYLIB_CFLAGS) -c -MD $< -o $@
 
 -include $(RAYLIB_BUILD_DIR)/*.d
+
+$(LAUNCHER_OUT): $(LAUNCHER_SRCS)
+	@echo "  $(PPO_CARGO)   $@"
+	$(Q)$(CARGO) --lib
+
+-include $(LAUNCHER_BUILD_DIR)/*.d
 
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
 	@echo "  $(PPO_CC)      $@"
@@ -159,9 +185,9 @@ $(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
 -include $(BUILD_DIR)/*.d
 
 clean:
-	@if [ -d $(BUILD_DIR) ]; then           \
-	  echo "  $(PPO_CLEAN)   $(BUILD_DIR)"; \
-	  rm -r $(BUILD_DIR);                   \
+	@if [ -d $(BUILD_ROOT_DIR) ]; then           \
+	  echo "  $(PPO_CLEAN)   $(BUILD_ROOT_DIR)"; \
+	  rm -r $(BUILD_ROOT_DIR);                   \
 	fi
 
 mrproper: clean
