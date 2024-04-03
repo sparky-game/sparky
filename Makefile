@@ -180,7 +180,7 @@ $(RAYLIB_BUILD_DIR)/%.o: $(RAYLIB_SRC_DIR)/%.c
 -include $(RAYLIB_BUILD_DIR)/*.d
 
 $(LAUNCHER_OUT): $(LAUNCHER_SRCS)
-	$(Q)$(RSC) --lib | $(JQ_RSC)
+	$(Q)set -o pipefail; $(RSC) --lib | $(JQ_RSC)
 	@echo "  $(PPO_RSC)     $@"
 
 -include $(LAUNCHER_BUILD_DIR)/*.d

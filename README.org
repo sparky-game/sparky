@@ -112,6 +112,7 @@ GNU Sparky --- A 5v5 character-based libre tactical shooter
 If no option is provided, the client will start in offline mode.
 
 Options:
+  -g, --gui 		start the graphical launcher
   -i, --ip <IP> 	start the client and connect to the server at <IP>
   -s, --server 		start the server
   -h, --help 		display this help and exit
