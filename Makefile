@@ -78,10 +78,11 @@ MAKEFLAGS_JOBS := $(patsubst -j%, %, $(filter -j%, $(MAKEFLAGS)))
 ifndef MAKEFLAGS_JOBS
   CARGO_JOBS = -j1
 endif
-CC     = gcc
-AR     = ar -rc
-RSC    = cargo b -q --message-format=json --target-dir $(LAUNCHER_BUILD_ROOT_DIR) $(CARGO_JOBS) --locked
-JQ_RSC = jq -r 'if .reason == "compiler-artifact" and .fresh == false then "  $(PPO_RSC)     " + .target.name else empty end'
+CC       = gcc
+AR       = ar -rc
+RSC      = cargo b -q --message-format=json --target-dir $(LAUNCHER_BUILD_ROOT_DIR) $(CARGO_JOBS) --locked
+JQ_RSC   = jq -r 'if .reason == "compiler-artifact" and .target.name != "build-script-build" and .fresh == false then "  $(PPO_RSC)     " + .target.name else empty end'
+FIFO_RSC = /tmp/sparky_cargo_pipe
 ifdef D
   DEBUG_SYM_OPTS = -ggdb
 else
@@ -180,7 +181,12 @@ $(RAYLIB_BUILD_DIR)/%.o: $(RAYLIB_SRC_DIR)/%.c
 -include $(RAYLIB_BUILD_DIR)/*.d
 
 $(LAUNCHER_OUT): $(LAUNCHER_SRCS)
-	$(Q)set -o pipefail; $(RSC) --lib | $(JQ_RSC)
+	@if [ ! -e $(FIFO_RSC) ]; then \
+	  mkfifo $(FIFO_RSC);          \
+	fi
+	@$(JQ_RSC) < $(FIFO_RSC) &
+	$(Q)$(RSC) --lib > $(FIFO_RSC)
+	@rm $(FIFO_RSC)
 	@echo "  $(PPO_RSC)     $@"
 
 -include $(LAUNCHER_BUILD_DIR)/*.d
@@ -195,6 +201,10 @@ clean:
 	@if [ -d $(BUILD_ROOT_DIR) ]; then           \
 	  echo "  $(PPO_CLEAN)   $(BUILD_ROOT_DIR)"; \
 	  rm -r $(BUILD_ROOT_DIR);                   \
+	fi
+	@if [ -e $(FIFO_RSC) ]; then           \
+	  echo "  $(PPO_CLEAN)   $(FIFO_RSC)"; \
+	  rm $(FIFO_RSC);                      \
 	fi
 
 mrproper: clean
