@@ -1,0 +1,12 @@
+[package]
+name = "sparky_extras"
+version = "0.1.0"
+
+[lib]
+name = "sk_launcher"
+crate-type = ["staticlib"]
+path = "src/sk_launcher.rs"
+
+[dependencies]
+eframe = "0.27.1"
+libc = "0.2.153"

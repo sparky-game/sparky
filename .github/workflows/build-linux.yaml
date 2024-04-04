@@ -37,11 +37,15 @@ jobs:
           submodules: recursive
       - name: install-dependencies
         run: sudo apt-get install -y libx11-dev libxcursor-dev libxrandr-dev libxinerama-dev libxi-dev
+      - name: setup-rust-cache
+        uses: Swatinem/rust-cache@v2
+        with:
+          cache-targets: "false"
       - name: setup-codeql
         uses: github/codeql-action/init@v3
         with:
           languages: c-cpp
       - name: build
-        run: make
+        run: make -j$(nproc)
       - name: analyze
         uses: github/codeql-action/analyze@v3

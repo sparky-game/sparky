@@ -24,7 +24,9 @@ VERSION      = 0
 PATCHLEVEL   = 1
 SUBLEVEL     = 0
 EXTRAVERSION = -alpha1
-# Quiet
-Q = @
 # Debug
 D =
+# Quiet (general)
+Q = @
+# Quiet (RSC)
+Q_RSC = @

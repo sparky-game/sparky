@@ -76,6 +76,7 @@ static i8 online_mode(const char *ip) {
   i8 assigned_lobby_id = -1;
   i8 assigned_lobby_slot_idx = -1;
   u8 matched_data = sscanf(howdy_msg, SK_SERVER_MSG_HOWDY, &assigned_lobby_id, &assigned_lobby_slot_idx);
+  (void) matched_data;
   assert(matched_data == 2);
   if (assigned_lobby_id == -1 || assigned_lobby_slot_idx == -1) {
     SK_LOG_ERROR("Connection rejected from `%s`. Exiting...", ip);

@@ -19,12 +19,12 @@
  */
 
 
-#include <stdio.h>
 #include <string.h>
 #include <sk_log.h>
 #include <sk_text.h>
 #include <sk_client.h>
 #include <sk_server.h>
+#include <sk_launcher.h>
 
 int main(int argc, char **argv) {
 #ifndef NDEBUG
@@ -32,18 +32,12 @@ int main(int argc, char **argv) {
   SK_LOG_WARN("Running in debug mode");
 #endif
 
-  if (argc == 2 && (!strcmp(argv[1], "-h") || !strcmp(argv[1], "--help"))) {
-    printf(sk_text_help_msg, argv[0]);
-    return 0;
-  }
-  if (argc == 2 && (!strcmp(argv[1], "-v") || !strcmp(argv[1], "--version"))) {
-    printf(sk_text_version_msg, sk_xstr(SK_VERSION));
-    return 0;
-  }
-  if (argc == 2 && (!strcmp(argv[1], "-s") || !strcmp(argv[1], "--server"))) return sk_server_run();
-  if (argc == 3 && (!strcmp(argv[1], "-i") || !strcmp(argv[1], "--ip"))) return sk_client_run(argv[2]);
   if (argc == 1) return sk_client_run(0);
+  if (argc == 2 && (!strcmp(argv[1], "-g") || !strcmp(argv[1], "--gui"))) return sk_launcher_run();
+  if (argc == 3 && (!strcmp(argv[1], "-i") || !strcmp(argv[1], "--ip"))) return sk_client_run(argv[2]);
+  if (argc == 2 && (!strcmp(argv[1], "-s") || !strcmp(argv[1], "--server"))) return sk_server_run();
+  if (argc == 2 && (!strcmp(argv[1], "-h") || !strcmp(argv[1], "--help"))) return sk_text_help(argv[0]);
+  if (argc == 2 && (!strcmp(argv[1], "-v") || !strcmp(argv[1], "--version"))) return sk_text_version();
 
-  fprintf(stderr, sk_text_unrecog_opt_msg, argv[0], argv[0]);
-  return 1;
+  return sk_text_unrecog_opt(argv[0]);
 }
