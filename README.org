@@ -141,50 +141,6 @@ git clone --recurse-submodules https://github.com/iWas-Coder/sparky
 
 These are the packages needed to be able to build /Sparky/ from source, they are divided by distribution/package manager. Also, a command for each one is added to make the installation of these development dependencies as easy and straightforward as possible.
 
-*** Debian/Ubuntu
-
-- ~gcc~
-- ~make~
-- ~libx11-dev~
-- ~libxcursor-dev~
-- ~libxrandr-dev~
-- ~libxinerama-dev~
-- ~libxi-dev~
-
-#+begin_src sh
-sudo apt install -y gcc make libx11-dev libxcursor-dev libxrandr-dev libxinerama-dev libxi-dev
-#+end_src
-
-*** Fedora
-
-- ~gcc~
-- ~make~
-- ~libX11-devel~
-- ~libXcursor-devel~
-- ~libXrandr-devel~
-- ~libXinerama-devel~
-- ~libXi-devel~
-
-#+begin_src sh
-sudo dnf install -y gcc make libX11-devel libXcursor-devel libXrandr-devel libXinerama-devel libXi-devel
-#+end_src
-
-*** Arch
-
-- ~gcc~
-- ~make~
-- ~libx11~
-- ~libxcursor~
-- ~libxrandr~
-- ~libxinerama~
-- ~libxi~
-
-#+begin_src sh
-sudo pacman -S gcc make libx11 libxcursor libxrandr libxinerama libxi
-#+end_src
-
-*** Gentoo
-
 - ~gcc~
 - ~make~
 - ~libX11~
@@ -192,6 +148,26 @@ sudo pacman -S gcc make libx11 libxcursor libxrandr libxinerama libxi
 - ~libXrandr~
 - ~libXinerama~
 - ~libXi~
+
+*** Debian/Ubuntu
+
+#+begin_src sh
+sudo apt install -y gcc make libx11-dev libxcursor-dev libxrandr-dev libxinerama-dev libxi-dev
+#+end_src
+
+*** Fedora
+
+#+begin_src sh
+sudo dnf install -y gcc make libX11-devel libXcursor-devel libXrandr-devel libXinerama-devel libXi-devel
+#+end_src
+
+*** Arch
+
+#+begin_src sh
+sudo pacman -S gcc make libx11 libxcursor libxrandr libxinerama libxi
+#+end_src
+
+*** Gentoo
 
 #+begin_src sh
 sudo emerge -va gcc make libX11 libXcursor libXrandr libXinerama libXi
