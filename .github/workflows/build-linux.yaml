@@ -41,6 +41,10 @@ jobs:
         uses: github/codeql-action/init@v3
         with:
           languages: c-cpp
+      - name: setup-rust-cache
+        uses: Swatinem/rust-cache@v2
+        with:
+          cache-targets: "false"
       - name: build
         run: make -j$(nproc)
       - name: analyze
