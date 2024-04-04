@@ -2427,6 +2427,7 @@ name = "sparky_extras"
 version = "0.1.0"
 dependencies = [
  "eframe",
+ "libc",
 ]
 
 [[package]]

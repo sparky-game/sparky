@@ -19,48 +19,30 @@
  */
 
 
-use eframe::egui;
+extern crate libc;
 extern crate eframe;
+
+mod sk_launcher_playwin;
+
+use eframe::egui;
+
+static SK_LAUNCHER_NAME: &str = "sparky-client::launcher";
 
 #[no_mangle]
 pub extern "C" fn sk_launcher_run() -> u8 {
+  println!("INFO: Initializing {}", SK_LAUNCHER_NAME);
   let options = eframe::NativeOptions {
     viewport: egui::ViewportBuilder::default()
-      .with_inner_size([400.0, 300.0])
-      .with_min_inner_size([300.0, 220.0]),
+      .with_inner_size([800.0, 600.0])
+      .with_min_inner_size([300.0, 220.0])
+      .with_drag_and_drop(true),
     ..Default::default()
   };
-  let _ = eframe::run_native("sparky-client::launcher", options, Box::new(|_cc| {
-    Box::new(Launcher::default()) as Box<dyn eframe::App>
-  }));
+  let _ = eframe::run_native(
+    "sparky-client::launcher",
+    options,
+    Box::new(|_| Box::new(sk_launcher_playwin::PlayWin::default()) as Box<dyn eframe::App>)
+  );
+  println!("INFO: {} closed successfully", SK_LAUNCHER_NAME);
   return 0;
-}
-
-struct Launcher {
-  name: String,
-  age: u32
-}
-
-impl Default for Launcher {
-  fn default() -> Self {
-    Self {
-      name: "Wasym".to_owned(),
-      age: 23
-    }
-  }
-}
-
-impl eframe::App for Launcher {
-  fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
-    egui::CentralPanel::default().show(ctx, |ui| {
-      ui.heading("Sparky Launcher");
-      ui.horizontal(|ui| {
-        let name_label = ui.label("Name: ");
-        ui.text_edit_singleline(&mut self.name).labelled_by(name_label.id);
-      });
-      ui.add(egui::Slider::new(&mut self.age, 0..=120).text("age"));
-      if ui.button("Increment").clicked() { self.age += 1 }
-      ui.label(format!("Hello '{}', age {}", self.name, self.age));
-    });
-  }
 }
