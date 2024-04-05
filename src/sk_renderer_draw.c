@@ -74,14 +74,6 @@ static void __draw_gameplay_world(sk_state *s) {
   EndMode3D();
 }
 
-static inline void __draw_fps(void) {
-  DrawFPS(10, 10);
-}
-
-static inline void __draw_frametime(void) {
-  DrawText(TextFormat("%.4f ms", GetFrameTime() * 1000), 10, 33, 20, LIME);
-}
-
 static inline void __draw_ping(void) {
   DrawText(TextFormat("N/A ms"), 10, 50, 20, LIME);
 }
@@ -101,14 +93,23 @@ static inline void __draw_crosshair(void) {
              WHITE);
 }
 
+static inline void __draw_curr_ammo(sk_weapon *w) {
+  DrawText(TextFormat("%u | %u", w->ammo.magazine, w->ammo.reserve),
+           GetScreenWidth() - 100,
+           GetScreenHeight() - 100,
+           25,
+           RAYWHITE);
+}
+
 static void __draw_gameplay_hud(sk_state *s) {
-  __draw_fps();
-  __draw_frametime();
+  DrawFPS(10, 10);
+  DrawText(TextFormat("%.4f ms", GetFrameTime() * 1000), 10, 33, 20, LIME);
   if (s->is_online) {
     __draw_ping();
     __draw_bandwidth();
   }
   __draw_crosshair();
+  __draw_curr_ammo(&s->player.weapon);
 }
 
 void sk_renderer_draw(sk_state *s) {

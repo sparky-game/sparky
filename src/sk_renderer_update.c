@@ -39,6 +39,7 @@ void sk_renderer_update(sk_state *s) {
     break;
   case SK_SCENE_KIND_GAMEPLAY:
     if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) sk_weapon_shoot(&s->player.weapon);
+    if (IsKeyPressed(KEY_R)) sk_weapon_reload(&s->player.weapon);
     sk_player_jump(&s->player);
     sk_player_move(&s->player, sk_player_peek(&s->player));
     break;

@@ -29,16 +29,27 @@ typedef enum {
 } sk_weapon_kind;
 
 typedef struct {
+  u8 magazine;
+  u8 reserve;
+} sk_weapon_ammo_spec;
+
+typedef struct {
   sk_weapon_kind kind;
   Model model;
   ModelAnimation *model_anims;
   u8 model_anims_count;
   u8 model_anim_frame_count;
   Sound sound_shoot;
+  Sound sound_reload;
+  sk_weapon_ammo_spec ammo;
 } sk_weapon;
 
-static const char * const sk_weapon_kinds[] = {
+static const char * const sk_weapon_kind2name[] = {
   [SK_WEAPON_KIND_7MM] = "7mm"
+};
+
+static const sk_weapon_ammo_spec sk_weapon_kind2ammo[] = {
+  [SK_WEAPON_KIND_7MM] = { 12, 3 }
 };
 
 sk_weapon sk_weapon_create(sk_weapon_kind kind);
@@ -48,3 +59,5 @@ void sk_weapon_destroy(sk_weapon *w);
 void sk_weapon_draw(sk_weapon *w, Vector3 pos);
 
 void sk_weapon_shoot(sk_weapon *w);
+
+void sk_weapon_reload(sk_weapon *w);
