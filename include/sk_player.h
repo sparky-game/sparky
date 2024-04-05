@@ -36,6 +36,7 @@ typedef struct sk_player {
   Model model;
   sk_weapon weapon;
   f32 v_y;
+  u8 hp;
 } sk_player;
 
 static const char * const sk_player_kinds[] = {

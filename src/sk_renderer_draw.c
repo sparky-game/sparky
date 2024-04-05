@@ -93,6 +93,14 @@ static inline void __draw_crosshair(void) {
              WHITE);
 }
 
+static inline void __draw_curr_hp(sk_player *p) {
+  DrawText(TextFormat("%u", p->hp),
+           100,
+           GetScreenHeight() - 100,
+           25,
+           RAYWHITE);
+}
+
 static inline void __draw_curr_ammo(sk_weapon *w) {
   DrawText(TextFormat("%u | %u", w->ammo.magazine, w->ammo.reserve),
            GetScreenWidth() - 100,
@@ -109,6 +117,7 @@ static void __draw_gameplay_hud(sk_state *s) {
     __draw_bandwidth();
   }
   __draw_crosshair();
+  __draw_curr_hp(&s->player);
   __draw_curr_ammo(&s->player.weapon);
 }
 

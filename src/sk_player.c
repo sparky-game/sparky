@@ -24,11 +24,12 @@
 #include <sk_player.h>
 #include <sk_config.h>
 
-#define PLAYER_HEIGHT            2
-#define GRAVITY                  19
-#define JUMP_INIT_VELOCITY       9
-#define PEEK_ACCELERATION        1.5
-#define WALK_VELOCITY            0.1
+#define PLAYER_HEIGHT          2
+#define GRAVITY                20
+#define JUMP_INIT_VELOCITY     9
+#define PEEK_ACCELERATION      1.5
+#define WALK_VELOCITY          0.1
+#define MODEL_PATH_PLACEHOLDER "assets/models/%s.glb"
 
 sk_player sk_player_create(i8 lobby_id, i8 lobby_slot_idx, sk_player_kind kind) {
   assert(lobby_id != -1);
@@ -43,7 +44,8 @@ sk_player sk_player_create(i8 lobby_id, i8 lobby_slot_idx, sk_player_kind kind) 
       .up = (Vector3) { 0, 1, 0 },
       .fovy = SK_CONFIG_CLIENT_FOV,
       .projection = CAMERA_PERSPECTIVE
-    }
+    },
+    .hp = 100
   };
 }
 
@@ -54,7 +56,7 @@ void sk_player_destroy(sk_player *p) {
 }
 
 void sk_player_load(sk_player *p, sk_weapon_kind initial_weapon_kind) {
-  p->model = LoadModel(TextFormat("assets/models/%s.glb", sk_player_kinds[p->kind]));
+  p->model = LoadModel(TextFormat(MODEL_PATH_PLACEHOLDER, sk_player_kinds[p->kind]));
   p->weapon = sk_weapon_create(initial_weapon_kind);
 }
 
