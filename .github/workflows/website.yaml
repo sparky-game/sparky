@@ -50,6 +50,7 @@ jobs:
           path: docs/www/build
   deploy:
     if: ${{ github.event_name == 'push' }}
+    needs: [build-analyze]
     environment:
       name: ${{ github.workflow }}
       url: ${{ steps.deploy.outputs.page_url }}
