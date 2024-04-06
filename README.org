@@ -87,6 +87,13 @@ Sparky is distributed in the hope that it will be useful, but WITHOUT ANY WARRAN
 You should have received a copy of the GNU General Public License along with Sparky. If not, see <https://www.gnu.org/licenses/>.
 #+end_quote
 
+# Graphic's style (Low Poly)
+#+begin_html
+<p align="center">
+<img src="assets/3d-low-poly-scene.png" alt="3D Low Poly Scene" height=500>
+</p>
+#+end_html
+
 * Table of Contents :toc:
 - [[#projects-roadmap][Project's Roadmap]]
 - [[#usage][Usage]]
