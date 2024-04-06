@@ -1,0 +1,75 @@
+name: website
+
+on:
+  push:
+    branches: [master]
+    paths: ['docs/www/**']
+  pull_request:
+    branches: [master]
+    types: [opened, synchronize]
+    paths: ['docs/www/**']
+  schedule:
+    - cron: '0 0 * * 1'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-analyze:
+    defaults:
+      run:
+        working-directory: docs/www
+    permissions:
+      security-events: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout-repo
+        uses: actions/checkout@v4
+      - name: setup-node
+        uses: actions/setup-node@v4
+        with:
+          cache: npm
+          node-version: '20'
+          cache-dependency-path: docs/www/package-lock.json
+      - name: install-dependencies
+        run: npm ci --no-audit --no-fund --omit=optional
+      - name: setup-codeql
+        uses: github/codeql-action/init@v3
+        with:
+          languages: javascript-typescript
+      - name: build
+        run: npm run build
+      - name: analyze
+        uses: github/codeql-action/analyze@v3
+      - name: upload-artifact
+        if: ${{ github.event_name == 'push' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: build
+          path: docs/www/build
+  deploy:
+    if: ${{ github.event_name == 'push' }}
+    needs: [build-analyze]
+    environment:
+      name: ${{ github.workflow }}
+      url: ${{ steps.deploy.outputs.page_url }}
+    permissions:
+      id-token: write
+      pages: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: download-artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: build
+          path: build
+      - name: setup-page
+        uses: actions/configure-pages@v4
+      - name: upload-page
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: build
+      - name: deploy-page
+        id: deploy
+        uses: actions/deploy-pages@v4

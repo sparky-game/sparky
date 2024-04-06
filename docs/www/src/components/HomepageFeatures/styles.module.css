@@ -1,0 +1,16 @@
+.features {
+  display: flex;
+  align-items: center;
+  padding: 2rem 0;
+  width: 100%;
+}
+
+.featureImg {
+  margin-bottom: 1em;
+  height: 150px;
+  transition: transform 0.3s ease-in-out;
+}
+
+.featureImg:hover {
+  transform: scale(1.05);
+}

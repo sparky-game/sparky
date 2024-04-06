@@ -1,0 +1,64 @@
+.heroBanner {
+  padding: 4rem 0;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+@media screen and (max-width: 996px) {
+  .heroBanner {
+    padding: 2rem;
+  }
+}
+
+.Container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+@media (max-width: 1200px) {
+  .Container {
+    max-width: 50vw;
+  }
+}
+
+.Info {
+  float: left;
+  margin-right: 60px;
+}
+
+.Logo {
+  float: right;
+  margin-right: 0;
+  transition: transform 0.3s ease-in-out;
+}
+.Logo:hover {
+  transform: scale(1.05);
+}
+
+.Title {
+  font-size: 42px;
+  text-align: left;
+}
+
+.TitleHighlighted {
+  color: #ef6143;
+}
+
+.Subtitle {
+  font-size: 18px;
+  text-align: left;
+}
+
+.Button {
+  margin-right: 1em;
+}
+.Button:last-child {
+  margin-right: 0;
+}
+
+.ButtonPair {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
