@@ -1,4 +1,7 @@
 build/
+docs/www/.docusaurus/
+docs/www/build/
+docs/www/node_modules/
 
 sparky
 sparky_debug
