@@ -65,7 +65,7 @@ void sk_weapon_draw(sk_weapon *w, Camera3D *cam, Vector3 offset, f32 scale) {
 }
 
 void sk_weapon_shoot(sk_weapon *w) {
-  if (!w->ammo.magazine) return;
+  if (!w->ammo.magazine || IsSoundPlaying(w->sound_reload)) return;
   ++w->model_anim_frame_count;
   UpdateModelAnimation(w->model, w->model_anims[0], w->model_anim_frame_count);
   if (w->model_anim_frame_count >= w->model_anims[0].frameCount) w->model_anim_frame_count = 0;
