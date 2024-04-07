@@ -70,14 +70,6 @@ static void __draw_gameplay_world(sk_state *s) {
   EndMode3D();
 }
 
-static inline void __draw_ping(void) {
-  DrawText(TextFormat("N/A ms"), 10, 50, 20, LIME);
-}
-
-static inline void __draw_bandwidth(void) {
-  DrawText(TextFormat("(d) N/A bps | (u) N/A bps"), 10, 70, 20, LIME);
-}
-
 static inline void __draw_crosshair(void) {
   DrawCircle(GetScreenWidth() / 2,
              GetScreenHeight() / 2,
@@ -89,32 +81,29 @@ static inline void __draw_crosshair(void) {
              WHITE);
 }
 
-static inline void __draw_curr_hp(sk_player *p) {
-  DrawText(TextFormat("%u", p->hp),
+static void __draw_gameplay_hud(sk_state *s) {
+  DrawText("v" sk_xstr(SK_VERSION),
+           GetScreenWidth() - 100,
+           GetScreenHeight() - 20,
+           14,
+           GRAY);
+  DrawFPS(10, 10);
+  DrawText(TextFormat("%.4f ms", GetFrameTime() * 1000), 10, 33, 20, LIME);
+  if (s->is_online) {
+    DrawText(TextFormat("N/A ms"), 10, 50, 20, LIME);
+    DrawText(TextFormat("(d) N/A bps | (u) N/A bps"), 10, 70, 20, LIME);
+  }
+  __draw_crosshair();
+  DrawText(TextFormat("%u", s->player.hp),
            100,
            GetScreenHeight() - 100,
            25,
            RAYWHITE);
-}
-
-static inline void __draw_curr_ammo(sk_weapon *w) {
-  DrawText(TextFormat("%u | %u", w->ammo.magazine, w->ammo.reserve),
+  DrawText(TextFormat("%u | %u", s->player.weapon.ammo.magazine, s->player.weapon.ammo.reserve),
            GetScreenWidth() - 100,
            GetScreenHeight() - 100,
            25,
            RAYWHITE);
-}
-
-static void __draw_gameplay_hud(sk_state *s) {
-  DrawFPS(10, 10);
-  DrawText(TextFormat("%.4f ms", GetFrameTime() * 1000), 10, 33, 20, LIME);
-  if (s->is_online) {
-    __draw_ping();
-    __draw_bandwidth();
-  }
-  __draw_crosshair();
-  __draw_curr_hp(&s->player);
-  __draw_curr_ammo(&s->player.weapon);
 }
 
 void sk_renderer_draw(sk_state *s) {
