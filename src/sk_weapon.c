@@ -23,6 +23,7 @@
 #include <string.h>
 #include <assert.h>
 #include <sk_weapon.h>
+#include <raymath.h>
 
 #define MODEL_PATH_PLACEHOLDER        "assets/models/%s.glb"
 #define SOUND_SHOOT_PATH_PLACEHOLDER  "assets/sounds/%s/shoot.wav"
@@ -54,12 +55,12 @@ void sk_weapon_destroy(sk_weapon *w) {
   w = 0;
 }
 
-void sk_weapon_draw(sk_weapon *w, Vector3 pos) {
+void sk_weapon_draw(sk_weapon *w, Camera3D *cam, Vector3 offset, f32 scale) {
   DrawModelEx(w->model,
-              pos,
+              Vector3Add(cam->position, offset),
               (Vector3) { 1, 0, 0 },
               275,
-              (Vector3) { 0.5f, 0.5f, 0.5f },
+              (Vector3) { scale, scale, scale },
               WHITE);
 }
 

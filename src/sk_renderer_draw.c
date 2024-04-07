@@ -63,12 +63,8 @@ static inline void __draw_walls(void) {
 static void __draw_gameplay_world(sk_state *s) {
   ClearBackground(SKYBLUE);
   BeginMode3D(s->player.camera);
+  sk_weapon_draw(&s->player.weapon, &s->player.camera, (Vector3) { 1, -1, -3 }, 0.5f);
   sk_player_draw(&s->player);
-  sk_weapon_draw(&s->player.weapon, (Vector3) {
-      s->player.camera.position.x + 1,
-      s->player.camera.position.y - 1,
-      s->player.camera.position.z - 3
-    });
   __draw_floor();
   __draw_walls();
   EndMode3D();

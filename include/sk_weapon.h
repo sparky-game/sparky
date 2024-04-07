@@ -56,7 +56,7 @@ sk_weapon sk_weapon_create(sk_weapon_kind kind);
 
 void sk_weapon_destroy(sk_weapon *w);
 
-void sk_weapon_draw(sk_weapon *w, Vector3 pos);
+void sk_weapon_draw(sk_weapon *w, Camera3D *cam, Vector3 offset, f32 scale);
 
 void sk_weapon_shoot(sk_weapon *w);
 
