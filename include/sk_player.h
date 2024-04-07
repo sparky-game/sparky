@@ -25,7 +25,7 @@
 #include <sk_weapon.h>
 
 typedef enum {
-  SK_PLAYER_KIND_JETT
+  SK_PLAYER_KIND_AGENT69
 } sk_player_kind;
 
 typedef struct sk_player {
@@ -40,7 +40,7 @@ typedef struct sk_player {
 } sk_player;
 
 static const char * const sk_player_kinds[] = {
-  [SK_PLAYER_KIND_JETT] = "jett"
+  [SK_PLAYER_KIND_AGENT69] = "agent69"
 };
 
 sk_player sk_player_create(i8 lobby_id, i8 lobby_slot_idx, sk_player_kind kind);

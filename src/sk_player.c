@@ -107,12 +107,14 @@ void sk_player_move(sk_player *p, f32 roll) {
 }
 
 void sk_player_draw(sk_player *p) {
-  DrawModel(p->model,
-            (Vector3) {
-              p->camera.position.x - 4,
-              p->camera.position.y - PLAYER_HEIGHT,
-              p->camera.position.z
-            },
-            1,
-            WHITE);
+  DrawModelEx(p->model,
+              (Vector3) {
+                p->camera.position.x - 4,
+                p->camera.position.y - PLAYER_HEIGHT,
+                p->camera.position.z
+              },
+              (Vector3) { 0, 1, 0 },
+              90,
+              (Vector3) { 0.001f, 0.001f, 0.001f },
+              WHITE);
 }

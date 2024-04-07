@@ -62,6 +62,6 @@ sk_state sk_state_create_offline(void) {
   return (sk_state) {
     .is_online = 0,
     .curr_scene = (sk_scene) { .kind = SK_SCENE_KIND_MAIN_MENU },
-    .player = sk_player_create(0, 0, SK_PLAYER_KIND_JETT)
+    .player = sk_player_create(0, 0, SK_PLAYER_KIND_AGENT69)
   };
 }
