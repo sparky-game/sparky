@@ -65,6 +65,9 @@ A 5v5 character-based libre tactical shooter
 <a href="https://github.com/iWas-Coder/sparky/actions/workflows/build-linux.yaml">
 <img src="https://github.com/iWas-Coder/sparky/actions/workflows/build-linux.yaml/badge.svg" alt="CI Build Linux">
 </a>
+<a href="https://github.com/iWas-Coder/sparky/actions/workflows/website.yaml">
+<img src="https://github.com/iWas-Coder/sparky/actions/workflows/website.yaml/badge.svg" alt="CI Website">
+</a>
 </p>
 #+end_html
 
@@ -149,6 +152,8 @@ git clone --recurse-submodules https://github.com/iWas-Coder/sparky
 These are the packages needed to be able to build /Sparky/ from source, they are divided by distribution/package manager. Also, a command for each one is added to make the installation of these development dependencies as easy and straightforward as possible.
 
 - ~gcc~
+- ~rustc~
+- ~cargo~
 - ~make~
 - ~libX11~
 - ~libXcursor~
@@ -159,23 +164,23 @@ These are the packages needed to be able to build /Sparky/ from source, they are
 *** Debian/Ubuntu
 
 #+begin_src sh
-sudo apt install -y gcc make libx11-dev libxcursor-dev libxrandr-dev libxinerama-dev libxi-dev
+sudo apt install -y gcc rustc cargo make libx11-dev libxcursor-dev libxrandr-dev libxinerama-dev libxi-dev
 #+end_src
 
 *** Fedora
 
 #+begin_src sh
-sudo dnf install -y gcc make libX11-devel libXcursor-devel libXrandr-devel libXinerama-devel libXi-devel
+sudo dnf install -y gcc rust cargo make libX11-devel libXcursor-devel libXrandr-devel libXinerama-devel libXi-devel
 #+end_src
 
 *** Arch
 
 #+begin_src sh
-sudo pacman -S gcc make libx11 libxcursor libxrandr libxinerama libxi
+sudo pacman -S gcc rust make libx11 libxcursor libxrandr libxinerama libxi
 #+end_src
 
 *** Gentoo
 
 #+begin_src sh
-sudo emerge -va gcc make libX11 libXcursor libXrandr libXinerama libXi
+sudo emerge -va gcc rust-bin make libX11 libXcursor libXrandr libXinerama libXi
 #+end_src
