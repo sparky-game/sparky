@@ -7,7 +7,8 @@ on:
       - 'include/**'
       - 'src/**'
       - 'vendor/**'
-      - 'Makefile'
+      - 'BSDmakefile'
+      - 'GNUmakefile'
       - 'config.mk'
   pull_request:
     branches: [master]
@@ -16,7 +17,8 @@ on:
       - 'include/**'
       - 'src/**'
       - 'vendor/**'
-      - 'Makefile'
+      - 'BSDmakefile'
+      - 'GNUmakefile'
       - 'config.mk'
   schedule:
     - cron: '0 0 * * 1'
