@@ -20,7 +20,8 @@
 
 
 .PHONY: all
-
-all:
+.DEFAULT:
 	@which gmake >/dev/null 2>&1 || (echo "ERROR: *** GNU make is required for Sparky to build.  Stop." && exit 1)
 	@gmake -s ${.FLAGS} ${.TARGETS}
+
+all: .DEFAULT
