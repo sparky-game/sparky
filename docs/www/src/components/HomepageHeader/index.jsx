@@ -13,7 +13,7 @@ function Title() {
           className={styles.TitleHighlighted}
           strings={[
             '5v5',
-            'blazingly flast',
+            'blazingly fast',
             'character-based',
             'simple',
             'low poly',
