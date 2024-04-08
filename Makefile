@@ -48,6 +48,9 @@ PPO_CC    = CC
 PPO_AR    = AR
 PPO_LD    = LD
 
+# Dependencies
+CHECKDEPS = mkdir mkfifo gcc ar cargo jq
+
 # Directories
 SRC_DIR                 = src
 HDR_DIR                 = include
@@ -146,17 +149,25 @@ else
   OUT = $(NAME)
 endif
 
-# Build targets
-TGTS = $(BUILD_DIR) $(RAYLIB_BUILD_DIR) game
-
 
 ###################
 # === TARGETS === #
 ###################
-.PHONY: all game clean mrproper version help
+.WAIT:
+.PHONY: all checkdeps game clean mrproper version help
 
-all: $(TGTS)
+all: checkdeps .WAIT $(BUILD_DIR) $(RAYLIB_BUILD_DIR) game
 	@:
+
+checkdeps:
+	@for i in $(CHECKDEPS); do             \
+	  if which $${i} >/dev/null 2>&1; then \
+	    echo "checking for $${i}... yes";  \
+	  else                                 \
+	    echo "checking for $${i}... no";   \
+	    exit 1;                            \
+	  fi;                                  \
+	done
 
 $(BUILD_DIR):
 	@echo "  $(PPO_MKDIR)   $@"
@@ -226,12 +237,13 @@ version:
 help:
 	@echo "Targets"
 	@echo "======="
-	@echo "  all      :: Build all targets marked with [*]"
-	@echo "* game     :: Build the bare game"
-	@echo "  clean    :: Remove the 'build' directory"
-	@echo "  mrproper :: Remove and cleans everything"
-	@echo "  version  :: Show the current version string"
-	@echo "  help     :: Show this help and usage panel"
+	@echo "  all       :: Build all targets marked with [*]"
+	@echo "* checkdeps :: Check dependencies for build process"
+	@echo "* game      :: Build the bare game"
+	@echo "  clean     :: Remove the 'build' directory"
+	@echo "  mrproper  :: Remove and cleans everything"
+	@echo "  version   :: Show the current version string"
+	@echo "  help      :: Show this help and usage panel"
 	@echo
 	@echo "Execute 'make' or 'make all' to build all targets marked with [*]"
 	@echo "For further info see the ./README.org file"
