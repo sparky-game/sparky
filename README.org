@@ -56,6 +56,7 @@ A 5v5 character-based libre tactical shooter
 <img src="https://img.shields.io/github/license/iwas-coder/sparky?color=blue" alt="License">
 <img src="https://img.shields.io/github/repo-size/iwas-coder/sparky?color=blue" alt="Size">
 <img src="https://img.shields.io/github/v/tag/iwas-coder/sparky?color=blue" alt="Release">
+<img src="https://img.shields.io/badge/speed-%F0%9F%94%A5blazing-blue" alt="Blazing Speed">
 </p>
 #+end_html
 
