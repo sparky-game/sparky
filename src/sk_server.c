@@ -29,6 +29,7 @@
 #include <sk_server.h>
 #include <arpa/inet.h>
 #include <sys/socket.h>
+#include <netinet/in.h>
 
 #if defined(_WIN32) || defined(_WIN64)
 #include <windows.h>

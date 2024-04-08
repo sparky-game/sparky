@@ -31,6 +31,7 @@
 #include <sk_client.h>
 #include <sk_server.h>
 #include <sys/socket.h>
+#include <netinet/in.h>
 #include <sk_renderer.h>
 
 static void offline_mode(void) {
