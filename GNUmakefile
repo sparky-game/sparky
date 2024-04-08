@@ -95,8 +95,7 @@ else
   RSC                 += -r
   DISABLE_ASSERTS_OPTS = -D NDEBUG
   HIDE_WARNS_OPTS      = -w
-  HIDE_LTO_WARNS_OPTS  = -Wno-stringop-overflow
-  RELEASE_OPTS         = -pipe -O3 -fipa-pta -fuse-linker-plugin -flto=auto
+  RELEASE_OPTS         = -pipe -O3 -fipa-pta
   STRIP_OPTS           = -s
 endif
 define RAYLIB_CPPFLAGS
@@ -129,7 +128,6 @@ define CFLAGS
 endef
 define LDFLAGS
   -Wl,--build-id           \
-  $(HIDE_LTO_WARNS_OPTS)   \
   $(STRIP_OPTS)            \
   $(RELEASE_OPTS)          \
   -L $(BUILD_DIR)          \
