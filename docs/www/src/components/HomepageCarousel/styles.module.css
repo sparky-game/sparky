@@ -7,6 +7,8 @@
 
 .container {
   padding-top: 68px;
+  max-width: var(--ifm-container-width-xl);
+  margin: auto;
 }
 
 .title {
