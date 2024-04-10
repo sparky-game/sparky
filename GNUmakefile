@@ -99,9 +99,10 @@ else
   STRIP_OPTS           = -s
 endif
 define RAYLIB_CPPFLAGS
-  $(DISABLE_ASSERTS_OPTS)    \
-  -D PLATFORM_DESKTOP        \
-  -isystem $(RAYLIB_SRC_DIR) \
+  $(DISABLE_ASSERTS_OPTS)        \
+  -D PLATFORM_DESKTOP            \
+  -isystem /usr/X11R6/$(HDR_DIR) \
+  -isystem $(RAYLIB_SRC_DIR)     \
   -isystem $(RAYLIB_SRC_DIR)/external/glfw/$(HDR_DIR)
 endef
 define CPPFLAGS
@@ -118,7 +119,7 @@ define RAYLIB_CFLAGS
   $(RELEASE_OPTS)
 endef
 define CFLAGS
-  -std=c17          \
+  -std=c11          \
   -Wall             \
   -Wextra           \
   -pedantic         \
@@ -134,6 +135,7 @@ define LDFLAGS
   -L $(LAUNCHER_BUILD_DIR) \
   -lraylib                 \
   -lsk_launcher            \
+  -lpthread                \
   -lm                      \
   -static-libgcc
 endef

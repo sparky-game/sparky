@@ -108,6 +108,8 @@ You should have received a copy of the GNU General Public License along with Spa
     - [[#fedora][Fedora]]
     - [[#arch][Arch]]
     - [[#gentoo][Gentoo]]
+    - [[#freebsd][FreeBSD]]
+    - [[#openbsd][OpenBSD]]
 
 * Project's Roadmap
 
@@ -152,10 +154,10 @@ git clone --recurse-submodules https://github.com/iWas-Coder/sparky
 
 These are the packages needed to be able to build /Sparky/ from source, they are divided by distribution/package manager. Also, a command for each one is added to make the installation of these development dependencies as easy and straightforward as possible.
 
-- ~gcc~
-- ~rustc~
-- ~cargo~
 - ~make~
+- ~gcc~
+- ~rust~
+- ~jq~
 - ~libX11~
 - ~libXcursor~
 - ~libXrandr~
@@ -165,23 +167,36 @@ These are the packages needed to be able to build /Sparky/ from source, they are
 *** Debian/Ubuntu
 
 #+begin_src sh
-sudo apt install -y gcc rustc cargo make libx11-dev libxcursor-dev libxrandr-dev libxinerama-dev libxi-dev
+sudo apt install -y make gcc rustc jq libx11-dev libxcursor-dev libxrandr-dev libxinerama-dev libxi-dev
 #+end_src
 
 *** Fedora
 
 #+begin_src sh
-sudo dnf install -y gcc rust cargo make libX11-devel libXcursor-devel libXrandr-devel libXinerama-devel libXi-devel
+sudo dnf install -y make gcc cargo jq libX11-devel libXcursor-devel libXrandr-devel libXinerama-devel libXi-devel
 #+end_src
 
 *** Arch
 
 #+begin_src sh
-sudo pacman -S gcc rust make libx11 libxcursor libxrandr libxinerama libxi
+sudo pacman -S make gcc rust jq libx11 libxcursor libxrandr libxinerama libxi
 #+end_src
 
 *** Gentoo
 
 #+begin_src sh
-sudo emerge -va gcc rust-bin make libX11 libXcursor libXrandr libXinerama libXi
+sudo emerge -va make gcc rust-bin jq libX11 libXcursor libXrandr libXinerama libXi
+#+end_src
+
+*** FreeBSD
+
+#+begin_src sh
+sudo pkg install gmake gcc rust jq libX11 libXcursor libXrandr libXinerama libXi
+#+end_src
+
+*** OpenBSD
+
+#+begin_src sh
+sudo pkg_add gmake gcc rust jq
+sudo ln -s /usr/local/bin/x86_64-unknown-openbsd*-gcc-* /usr/local/bin/gcc
 #+end_src
