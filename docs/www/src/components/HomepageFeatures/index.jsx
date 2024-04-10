@@ -75,9 +75,7 @@ function Feature({title, image, description}) {
         <img className={styles.featureImg} src={image} alt={title} />
       </div>
       <div className='text--center padding-horiz--md'>
-        <Heading as='h3'>
-          {title}
-        </Heading>
+        <Heading as='h3'>{title}</Heading>
         <p>{description}</p>
       </div>
     </div>
@@ -86,7 +84,7 @@ function Feature({title, image, description}) {
 
 export default function HomepageFeatures() {
   return (
-    <section className={ styles.features }>
+    <section className={styles.features}>
       <div className='container'>
         <div className='row'>
           {featureList.map((props, idx) => (

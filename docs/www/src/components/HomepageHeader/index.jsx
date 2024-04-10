@@ -92,7 +92,7 @@ function Logo() {
 export default function HomepageHeader() {
   return (
     <header className={clsx('hero hero--secondary', styles.heroBanner)}>
-      <div className={`container ${styles.Container}`}>
+      <div className={`container ${styles.Container} fade-in-anim`}>
         <Info />
         <Logo />
       </div>

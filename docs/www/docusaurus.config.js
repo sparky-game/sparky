@@ -1,7 +1,7 @@
 import { themes as prismThemes } from 'prism-react-renderer';
 
 const config = {
-  title: 'Sparky: 5v5 character-based libre tactical shooter',
+  title: 'Sparky - 5v5 character-based libre tactical shooter',
   tagline: 'A 5v5, blazingly flast, character-based libre tactical shooter written in pure C.',
   favicon: 'img/favicon.png',
   url: 'https://iwas-coder.github.io',
@@ -59,7 +59,7 @@ const config = {
         {
           href: 'https://buymeacoffee.com/iwas.coder',
           className: 'header-bmac-link',
-          'aria-label': 'Buy me a coffee',
+          'aria-label': 'Buy Me A Coffee',
           position: 'right'
         },
         {
@@ -103,6 +103,10 @@ const config = {
             {
               label: 'Contributing',
               href: 'https://github.com/iWas-Coder/sparky/blob/master/CONTRIBUTING.org'
+            },
+            {
+              label: 'Code of Conduct',
+              href: 'https://github.com/iWas-Coder/sparky/blob/master/CODE_OF_CONDUCT.md'
             }
           ]
         },
@@ -111,7 +115,15 @@ const config = {
           items: [
             {
               label: 'GitHub',
-              href: 'https://github.com/iWas-Coder/sparky',
+              href: 'https://github.com/iWas-Coder/sparky'
+            },
+            {
+              label: 'itch.io',
+              href: 'https://iwas-coder.itch.io/sparky'
+            },
+            {
+              label: 'Buy Me a Coffee',
+              href: 'https://buymeacoffee.com/iwas.coder'
             }
           ]
         }

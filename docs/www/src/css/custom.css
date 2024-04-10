@@ -27,6 +27,22 @@
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
 }
 
+/* Enter animation */
+@keyframes fade-in {
+  0% {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0%);
+    opacity: 1;
+  }
+}
+
+.fade-in-anim {
+  animation: 1.5s fade-in;
+}
+
 /* Navbar */
 
 .navbar {
