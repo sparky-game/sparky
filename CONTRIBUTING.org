@@ -26,7 +26,7 @@ Thank you for your interest in contributing to this project, it is extremely app
 
 * Submitting changes
 
-Please, send a GitHub Pull Request (PR) to [[https://github.com/iWas-Coder/wge][iWas-Coder/wge]] with a clear list of what you've done ([[http://help.github.com/pull-requests/][read more about PRs]]). The best place to start is to fork the repository to your personal profile, and start working from there.
+Please, send a GitHub Pull Request (PR) to [[https://github.com/iWas-Coder/sparky][iWas-Coder/sparky]] with a clear list of what you've done ([[http://help.github.com/pull-requests/][read more about PRs]]). The best place to start is to fork the repository to your personal profile, and start working from there.
 
 Please, follow our coding conventions below and make sure all of your commits are atomic (one feature per commit) and have descriptive messages and an optional description (if needed). One-line messages are fine for small changes, but bigger changes should look like this:
 
