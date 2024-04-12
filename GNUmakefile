@@ -49,7 +49,7 @@ PPO_AR    = AR
 PPO_LD    = LD
 
 # Dependencies
-CHECKDEPS = mkdir mkfifo gcc ar cargo jq
+CHECKDEPS = mkdir mkfifo $(CC) ar cargo jq
 
 # Directories
 SRC_DIR                 = src
@@ -82,6 +82,11 @@ ifndef MAKEFLAGS_JOBS
   CARGO_JOBS = -j1
 endif
 CC = gcc
+ifeq ($(shell uname), Darwin)
+  CC = clang
+  MACOS_SPECIFIC_CFLAGS_OPTS  = -x objective-c
+  MACOS_SPECIFIC_LDFLAGS_OPTS = -framework Cocoa -framework Carbon -framework CoreVideo -framework OpenGL -framework IOKit
+endif
 AR = ar -rc
 ifdef Q_RSC
   CARGO_QUIET_OPTS = -q --message-format=json
@@ -95,8 +100,19 @@ else
   RSC                 += -r
   DISABLE_ASSERTS_OPTS = -D NDEBUG
   HIDE_WARNS_OPTS      = -w
-  RELEASE_OPTS         = -pipe -O3 -fipa-pta
-  STRIP_OPTS           = -s
+  RELEASE_OPTS         = -pipe -O3
+  ifeq ($(CC), gcc)
+    RELEASE_OPTS += -fipa-pta
+  endif
+  ifneq ($(shell uname), Darwin)
+    STRIP_OPTS = -s
+  endif
+endif
+ifeq ($(CC), gcc)
+  GCC_STATIC_LDFLAGS_OPTS = -static-libgcc
+endif
+ifneq ($(shell uname), Darwin)
+  BUILDID_OPTS = -Wl,--build-id
 endif
 define RAYLIB_CPPFLAGS
   $(DISABLE_ASSERTS_OPTS)        \
@@ -116,7 +132,8 @@ define RAYLIB_CFLAGS
   -std=gnu99         \
   $(HIDE_WARNS_OPTS) \
   $(DEBUG_SYM_OPTS)  \
-  $(RELEASE_OPTS)
+  $(RELEASE_OPTS)    \
+  $(MACOS_SPECIFIC_CFLAGS_OPTS)
 endef
 define CFLAGS
   -std=c11          \
@@ -125,19 +142,21 @@ define CFLAGS
   -pedantic         \
   -Werror           \
   $(DEBUG_SYM_OPTS) \
-  $(RELEASE_OPTS)
+  $(RELEASE_OPTS)   \
+  $(MACOS_SPECIFIC_CFLAGS_OPTS)
 endef
 define LDFLAGS
-  -Wl,--build-id           \
-  $(STRIP_OPTS)            \
-  $(RELEASE_OPTS)          \
-  -L $(BUILD_DIR)          \
-  -L $(LAUNCHER_BUILD_DIR) \
-  -lraylib                 \
-  -lsk_launcher            \
-  -lpthread                \
-  -lm                      \
-  -static-libgcc
+  $(BUILDID_OPTS)            \
+  $(STRIP_OPTS)              \
+  $(RELEASE_OPTS)            \
+  -L $(BUILD_DIR)            \
+  -L $(LAUNCHER_BUILD_DIR)   \
+  -lraylib                   \
+  -lsk_launcher              \
+  -lpthread                  \
+  -lm                        \
+  $(GCC_STATIC_LDFLAGS_OPTS) \
+  $(MACOS_SPECIFIC_LDFLAGS_OPTS)
 endef
 
 # Build output

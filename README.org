@@ -110,6 +110,7 @@ You should have received a copy of the GNU General Public License along with Spa
     - [[#gentoo][Gentoo]]
     - [[#freebsd][FreeBSD]]
     - [[#openbsd][OpenBSD]]
+    - [[#macos][macOS]]
 
 * Project's Roadmap
 
@@ -199,4 +200,10 @@ sudo pkg install gmake gcc rust jq libX11 libXcursor libXrandr libXinerama libXi
 #+begin_src sh
 sudo pkg_add gmake gcc rust jq
 sudo ln -s /usr/local/bin/x86_64-unknown-openbsd*-gcc-* /usr/local/bin/gcc
+#+end_src
+
+*** macOS
+
+#+begin_src sh
+brew install rust jq
 #+end_src

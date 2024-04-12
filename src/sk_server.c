@@ -40,7 +40,6 @@
 #endif
 
 static volatile u8 running = 1;
-static volatile u8 clients = 0;
 
 static inline void handle_interrupt(i32 signum) {
   if (signum == SIGINT) running = 0;
