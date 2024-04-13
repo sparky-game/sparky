@@ -90,6 +90,7 @@ else ifeq ($(shell uname), FreeBSD)
   CC = clang
 else ifeq ($(shell uname), OpenBSD)
   CC = clang
+  OPENBSD_SPECIFIC_LDFLAGS_OPTS = -lc++abi
 endif
 AR = ar -rc
 ifdef Q_RSC
@@ -151,17 +152,18 @@ define CFLAGS
   $(MACOS_SPECIFIC_CFLAGS_OPTS)
 endef
 define LDFLAGS
-  $(BUILDID_OPTS)            \
-  $(STRIP_OPTS)              \
-  $(RELEASE_OPTS)            \
-  -L $(BUILD_DIR)            \
-  -L $(LAUNCHER_BUILD_DIR)   \
-  -lraylib                   \
-  -lsk_launcher              \
-  -lpthread                  \
-  -lm                        \
-  $(GCC_STATIC_LDFLAGS_OPTS) \
-  $(MACOS_SPECIFIC_LDFLAGS_OPTS)
+  $(BUILDID_OPTS)                \
+  $(STRIP_OPTS)                  \
+  $(RELEASE_OPTS)                \
+  -L $(BUILD_DIR)                \
+  -L $(LAUNCHER_BUILD_DIR)       \
+  -lraylib                       \
+  -lsk_launcher                  \
+  -lpthread                      \
+  -lm                            \
+  $(GCC_STATIC_LDFLAGS_OPTS)     \
+  $(MACOS_SPECIFIC_LDFLAGS_OPTS) \
+  $(OPENBSD_SPECIFIC_LDFLAGS_OPTS)
 endef
 
 # Build output
