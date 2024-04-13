@@ -86,6 +86,10 @@ ifeq ($(shell uname), Darwin)
   CC = clang
   MACOS_SPECIFIC_CFLAGS_OPTS  = -x objective-c
   MACOS_SPECIFIC_LDFLAGS_OPTS = -framework Cocoa -framework Carbon -framework CoreVideo -framework OpenGL -framework IOKit
+else ifeq ($(shell uname), FreeBSD)
+  CC = clang
+else ifeq ($(shell uname), OpenBSD)
+  CC = clang
 endif
 AR = ar -rc
 ifdef Q_RSC
@@ -117,6 +121,7 @@ endif
 define RAYLIB_CPPFLAGS
   $(DISABLE_ASSERTS_OPTS)        \
   -D PLATFORM_DESKTOP            \
+  -isystem /usr/local/$(HDR_DIR) \
   -isystem /usr/X11R6/$(HDR_DIR) \
   -isystem $(RAYLIB_SRC_DIR)     \
   -isystem $(RAYLIB_SRC_DIR)/external/glfw/$(HDR_DIR)

@@ -111,6 +111,7 @@ You should have received a copy of the GNU General Public License along with Spa
     - [[#freebsd][FreeBSD]]
     - [[#openbsd][OpenBSD]]
     - [[#macos][macOS]]
+  - [[#compilation--linkage][Compilation & Linkage]]
 
 * Project's Roadmap
 
@@ -156,7 +157,7 @@ git clone --recurse-submodules https://github.com/iWas-Coder/sparky
 These are the packages needed to be able to build /Sparky/ from source, they are divided by distribution/package manager. Also, a command for each one is added to make the installation of these development dependencies as easy and straightforward as possible.
 
 - ~make~
-- ~gcc~
+- ~gcc~ / ~clang~
 - ~rust~
 - ~jq~
 - ~libX11~
@@ -192,14 +193,13 @@ sudo emerge -va make gcc rust-bin jq libX11 libXcursor libXrandr libXinerama lib
 *** FreeBSD
 
 #+begin_src sh
-sudo pkg install gmake gcc rust jq libX11 libXcursor libXrandr libXinerama libXi
+sudo pkg install gmake rust jq libX11 libXcursor libXrandr libXinerama libXi
 #+end_src
 
 *** OpenBSD
 
 #+begin_src sh
-sudo pkg_add gmake gcc rust jq
-sudo ln -s /usr/local/bin/x86_64-unknown-openbsd*-gcc-* /usr/local/bin/gcc
+sudo pkg_add gmake rust jq
 #+end_src
 
 *** macOS
@@ -207,3 +207,7 @@ sudo ln -s /usr/local/bin/x86_64-unknown-openbsd*-gcc-* /usr/local/bin/gcc
 #+begin_src sh
 brew install rust jq
 #+end_src
+
+** Compilation & Linkage
+
+(...)
