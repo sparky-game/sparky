@@ -105,10 +105,6 @@ static void __draw_gameplay_world(sk_state *s) {
   sk_weapon_draw(&s->player.weapon, &s->player.camera, (Vector3) { 1, -1, -3 }, 0.5f);
   sk_player_draw(&s->player);
   sk_map_draw(&s->map);
-  // DrawPlane((Vector3) { 0, 0, 0 }, (Vector2) { 32, 32 }, DARKGRAY);
-  DrawCube((Vector3) { -16, 2.5f, 0 }, 1, 5, 32, MAROON);
-  DrawCube((Vector3) { 16, 2.5f, 0 }, 1, 5, 32, LIME);
-  DrawCube((Vector3) { 0, 2.5f, 16 }, 32, 5, 1, GOLD);
   EndMode3D();
 }
 

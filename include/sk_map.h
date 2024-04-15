@@ -31,6 +31,9 @@ typedef struct {
   sk_map_kind kind;
   Shader pbr_shader;
   Model floor;
+  Model wall1;
+  Model wall2;
+  Model wall3;
 } sk_map;
 
 sk_map sk_map_create(sk_map_kind kind);
