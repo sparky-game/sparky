@@ -35,7 +35,7 @@ extern "C" {
   fn sk_server_run() -> u8;
 }
 
-static SK_LAUNCHER_NAME: &str = "sparky-client::launcher";
+static SK_LAUNCHER_NAME: &str = "sparky::launcher";
 static SK_LAUNCHER_TAB_MODULES: &str = "Modules";
 static SK_LAUNCHER_TAB_LOG: &str = "Console Log";
 
@@ -69,7 +69,13 @@ impl eframe::App for Launcher {
             let ip_label = ui.label("IP: ");
             ui.text_edit_singleline(&mut self.ip).labelled_by(ip_label.id);
           });
-          if ui.button("Play").clicked() { unsafe { sk_client_run(std::ptr::null()); } }
+          if ui.button("Play").clicked() {
+            if self.ip.is_empty() { unsafe { sk_client_run(std::ptr::null()); } }
+            else {
+              let ip_addr = std::ffi::CString::new(self.ip.clone()).unwrap();
+              unsafe { sk_client_run(ip_addr.as_ptr()); }
+            }
+          }
         });
         egui::Window::new("Server").show(ctx, |ui| {
           if ui.button("Start").clicked() { unsafe { sk_server_run(); } }
