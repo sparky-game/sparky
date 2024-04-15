@@ -21,6 +21,7 @@
 
 #pragma once
 
+#include <sk_map.h>
 #include <sk_scene.h>
 #include <sk_lobby.h>
 
@@ -34,9 +35,13 @@ typedef struct {
 typedef struct {
   u8 is_online;
   sk_scene curr_scene;
+  Music menu_music;
   union {
     sk_lobby lobby;
-    sk_player player;
+    struct {
+      sk_map map;
+      sk_player player;
+    };
   };
 } sk_state;
 
@@ -45,5 +50,7 @@ sk_state_global sk_state_global_create(void);
 void sk_state_global_assign_lobby(sk_state_global *sg, i8 *lobby_id, i8 *lobby_slot_idx);
 
 sk_state sk_state_create_offline(void);
+
+void sk_state_destroy_offline(sk_state *s);
 
 sk_state sk_state_create_online(u8 lobby_id);

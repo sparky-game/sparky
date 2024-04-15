@@ -56,8 +56,10 @@ void sk_weapon_destroy(sk_weapon *w) {
 }
 
 void sk_weapon_draw(sk_weapon *w, Camera3D *cam, Vector3 offset, f32 scale) {
+  Vector3 weapon_pos = Vector3Add(cam->position, offset);
+  // Vector3 weapon_pos = Vector3Project(Vector3Add(cam->position, offset), cam->target);
   DrawModelEx(w->model,
-              Vector3Add(cam->position, offset),
+              weapon_pos,
               (Vector3) { 1, 0, 0 },
               275,
               (Vector3) { scale, scale, scale },

@@ -21,6 +21,9 @@
 
 #include <sk_log.h>
 #include <sk_state.h>
+#include <sk_renderer.h>
+
+#define MUSIC_PATH_PLACEHOLDER "assets/music/%s.mp3"
 
 sk_state_global sk_state_global_create(void) {
   sk_state_global sg = { .lobbies_count = 0 };
@@ -50,18 +53,28 @@ void sk_state_global_assign_lobby(sk_state_global *sg, i8 *lobby_id, i8 *lobby_s
   SK_LOG_WARN("sk_state_global_assign_lobby :: all lobbies are full");
 }
 
+sk_state sk_state_create_offline(void) {
+  sk_renderer_create();
+  return (sk_state) {
+    .is_online = 0,
+    .curr_scene = (sk_scene) { .kind = SK_SCENE_KIND_INTRO },
+    .menu_music = LoadMusicStream(TextFormat(MUSIC_PATH_PLACEHOLDER, "menu")),
+    .map = sk_map_create(SK_MAP_CAMPING),
+    .player = sk_player_create(0, 0, SK_PLAYER_KIND_AGENT69)
+  };
+}
+
+void sk_state_destroy_offline(sk_state *s) {
+  sk_map_destroy(&s->map);
+  sk_player_destroy(&s->player);
+  UnloadMusicStream(s->menu_music);
+  sk_renderer_destroy();
+}
+
 sk_state sk_state_create_online(u8 lobby_id) {
   return (sk_state) {
     .is_online = 1,
     .curr_scene = (sk_scene) { .kind = SK_SCENE_KIND_MAIN_MENU },
     .lobby = sk_lobby_create(lobby_id)
-  };
-}
-
-sk_state sk_state_create_offline(void) {
-  return (sk_state) {
-    .is_online = 0,
-    .curr_scene = (sk_scene) { .kind = SK_SCENE_KIND_MAIN_MENU },
-    .player = sk_player_create(0, 0, SK_PLAYER_KIND_AGENT69)
   };
 }

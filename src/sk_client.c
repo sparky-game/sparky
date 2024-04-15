@@ -37,13 +37,11 @@
 static void offline_mode(void) {
   SK_LOG_WARN("Running in offline mode");
   sk_state state = sk_state_create_offline();
-  sk_renderer_create();
   sk_renderer_loop {
     sk_renderer_update(&state);
     sk_renderer_draw(&state);
   }
-  sk_player_destroy(&state.player);
-  sk_renderer_destroy();
+  sk_state_destroy_offline(&state);
 }
 
 static i8 online_mode(const char *ip) {

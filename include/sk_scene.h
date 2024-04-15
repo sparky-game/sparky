@@ -22,6 +22,7 @@
 #pragma once
 
 typedef enum {
+  SK_SCENE_KIND_INTRO,
   SK_SCENE_KIND_MAIN_MENU,
   SK_SCENE_KIND_GAMEPLAY
 } sk_scene_kind;

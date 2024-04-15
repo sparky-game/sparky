@@ -27,6 +27,55 @@
 #include <sk_defines.h>
 #include <sk_renderer.h>
 
+#define INTRO_PHASE0_TXT1      "Wasym Atieh Alonso"
+#define INTRO_PHASE0_TXT1_SIZE 30
+#define INTRO_PHASE0_TXT2      "presents"
+#define INTRO_PHASE0_TXT2_SIZE 26
+#define INTRO_PHASE1_TXT       "a FOSS game"
+#define INTRO_PHASE1_TXT_SIZE  30
+
+static void __draw_intro(sk_state *s) {
+  static u8 phase = 0;
+  static f32 time = 0;
+  switch (phase) {
+  case 0:
+    ClearBackground(BLACK);
+    DrawText(INTRO_PHASE0_TXT1,
+             (GetScreenWidth() - MeasureText(INTRO_PHASE0_TXT1,
+                                             INTRO_PHASE0_TXT1_SIZE)) / 2,
+             (GetScreenHeight() - MeasureText(INTRO_PHASE0_TXT1,
+                                              INTRO_PHASE0_TXT1_SIZE)) / 2,
+             INTRO_PHASE0_TXT1_SIZE,
+             RAYWHITE);
+    DrawText(INTRO_PHASE0_TXT2,
+             (GetScreenWidth() - MeasureText(INTRO_PHASE0_TXT2,
+                                             INTRO_PHASE0_TXT2_SIZE)) / 2,
+             ((GetScreenHeight() - MeasureText(INTRO_PHASE0_TXT2,
+                                               INTRO_PHASE0_TXT2_SIZE)) / 2) - 55,
+             INTRO_PHASE0_TXT2_SIZE,
+             RAYWHITE);
+    break;
+  case 1:
+    ClearBackground(BLACK);
+    DrawText(INTRO_PHASE1_TXT,
+             (GetScreenWidth() - MeasureText(INTRO_PHASE1_TXT,
+                                             INTRO_PHASE1_TXT_SIZE)) / 2,
+             (GetScreenHeight() - MeasureText(INTRO_PHASE1_TXT,
+                                              INTRO_PHASE1_TXT_SIZE)) / 2,
+             INTRO_PHASE1_TXT_SIZE,
+             RAYWHITE);
+    break;
+  case 2:
+    s->curr_scene.kind = SK_SCENE_KIND_MAIN_MENU;
+    return;
+  }
+  if (time >= 9.3f) {
+    time = 0;
+    ++phase;
+  }
+  time += GetFrameTime();
+}
+
 static void __draw_main_menu(void) {
   ClearBackground(BLACK);
   const char * const subtitle = "Press <ENTER> to start";
@@ -50,23 +99,16 @@ static void __draw_main_menu(void) {
            RAYWHITE);
 }
 
-static inline void __draw_floor(void) {
-  DrawPlane((Vector3) { 0, 0, 0 }, (Vector2) { 32, 32 }, DARKGRAY);
-}
-
-static inline void __draw_walls(void) {
-  DrawCube((Vector3) { -16, 2.5f, 0 }, 1, 5, 32, MAROON);
-  DrawCube((Vector3) { 16, 2.5f, 0 }, 1, 5, 32, LIME);
-  DrawCube((Vector3) { 0, 2.5f, 16 }, 32, 5, 1, GOLD);
-}
-
 static void __draw_gameplay_world(sk_state *s) {
   ClearBackground(SKYBLUE);
   BeginMode3D(s->player.camera);
   sk_weapon_draw(&s->player.weapon, &s->player.camera, (Vector3) { 1, -1, -3 }, 0.5f);
   sk_player_draw(&s->player);
-  __draw_floor();
-  __draw_walls();
+  sk_map_draw(&s->map);
+  // DrawPlane((Vector3) { 0, 0, 0 }, (Vector2) { 32, 32 }, DARKGRAY);
+  DrawCube((Vector3) { -16, 2.5f, 0 }, 1, 5, 32, MAROON);
+  DrawCube((Vector3) { 16, 2.5f, 0 }, 1, 5, 32, LIME);
+  DrawCube((Vector3) { 0, 2.5f, 16 }, 32, 5, 1, GOLD);
   EndMode3D();
 }
 
@@ -109,6 +151,9 @@ static void __draw_gameplay_hud(sk_state *s) {
 void sk_renderer_draw(sk_state *s) {
   BeginDrawing();
   switch (s->curr_scene.kind) {
+  case SK_SCENE_KIND_INTRO:
+    __draw_intro(s);
+    break;
   case SK_SCENE_KIND_MAIN_MENU:
     __draw_main_menu();
     break;
