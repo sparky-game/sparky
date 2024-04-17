@@ -57,7 +57,7 @@ sk_state sk_state_create_offline(void) {
   sk_renderer_create();
   return (sk_state) {
     .is_online = 0,
-    .curr_scene = (sk_scene) { .kind = SK_SCENE_KIND_INTRO },
+    .curr_scene = sk_scene_create(SK_SCENE_KIND_INTRO),
     .menu_music = LoadMusicStream(TextFormat(MUSIC_PATH_PLACEHOLDER, "menu")),
     .map = sk_map_create(SK_MAP_CAMPING),
     .player = sk_player_create(0, 0, SK_PLAYER_KIND_AGENT69)
@@ -74,7 +74,7 @@ void sk_state_destroy_offline(sk_state *s) {
 sk_state sk_state_create_online(u8 lobby_id) {
   return (sk_state) {
     .is_online = 1,
-    .curr_scene = (sk_scene) { .kind = SK_SCENE_KIND_MAIN_MENU },
+    .curr_scene = sk_scene_create(SK_SCENE_KIND_MAIN_MENU),
     .lobby = sk_lobby_create(lobby_id)
   };
 }

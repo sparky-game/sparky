@@ -21,6 +21,8 @@
 
 #pragma once
 
+typedef struct sk_state sk_state;
+
 typedef enum {
   SK_SCENE_KIND_INTRO,
   SK_SCENE_KIND_MAIN_MENU,
@@ -29,4 +31,8 @@ typedef enum {
 
 typedef struct {
   sk_scene_kind kind;
+  void (*update)(sk_state *s);
+  void (*draw)(sk_state *s);
 } sk_scene;
+
+sk_scene sk_scene_create(sk_scene_kind kind);

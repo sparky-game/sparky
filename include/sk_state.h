@@ -32,7 +32,7 @@ typedef struct {
   sk_lobby lobbies[SK_STATE_MAX_LOBBIES];
 } sk_state_global;
 
-typedef struct {
+typedef struct sk_state {
   u8 is_online;
   sk_scene curr_scene;
   Music menu_music;
