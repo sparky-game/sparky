@@ -11,7 +11,8 @@ const osList = [
   'arch',
   'gentoo',
   'freebsd',
-  'openbsd'
+  'openbsd',
+  'macos'
 ];
 
 const logoList = [...osList, ...osList];
