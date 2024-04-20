@@ -54,13 +54,16 @@ void sk_state_global_assign_lobby(sk_state_global *sg, i8 *lobby_id, i8 *lobby_s
 }
 
 sk_state sk_state_create_offline(void) {
-  sk_renderer_create();
+  sk_config config = sk_config_create();
+  sk_config_load("config.lua", &config);
+  sk_renderer_create(&config);
   return (sk_state) {
     .is_online = 0,
+    .config = config,
     .curr_scene = sk_scene_create(SK_SCENE_KIND_INTRO),
     .menu_music = LoadMusicStream(TextFormat(MUSIC_PATH_PLACEHOLDER, "menu")),
     .map = sk_map_create(SK_MAP_CAMPING),
-    .player = sk_player_create(0, 0, SK_PLAYER_KIND_AGENT69)
+    .player = sk_player_create(0, 0, SK_PLAYER_KIND_AGENT69, &config)
   };
 }
 
@@ -69,12 +72,15 @@ void sk_state_destroy_offline(sk_state *s) {
   sk_player_destroy(&s->player);
   UnloadMusicStream(s->menu_music);
   sk_renderer_destroy();
+  sk_config_destroy(&s->config);
 }
 
 sk_state sk_state_create_online(u8 lobby_id) {
   return (sk_state) {
     .is_online = 1,
+    .config = sk_config_create(),
     .curr_scene = sk_scene_create(SK_SCENE_KIND_INTRO),
+    .menu_music = LoadMusicStream(TextFormat(MUSIC_PATH_PLACEHOLDER, "menu")),
     .lobby = sk_lobby_create(lobby_id)
   };
 }

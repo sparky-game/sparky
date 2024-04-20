@@ -22,6 +22,7 @@
 #pragma once
 
 #include <raylib.h>
+#include <sk_config.h>
 #include <sk_weapon.h>
 
 typedef enum {
@@ -43,16 +44,16 @@ static const char * const sk_player_kinds[] = {
   [SK_PLAYER_KIND_AGENT69] = "agent69"
 };
 
-sk_player sk_player_create(i8 lobby_id, i8 lobby_slot_idx, sk_player_kind kind);
+sk_player sk_player_create(i8 lobby_id, i8 lobby_slot_idx, sk_player_kind kind, sk_config *config);
 
 void sk_player_destroy(sk_player *p);
 
 void sk_player_load(sk_player *p, sk_weapon_kind initial_weapon_kind);
 
-void sk_player_jump(sk_player *p);
+void sk_player_jump(sk_player *p, sk_config *config);
 
-f32 sk_player_peek(sk_player *p);
+f32 sk_player_peek(sk_player *p, sk_config *config);
 
-void sk_player_move(sk_player *p, f32 roll);
+void sk_player_move(sk_player *p, sk_config *config, f32 roll);
 
 void sk_player_draw(sk_player *p);

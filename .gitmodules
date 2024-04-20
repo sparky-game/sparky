@@ -1,3 +1,6 @@
 [submodule "vendor/raylib"]
 	path = vendor/raylib
 	url = https://github.com/raysan5/raylib
+[submodule "vendor/lua"]
+	path = vendor/lua
+	url = https://github.com/lua/lua

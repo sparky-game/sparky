@@ -34,10 +34,10 @@
 #define MAIN_MENU_TXT_SIZE     80
 
 static void sk_scene_kind_gameplay_update(sk_state *s) {
-  if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) sk_weapon_shoot(&s->player.weapon);
-  if (IsKeyPressed(KEY_R)) sk_weapon_reload(&s->player.weapon);
-  sk_player_jump(&s->player);
-  sk_player_move(&s->player, sk_player_peek(&s->player));
+  if (IsMouseButtonPressed(s->config.controls.shoot)) sk_weapon_shoot(&s->player.weapon);
+  if (IsKeyPressed(s->config.controls.reload)) sk_weapon_reload(&s->player.weapon);
+  sk_player_jump(&s->player, &s->config);
+  sk_player_move(&s->player, &s->config, sk_player_peek(&s->player, &s->config));
 }
 
 static void sk_scene_kind_gameplay_draw(sk_state *s) {
@@ -63,11 +63,11 @@ static void sk_scene_kind_gameplay_draw(sk_state *s) {
   // START: HUD's Crosshair
   DrawCircle(GetScreenWidth() / 2,
              GetScreenHeight() / 2,
-             SK_CONFIG_CLIENT_CROSSHAIR_RADIUS,
+             s->config.crosshair.radius,
              BLACK);
   DrawCircle(GetScreenWidth() / 2,
              GetScreenHeight() / 2,
-             SK_CONFIG_CLIENT_CROSSHAIR_RADIUS - 0.9f,
+             s->config.crosshair.radius - 0.9f,
              WHITE);
   // END: HUD's Crosshair
   DrawText(TextFormat("%u", s->player.hp),

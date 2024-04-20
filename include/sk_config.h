@@ -21,16 +21,46 @@
 
 #pragma once
 
-#define SK_CONFIG_CLIENT_WIN_WIDTH         1280
-#define SK_CONFIG_CLIENT_WIN_HEIGHT        720
-#define SK_CONFIG_CLIENT_FPS               144
-#define SK_CONFIG_CLIENT_FOV               60
-#define SK_CONFIG_CLIENT_MOUSE_SENSITIVITY 0.05
-#define SK_CONFIG_CLIENT_CROSSHAIR_RADIUS  2.5
-#define SK_CONFIG_CLIENT_MOVE_FORWARD      KEY_W
-#define SK_CONFIG_CLIENT_MOVE_BACKWARDS    KEY_S
-#define SK_CONFIG_CLIENT_MOVE_LEFT         KEY_A
-#define SK_CONFIG_CLIENT_MOVE_RIGHT        KEY_D
-#define SK_CONFIG_CLIENT_PEEK_LEFT         KEY_Q
-#define SK_CONFIG_CLIENT_PEEK_RIGHT        KEY_E
-#define SK_CONFIG_CLIENT_JUMP              KEY_SPACE
+#include <sk_defines.h>
+
+typedef struct {
+  f32 radius;
+} sk_config_crosshair;
+
+typedef struct {
+  u16 win_width;
+  u16 win_height;
+  u16 fps_limit;
+} sk_config_video;
+
+typedef struct {
+  u8 fov;
+  f32 mouse_sensitivity;
+} sk_config_general;
+
+typedef struct {
+  u16 move_forward;
+  u16 move_backwards;
+  u16 move_left;
+  u16 move_right;
+  u16 peek_left;
+  u16 peek_right;
+  u16 jump;
+  u16 shoot;
+  u16 reload;
+} sk_config_controls;
+
+typedef struct {
+  sk_config_crosshair crosshair;
+  sk_config_video video;
+  sk_config_general general;
+  sk_config_controls controls;
+} sk_config;
+
+sk_config sk_config_create(void);
+
+void sk_config_destroy(sk_config *c);
+
+void sk_config_load(const char *filepath, sk_config *c);
+
+void sk_config_write(const char *filepath, sk_config *c);

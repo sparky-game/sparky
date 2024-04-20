@@ -22,7 +22,6 @@
 #include <stdio.h>
 #include <assert.h>
 #include <sk_player.h>
-#include <sk_config.h>
 
 #define PLAYER_HEIGHT          2
 #define GRAVITY                20
@@ -31,7 +30,7 @@
 #define WALK_VELOCITY          0.1
 #define MODEL_PATH_PLACEHOLDER "assets/models/%s.glb"
 
-sk_player sk_player_create(i8 lobby_id, i8 lobby_slot_idx, sk_player_kind kind) {
+sk_player sk_player_create(i8 lobby_id, i8 lobby_slot_idx, sk_player_kind kind, sk_config *config) {
   assert(lobby_id != -1);
   assert(lobby_slot_idx != -1);
   return (sk_player) {
@@ -42,7 +41,7 @@ sk_player sk_player_create(i8 lobby_id, i8 lobby_slot_idx, sk_player_kind kind) 
       .position = (Vector3) { 0, PLAYER_HEIGHT, 4 },
       .target = (Vector3) { 0, 2, 0 },
       .up = (Vector3) { 0, 1, 0 },
-      .fovy = SK_CONFIG_CLIENT_FOV,
+      .fovy = config->general.fov,
       .projection = CAMERA_PERSPECTIVE
     },
     .hp = 100
@@ -60,9 +59,9 @@ void sk_player_load(sk_player *p, sk_weapon_kind initial_weapon_kind) {
   p->weapon = sk_weapon_create(initial_weapon_kind);
 }
 
-void sk_player_jump(sk_player *p) {
+void sk_player_jump(sk_player *p, sk_config *config) {
   f32 dt = GetFrameTime();
-  if (IsKeyPressed(SK_CONFIG_CLIENT_JUMP) &&
+  if (IsKeyPressed(config->controls.jump) &&
       p->camera.position.y <= PLAYER_HEIGHT) p->v_y = JUMP_INIT_VELOCITY;
   p->v_y -= GRAVITY * dt;
   p->camera.position.y += p->v_y * dt;
@@ -73,14 +72,14 @@ void sk_player_jump(sk_player *p) {
   else p->camera.target.y += p->v_y * dt;
 }
 
-f32 sk_player_peek(sk_player *p) {
+f32 sk_player_peek(sk_player *p, sk_config *config) {
   f32 cam_roll = 0;
   if (p->camera.up.y >= 0.98f) {
-    if (IsKeyDown(SK_CONFIG_CLIENT_PEEK_LEFT))       cam_roll -= PEEK_ACCELERATION;
-    else if (IsKeyDown(SK_CONFIG_CLIENT_PEEK_RIGHT)) cam_roll += PEEK_ACCELERATION;
+    if (IsKeyDown(config->controls.peek_left))       cam_roll -= PEEK_ACCELERATION;
+    else if (IsKeyDown(config->controls.peek_right)) cam_roll += PEEK_ACCELERATION;
   }
-  if (!IsKeyDown(SK_CONFIG_CLIENT_PEEK_LEFT) &&
-      !IsKeyDown(SK_CONFIG_CLIENT_PEEK_RIGHT)) {
+  if (!IsKeyDown(config->controls.peek_left) &&
+      !IsKeyDown(config->controls.peek_right)) {
     p->camera.up.z = 0;
     if (p->camera.up.x) p->camera.up.x *= 0.9f;
     if (p->camera.up.y < 1) p->camera.up.y = 1;
@@ -88,19 +87,19 @@ f32 sk_player_peek(sk_player *p) {
   return cam_roll;
 }
 
-void sk_player_move(sk_player *p, f32 roll) {
+void sk_player_move(sk_player *p, sk_config *config, f32 roll) {
   Vector2 dm = GetMouseDelta();
   UpdateCameraPro(&p->camera,
                   (Vector3) {
-                    IsKeyDown(SK_CONFIG_CLIENT_MOVE_FORWARD)   * WALK_VELOCITY -
-                    IsKeyDown(SK_CONFIG_CLIENT_MOVE_BACKWARDS) * WALK_VELOCITY,
-                    IsKeyDown(SK_CONFIG_CLIENT_MOVE_RIGHT)     * WALK_VELOCITY -
-                    IsKeyDown(SK_CONFIG_CLIENT_MOVE_LEFT)      * WALK_VELOCITY,
+                    IsKeyDown(config->controls.move_forward)   * WALK_VELOCITY -
+                    IsKeyDown(config->controls.move_backwards) * WALK_VELOCITY,
+                    IsKeyDown(config->controls.move_right)     * WALK_VELOCITY -
+                    IsKeyDown(config->controls.move_left)      * WALK_VELOCITY,
                     0
                   },
                   (Vector3) {
-                    dm.x * SK_CONFIG_CLIENT_MOUSE_SENSITIVITY,
-                    dm.y * SK_CONFIG_CLIENT_MOUSE_SENSITIVITY,
+                    dm.x * config->general.mouse_sensitivity,
+                    dm.y * config->general.mouse_sensitivity,
                     roll
                   },
                   0);

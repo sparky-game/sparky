@@ -136,7 +136,7 @@ u8 sk_server_run(void) {
         continue;
       }
       SK_LOG_INFO("Connection from client (%s:%u) accepted", inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port));
-      state_global.lobbies[assigned_lobby_id].players[assigned_lobby_slot_idx] = sk_player_create(assigned_lobby_id, assigned_lobby_slot_idx, SK_PLAYER_KIND_AGENT69);
+      // state_global.lobbies[assigned_lobby_id].players[assigned_lobby_slot_idx] = sk_player_create(assigned_lobby_id, assigned_lobby_slot_idx, SK_PLAYER_KIND_AGENT69);
     }
     wait_next_tick(dt);
   }

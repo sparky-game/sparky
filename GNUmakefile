@@ -68,10 +68,14 @@ endif
 VENDOR_DIR       = vendor
 RAYLIB_SRC_DIR   = $(VENDOR_DIR)/raylib/$(SRC_DIR)
 RAYLIB_BUILD_DIR = $(BUILD_DIR)/raylib
+LUA_SRC_DIR      = $(VENDOR_DIR)/lua
+LUA_BUILD_DIR    = $(BUILD_DIR)/lua
 
 # Files
 RAYLIB_SRCS   := $(wildcard $(RAYLIB_SRC_DIR)/*.c)
 RAYLIB_OBJS   := $(patsubst $(RAYLIB_SRC_DIR)/%.c, $(RAYLIB_BUILD_DIR)/%.o, $(RAYLIB_SRCS))
+LUA_SRCS      := $(filter-out $(LUA_SRC_DIR)/onelua.c, $(wildcard $(LUA_SRC_DIR)/*.c))
+LUA_OBJS      := $(patsubst $(LUA_SRC_DIR)/%.c, $(LUA_BUILD_DIR)/%.o, $(LUA_SRCS))
 LAUNCHER_SRCS := $(wildcard $(SRC_DIR)/sk_launcher*.rs)
 SRCS          := $(wildcard $(SRC_DIR)/*.c)
 OBJS          := $(patsubst $(SRC_DIR)/%.c, $(BUILD_DIR)/%.o, $(SRCS))
@@ -127,11 +131,16 @@ define RAYLIB_CPPFLAGS
   -isystem $(RAYLIB_SRC_DIR)     \
   -isystem $(RAYLIB_SRC_DIR)/external/glfw/$(HDR_DIR)
 endef
+define LUA_CPPFLAGS
+  $(DISABLE_ASSERTS_OPTS) \
+  -isystem $(LUA_SRC_DIR)
+endef
 define CPPFLAGS
   -D SK_VERSION=$(DIST_VERSION) \
   $(DISABLE_ASSERTS_OPTS)       \
   -D _POSIX_C_SOURCE=199309L    \
   -isystem $(RAYLIB_SRC_DIR)    \
+  -isystem $(LUA_SRC_DIR)       \
   -I $(HDR_DIR)
 endef
 define RAYLIB_CFLAGS
@@ -139,6 +148,12 @@ define RAYLIB_CFLAGS
   $(HIDE_WARNS_OPTS) \
   $(DEBUG_SYM_OPTS)  \
   $(RELEASE_OPTS)    \
+  $(MACOS_SPECIFIC_CFLAGS_OPTS)
+endef
+define LUA_CFLAGS
+  -std=c99          \
+  $(DEBUG_SYM_OPTS) \
+  $(RELEASE_OPTS)   \
   $(MACOS_SPECIFIC_CFLAGS_OPTS)
 endef
 define CFLAGS
@@ -153,11 +168,13 @@ define CFLAGS
 endef
 define LDFLAGS
   $(BUILDID_OPTS)                \
+  $(HIDE_WARNS_OPTS)             \
   $(STRIP_OPTS)                  \
   $(RELEASE_OPTS)                \
   -L $(BUILD_DIR)                \
   -L $(LAUNCHER_BUILD_DIR)       \
   -lraylib                       \
+  -llua                          \
   -lsk_launcher                  \
   -lpthread                      \
   -lm                            \
@@ -169,6 +186,7 @@ endef
 # Build output
 LAUNCHER_OUT = $(LAUNCHER_BUILD_DIR)/libsk_launcher.a
 RAYLIB_OUT   = $(BUILD_DIR)/libraylib.a
+LUA_OUT      = $(BUILD_DIR)/liblua.a
 ifdef D
   OUT = $(NAME)_debug
 else
@@ -182,7 +200,7 @@ endif
 .WAIT:
 .PHONY: all checkdeps game clean mrproper version help
 
-all: checkdeps .WAIT $(BUILD_DIR) $(RAYLIB_BUILD_DIR) game
+all: checkdeps .WAIT $(BUILD_DIR) $(RAYLIB_BUILD_DIR) $(LUA_BUILD_DIR) game
 	@:
 
 checkdeps:
@@ -203,10 +221,14 @@ $(RAYLIB_BUILD_DIR):
 	@echo "  $(PPO_MKDIR)   $@"
 	$(Q)mkdir -p $@
 
+$(LUA_BUILD_DIR):
+	@echo "  $(PPO_MKDIR)   $@"
+	$(Q)mkdir -p $@
+
 game: $(OUT)
 	@echo "INFO: $(OUT) is ready  ($(FULL_VERSION))"
 
-$(OUT): $(RAYLIB_OUT) $(LAUNCHER_OUT) $(OBJS)
+$(OUT): $(RAYLIB_OUT) $(LUA_OUT) $(LAUNCHER_OUT) $(OBJS)
 	@echo "  $(PPO_LD)      $@"
 	$(Q)$(CC) $(OBJS) $(LDFLAGS) -o $@
 
@@ -219,6 +241,16 @@ $(RAYLIB_BUILD_DIR)/%.o: $(RAYLIB_SRC_DIR)/%.c
 	$(Q)$(CC) $(RAYLIB_CPPFLAGS) $(RAYLIB_CFLAGS) -c -MD $< -o $@
 
 -include $(RAYLIB_BUILD_DIR)/*.d
+
+$(LUA_OUT): $(LUA_OBJS)
+	@echo "  $(PPO_AR)      $@"
+	$(Q)$(AR) $@ $^
+
+$(LUA_BUILD_DIR)/%.o: $(LUA_SRC_DIR)/%.c
+	@echo "  $(PPO_CC)      $@"
+	$(Q)$(CC) $(LUA_CPPFLAGS) $(LUA_CFLAGS) -c -MD $< -o $@
+
+-include $(LUA_BUILD_DIR)/*.d
 
 $(LAUNCHER_OUT): $(LAUNCHER_SRCS)
 	@if [ ! -e $(FIFO_RSC) ]; then \

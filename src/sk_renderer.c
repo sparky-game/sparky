@@ -24,17 +24,17 @@
 #include <sk_client.h>
 #include <sk_renderer.h>
 
-void sk_renderer_create(void) {
+void sk_renderer_create(sk_config *config) {
   SetConfigFlags(FLAG_MSAA_4X_HINT);
   SetConfigFlags(FLAG_BORDERLESS_WINDOWED_MODE);
   SetConfigFlags(FLAG_WINDOW_MOUSE_PASSTHROUGH);
-  InitWindow(SK_CONFIG_CLIENT_WIN_WIDTH,
-             SK_CONFIG_CLIENT_WIN_HEIGHT,
+  InitWindow(config->video.win_width,
+             config->video.win_height,
              SK_CLIENT_NAME);
   assert(IsWindowReady());
   InitAudioDevice();
   assert(IsAudioDeviceReady());
-  SetTargetFPS(SK_CONFIG_CLIENT_FPS);
+  SetTargetFPS(config->video.fps_limit);
 }
 
 void sk_renderer_destroy(void) {

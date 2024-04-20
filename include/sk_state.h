@@ -24,6 +24,7 @@
 #include <sk_map.h>
 #include <sk_scene.h>
 #include <sk_lobby.h>
+#include <sk_config.h>
 
 #define SK_STATE_MAX_LOBBIES 256
 
@@ -34,6 +35,7 @@ typedef struct {
 
 typedef struct sk_state {
   u8 is_online;
+  sk_config config;
   sk_scene curr_scene;
   Music menu_music;
   union {

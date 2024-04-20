@@ -26,7 +26,7 @@
 
 #define sk_renderer_loop while (!WindowShouldClose())
 
-void sk_renderer_create(void);
+void sk_renderer_create(sk_config *config);
 
 void sk_renderer_destroy(void);
 
