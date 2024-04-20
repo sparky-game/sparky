@@ -74,7 +74,7 @@ void sk_state_destroy_offline(sk_state *s) {
 sk_state sk_state_create_online(u8 lobby_id) {
   return (sk_state) {
     .is_online = 1,
-    .curr_scene = sk_scene_create(SK_SCENE_KIND_MAIN_MENU),
+    .curr_scene = sk_scene_create(SK_SCENE_KIND_INTRO),
     .lobby = sk_lobby_create(lobby_id)
   };
 }
