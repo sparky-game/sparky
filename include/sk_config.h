@@ -55,6 +55,8 @@ typedef struct {
   sk_config_video video;
   sk_config_general general;
   sk_config_controls controls;
+  const char *err_title;
+  const char *err_body;
 } sk_config;
 
 sk_config sk_config_create(void);

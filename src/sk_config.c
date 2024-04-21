@@ -61,7 +61,9 @@ void sk_config_load(const char *filepath, sk_config *c) {
   lua_State *L = luaL_newstate();
   luaL_openlibs(L);
   if (luaL_loadfile(L, filepath) || lua_pcall(L, 0, 0, 0)) {
-    SK_LOG_ERROR("Unable to load config file (%s) :: %s", filepath, lua_tostring(L, -1));
+    c->err_title = TextFormat("Unable to load config file (%s)", filepath);
+    c->err_body = TextFormat("%s", lua_tostring(L, -1));
+    SK_LOG_ERROR("%s :: %s", c->err_title, c->err_body);
     lua_close(L);
     return;
   }

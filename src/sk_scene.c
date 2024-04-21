@@ -20,18 +20,21 @@
 
 
 #include <assert.h>
+#include <string.h>
 #include <sk_scene.h>
 #include <sk_state.h>
 #include <sk_config.h>
 
-#define INTRO_PHASE0_TXT1      "Wasym Atieh Alonso"
-#define INTRO_PHASE0_TXT1_SIZE 30
-#define INTRO_PHASE0_TXT2      "presents"
-#define INTRO_PHASE0_TXT2_SIZE 26
-#define INTRO_PHASE1_TXT       "a FOSS game"
-#define INTRO_PHASE1_TXT_SIZE  30
-#define MAIN_MENU_TXT          "SPARKY"
-#define MAIN_MENU_TXT_SIZE     80
+#define INTRO_PHASE0_TXT1       "Wasym Atieh Alonso"
+#define INTRO_PHASE0_TXT1_SIZE  30
+#define INTRO_PHASE0_TXT2       "presents"
+#define INTRO_PHASE0_TXT2_SIZE  26
+#define INTRO_PHASE1_TXT        "a FOSS game"
+#define INTRO_PHASE1_TXT_SIZE   30
+#define MAIN_MENU_TITLE         "SPARKY"
+#define MAIN_MENU_TITLE_SIZE    80
+#define MAIN_MENU_SUBTITLE      "Press <ENTER> to start"
+#define MAIN_MENU_SUBTITLE_SIZE 30
 
 static void sk_scene_kind_gameplay_update(sk_state *s) {
   if (IsMouseButtonPressed(s->config.controls.shoot)) sk_weapon_shoot(&s->player.weapon);
@@ -98,28 +101,39 @@ static void sk_scene_kind_main_menu_update(sk_state *s) {
 }
 
 static void sk_scene_kind_main_menu_draw(sk_state *s) {
-  (void) s;
-
   ClearBackground(BLACK);
-  const char * const subtitle = "Press <ENTER> to start";
-  u8 subtitle_size = 30;
-  DrawText(MAIN_MENU_TXT,
-           (GetScreenWidth() - MeasureText(MAIN_MENU_TXT,
-                                           MAIN_MENU_TXT_SIZE)) / 2,
-           (GetScreenHeight() - MeasureText(MAIN_MENU_TXT,
-                                            MAIN_MENU_TXT_SIZE)) / 2,
-           MAIN_MENU_TXT_SIZE,
+  DrawText(MAIN_MENU_TITLE,
+           (GetScreenWidth() - MeasureText(MAIN_MENU_TITLE,
+                                           MAIN_MENU_TITLE_SIZE)) / 2,
+           (GetScreenHeight() - MeasureText(MAIN_MENU_TITLE,
+                                            MAIN_MENU_TITLE_SIZE)) / 2,
+           MAIN_MENU_TITLE_SIZE,
            RAYWHITE);
-  DrawText(subtitle,
-           (GetScreenWidth() - MeasureText(subtitle, subtitle_size)) / 2,
-           ((GetScreenHeight() - MeasureText(subtitle, subtitle_size)) / 2) + 115,
-           subtitle_size,
+  DrawText(MAIN_MENU_SUBTITLE,
+           (GetScreenWidth() - MeasureText(MAIN_MENU_SUBTITLE, MAIN_MENU_SUBTITLE_SIZE)) / 2,
+           ((GetScreenHeight() - MeasureText(MAIN_MENU_SUBTITLE, MAIN_MENU_SUBTITLE_SIZE)) / 2) + 115,
+           MAIN_MENU_SUBTITLE_SIZE,
            RAYWHITE);
   DrawText("v" sk_xstr(SK_VERSION),
            10,
            GetScreenHeight() - 25,
            20,
            RAYWHITE);
+  if (s->config.err_title            &&
+      s->config.err_body             &&
+      strcmp(s->config.err_body, "") &&
+      strcmp(s->config.err_title, "")) {
+    DrawText(s->config.err_title,
+             GetScreenWidth() - 500,
+             GetScreenHeight() - 200,
+             20,
+             RED);
+    DrawText(s->config.err_body,
+             GetScreenWidth() - 650,
+             GetScreenHeight() - 150,
+             18,
+             RED);
+  }
 }
 
 static void sk_scene_kind_intro_update(sk_state *s) {
