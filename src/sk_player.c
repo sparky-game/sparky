@@ -27,7 +27,7 @@
 #define GRAVITY                20
 #define JUMP_INIT_VELOCITY     9
 #define PEEK_ACCELERATION      1.5
-#define WALK_VELOCITY          0.1
+#define WALK_VELOCITY          14
 #define MODEL_PATH_PLACEHOLDER "assets/models/%s.glb"
 
 sk_player sk_player_create(i8 lobby_id, i8 lobby_slot_idx, sk_player_kind kind, sk_config *config) {
@@ -88,18 +88,17 @@ f32 sk_player_peek(sk_player *p, sk_config *config) {
 }
 
 void sk_player_move(sk_player *p, sk_config *config, f32 roll) {
+  f32 dt = GetFrameTime();
   Vector2 dm = GetMouseDelta();
   UpdateCameraPro(&p->camera,
                   (Vector3) {
-                    IsKeyDown(config->controls.move_forward)   * WALK_VELOCITY -
-                    IsKeyDown(config->controls.move_backwards) * WALK_VELOCITY,
-                    IsKeyDown(config->controls.move_right)     * WALK_VELOCITY -
-                    IsKeyDown(config->controls.move_left)      * WALK_VELOCITY,
+                    (IsKeyDown(config->controls.move_forward) - IsKeyDown(config->controls.move_backwards)) * WALK_VELOCITY * dt,
+                    (IsKeyDown(config->controls.move_right) - IsKeyDown(config->controls.move_left)) * WALK_VELOCITY * dt,
                     0
                   },
                   (Vector3) {
-                    dm.x * config->general.mouse_sensitivity,
-                    dm.y * config->general.mouse_sensitivity,
+                    config->general.mouse_sensitivity * dm.x,
+                    config->general.mouse_sensitivity * dm.y,
                     roll
                   },
                   0);
