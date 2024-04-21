@@ -99,7 +99,7 @@ You should have received a copy of the GNU General Public License along with Spa
 #+end_html
 
 * Table of Contents :toc:
-- [[#projects-roadmap][Project's Roadmap]]
+- [[#projects-roadmap][Project's roadmap]]
 - [[#usage][Usage]]
 - [[#build-from-source][Build from source]]
   - [[#get-the-code][Get the code]]
@@ -112,10 +112,11 @@ You should have received a copy of the GNU General Public License along with Spa
     - [[#openbsd][OpenBSD]]
     - [[#macos][macOS]]
   - [[#compilation--linkage][Compilation & Linkage]]
+- [[#binary-distributions][Binary distributions]]
 
-* Project's Roadmap
+* Project's roadmap
 
-For information about the detailed project roadmap, including delivered milestones, see [[https://github.com/users/iWas-Coder/projects/5][the Sparky Roadmap on GitHub]].
+For information about the detailed project's roadmap, including delivered milestones, see [[https://github.com/users/iWas-Coder/projects/5][the Sparky's Roadmap on GitHub]].
 
 * Usage
 
@@ -209,5 +210,9 @@ brew install rust jq
 #+end_src
 
 ** Compilation & Linkage
+
+(...)
+
+* Binary distributions
 
 (...)
