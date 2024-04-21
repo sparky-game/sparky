@@ -119,6 +119,11 @@ static void sk_scene_kind_main_menu_draw(sk_state *s) {
            GetScreenHeight() - 25,
            20,
            RAYWHITE);
+  if (!s->is_online) DrawText("OFFLINE MODE",
+                             10,
+                             10,
+                             20,
+                             YELLOW);
   if (s->config.err_title            &&
       s->config.err_body             &&
       strcmp(s->config.err_body, "") &&
