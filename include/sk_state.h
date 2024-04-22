@@ -36,6 +36,7 @@ typedef struct {
 typedef struct sk_state {
   u8 is_online;
   sk_config config;
+  Image win_icon;
   sk_scene curr_scene;
   Music menu_music;
   union {

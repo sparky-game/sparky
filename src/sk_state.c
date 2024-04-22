@@ -57,22 +57,26 @@ sk_state sk_state_create_offline(void) {
   sk_config config = sk_config_create();
   sk_config_load("config.lua", &config);
   sk_renderer_create(&config);
-  return (sk_state) {
+  sk_state s = {
     .is_online = 0,
     .config = config,
+    .win_icon = LoadImage("assets/icon.png"),
     .curr_scene = sk_scene_create(SK_SCENE_KIND_INTRO),
     .menu_music = LoadMusicStream(TextFormat(MUSIC_PATH_PLACEHOLDER, "menu")),
     .map = sk_map_create(SK_MAP_CAMPING),
     .player = sk_player_create(0, 0, SK_PLAYER_KIND_AGENT69, &config)
   };
+  SetWindowIcon(s.win_icon);
+  return s;
 }
 
 void sk_state_destroy_offline(sk_state *s) {
-  sk_map_destroy(&s->map);
   sk_player_destroy(&s->player);
+  sk_map_destroy(&s->map);
   UnloadMusicStream(s->menu_music);
-  sk_renderer_destroy();
+  UnloadImage(s->win_icon);
   sk_config_destroy(&s->config);
+  sk_renderer_destroy();
 }
 
 sk_state sk_state_create_online(u8 lobby_id) {
