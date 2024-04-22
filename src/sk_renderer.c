@@ -35,6 +35,7 @@ void sk_renderer_create(sk_config *config) {
   InitAudioDevice();
   assert(IsAudioDeviceReady());
   SetTargetFPS(config->video.fps_limit);
+  SetExitKey(KEY_NULL);
 }
 
 void sk_renderer_destroy(void) {

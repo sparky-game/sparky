@@ -33,8 +33,12 @@
 #define INTRO_PHASE1_TXT_SIZE   30
 #define MAIN_MENU_TITLE         "SPARKY"
 #define MAIN_MENU_TITLE_SIZE    80
-#define MAIN_MENU_SUBTITLE      "Press <ENTER> to start"
-#define MAIN_MENU_SUBTITLE_SIZE 30
+#define MAIN_MENU_START         "Press <1> to start"
+#define MAIN_MENU_START_SIZE    30
+#define MAIN_MENU_OPTIONS       "Press <2> for options"
+#define MAIN_MENU_OPTIONS_SIZE  30
+#define MAIN_MENU_EXIT          "Press <3> to exit"
+#define MAIN_MENU_EXIT_SIZE     30
 
 static void sk_scene_kind_gameplay_update(sk_state *s) {
   if (IsMouseButtonPressed(s->config.controls.shoot)) sk_weapon_shoot(&s->player.weapon);
@@ -89,14 +93,18 @@ static void sk_scene_kind_gameplay_draw(sk_state *s) {
 
 static void sk_scene_kind_main_menu_update(sk_state *s) {
   if (IsMusicStreamPlaying(s->menu_music)) UpdateMusicStream(s->menu_music);
-  if (IsKeyPressed(KEY_ENTER)) {
+  if (IsKeyPressed(KEY_ONE)) {
     s->curr_scene.kind = SK_SCENE_KIND_GAMEPLAY;
     s->curr_scene.update = sk_scene_kind_gameplay_update;
     s->curr_scene.draw = sk_scene_kind_gameplay_draw;
     StopMusicStream(s->menu_music);
     sk_player_load(&s->player, SK_WEAPON_KIND_7MM);
     sk_map_load(&s->map);
+    SetExitKey(KEY_ESCAPE);
     DisableCursor();
+  }
+  if (IsKeyPressed(KEY_TWO)) {
+
   }
 }
 
@@ -109,21 +117,27 @@ static void sk_scene_kind_main_menu_draw(sk_state *s) {
                                             MAIN_MENU_TITLE_SIZE)) / 2,
            MAIN_MENU_TITLE_SIZE,
            RAYWHITE);
-  DrawText(MAIN_MENU_SUBTITLE,
-           (GetScreenWidth() - MeasureText(MAIN_MENU_SUBTITLE, MAIN_MENU_SUBTITLE_SIZE)) / 2,
-           ((GetScreenHeight() - MeasureText(MAIN_MENU_SUBTITLE, MAIN_MENU_SUBTITLE_SIZE)) / 2) + 115,
-           MAIN_MENU_SUBTITLE_SIZE,
+  DrawText(MAIN_MENU_START,
+           (GetScreenWidth() - MeasureText(MAIN_MENU_START, MAIN_MENU_START_SIZE)) / 2,
+           ((GetScreenHeight() - MeasureText(MAIN_MENU_START, MAIN_MENU_START_SIZE)) / 2) + 115,
+           MAIN_MENU_START_SIZE,
+           RAYWHITE);
+  DrawText(MAIN_MENU_OPTIONS,
+           (GetScreenWidth() - MeasureText(MAIN_MENU_OPTIONS, MAIN_MENU_OPTIONS_SIZE)) / 2,
+           ((GetScreenHeight() - MeasureText(MAIN_MENU_OPTIONS, MAIN_MENU_OPTIONS_SIZE)) / 2) + 200,
+           MAIN_MENU_OPTIONS_SIZE,
+           RAYWHITE);
+  DrawText(MAIN_MENU_EXIT,
+           (GetScreenWidth() - MeasureText(MAIN_MENU_EXIT, MAIN_MENU_EXIT_SIZE)) / 2,
+           ((GetScreenHeight() - MeasureText(MAIN_MENU_EXIT, MAIN_MENU_EXIT_SIZE)) / 2) + 225,
+           MAIN_MENU_EXIT_SIZE,
            RAYWHITE);
   DrawText("v" sk_xstr(SK_VERSION),
            10,
            GetScreenHeight() - 25,
            20,
            RAYWHITE);
-  if (!s->is_online) DrawText("OFFLINE MODE",
-                             10,
-                             10,
-                             20,
-                             YELLOW);
+  if (!s->is_online) DrawText("OFFLINE MODE", 10, 10, 20, YELLOW);
   if (s->config.err_title            &&
       s->config.err_body             &&
       strcmp(s->config.err_body, "") &&
@@ -140,11 +154,7 @@ static void sk_scene_kind_main_menu_draw(sk_state *s) {
              RED);
   }
 #ifndef NDEBUG
-  DrawText("[DEBUG MODE]",
-           GetScreenWidth() - 155,
-           10,
-           20,
-           YELLOW);
+  DrawText("[DEBUG MODE]", GetScreenWidth() - 155, 10, 20, YELLOW);
 #endif
 }
 
@@ -192,6 +202,7 @@ static void sk_scene_kind_intro_draw(sk_state *s) {
     s->curr_scene.kind = SK_SCENE_KIND_MAIN_MENU;
     s->curr_scene.update = sk_scene_kind_main_menu_update;
     s->curr_scene.draw = sk_scene_kind_main_menu_draw;
+    SetExitKey(KEY_THREE);
     return;
   default:
     assert(0 && "Unreachable");
