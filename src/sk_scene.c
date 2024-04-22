@@ -139,6 +139,13 @@ static void sk_scene_kind_main_menu_draw(sk_state *s) {
              18,
              RED);
   }
+#ifndef NDEBUG
+  DrawText("[DEBUG MODE]",
+           GetScreenWidth() - 155,
+           10,
+           20,
+           YELLOW);
+#endif
 }
 
 static void sk_scene_kind_intro_update(sk_state *s) {
