@@ -19,21 +19,23 @@
  */
 
 
-#pragma once
+#include <sk_scene_options.h>
+#include <sk_scene_main_menu.h>
 
-typedef struct sk_state sk_state;
+void sk_scene_options_update(sk_state *s) {
+  if (IsMusicStreamPlaying(s->menu_music)) UpdateMusicStream(s->menu_music);
+  if (IsKeyPressed(KEY_ESCAPE)) {
+    s->curr_scene.kind = SK_SCENE_KIND_MAIN_MENU;
+    s->curr_scene.update = sk_scene_main_menu_update;
+    s->curr_scene.draw = sk_scene_main_menu_draw;
+    SetExitKey(KEY_THREE);
+  }
+}
 
-typedef enum {
-  SK_SCENE_KIND_INTRO,
-  SK_SCENE_KIND_MAIN_MENU,
-  SK_SCENE_KIND_OPTIONS,
-  SK_SCENE_KIND_GAMEPLAY
-} sk_scene_kind;
-
-typedef struct {
-  sk_scene_kind kind;
-  void (*update)(sk_state *s);
-  void (*draw)(sk_state *s);
-} sk_scene;
-
-sk_scene sk_scene_create(sk_scene_kind kind);
+void sk_scene_options_draw(sk_state *s) {
+  ClearBackground(BLACK);
+#ifndef NDEBUG
+  DrawText("[DEBUG MODE]", GetScreenWidth() - 155, 10, 20, YELLOW);
+#endif
+  if (!s->is_online) DrawText("OFFLINE MODE", 10, 10, 20, YELLOW);
+}

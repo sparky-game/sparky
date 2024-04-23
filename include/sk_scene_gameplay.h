@@ -21,19 +21,8 @@
 
 #pragma once
 
-typedef struct sk_state sk_state;
+#include <sk_state.h>
 
-typedef enum {
-  SK_SCENE_KIND_INTRO,
-  SK_SCENE_KIND_MAIN_MENU,
-  SK_SCENE_KIND_OPTIONS,
-  SK_SCENE_KIND_GAMEPLAY
-} sk_scene_kind;
+void sk_scene_gameplay_update(sk_state *s);
 
-typedef struct {
-  sk_scene_kind kind;
-  void (*update)(sk_state *s);
-  void (*draw)(sk_state *s);
-} sk_scene;
-
-sk_scene sk_scene_create(sk_scene_kind kind);
+void sk_scene_gameplay_draw(sk_state *s);
