@@ -19,31 +19,12 @@
 --
 
 
-require("include/raylib")
-
-Crosshair = {
-  radius = 2.5
-}
-
-Video = {
-  win_width = 1280,
-  win_height = 720,
-  fps_limit = 144
-}
-
-General = {
-  fov = 60,
-  mouse_sensitivity = 0.05
-}
-
-Controls = {
-  move_forward = KEY_W,
-  move_backwards = KEY_S,
-  move_left = KEY_A,
-  move_right = KEY_D,
-  peek_left = KEY_Q,
-  peek_right = KEY_E,
-  jump = KEY_SPACE,
-  shoot = MOUSE_BUTTON_LEFT,
-  reload = KEY_R
-}
+MOUSE_BUTTON_LEFT = 0
+KEY_SPACE         = 32
+KEY_A             = 65
+KEY_D             = 68
+KEY_E             = 69
+KEY_Q             = 81
+KEY_R             = 82
+KEY_S             = 83
+KEY_W             = 87
