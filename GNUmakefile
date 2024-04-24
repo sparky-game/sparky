@@ -144,11 +144,12 @@ define CPPFLAGS
   -I $(HDR_DIR)
 endef
 define RAYLIB_CFLAGS
-  -std=gnu99         \
-  $(HIDE_WARNS_OPTS) \
-  $(DEBUG_SYM_OPTS)  \
-  $(RELEASE_OPTS)    \
-  $(MACOS_SPECIFIC_CFLAGS_OPTS)
+  -std=gnu99                    \
+  $(HIDE_WARNS_OPTS)            \
+  $(DEBUG_SYM_OPTS)             \
+  $(RELEASE_OPTS)               \
+  $(MACOS_SPECIFIC_CFLAGS_OPTS) \
+  -Wno-implicit-function-declaration
 endef
 define LUA_CFLAGS
   -std=c99          \
