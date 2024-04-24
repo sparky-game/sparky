@@ -22,6 +22,7 @@
 #pragma once
 
 #include <raylib.h>
+#include <sk_uuid.h>
 #include <sk_defines.h>
 
 typedef enum {
@@ -44,6 +45,12 @@ typedef struct {
   sk_weapon_ammo_spec ammo;
 } sk_weapon;
 
+typedef struct {
+  Ray bullet;
+  sk_uuid shooter_id;
+  sk_weapon_kind weapon_kind;
+} sk_shot;
+
 static const char * const sk_weapon_kind2name[] = {
   [SK_WEAPON_KIND_7MM] = "7mm"
 };
@@ -58,6 +65,6 @@ void sk_weapon_destroy(sk_weapon *w);
 
 void sk_weapon_draw(sk_weapon *w, Camera3D *cam, Vector3 offset, f32 scale);
 
-void sk_weapon_shoot(sk_weapon *w);
+u8 sk_weapon_shoot(sk_weapon *w, sk_uuid id, Camera3D *cam, sk_shot *shot);
 
 void sk_weapon_reload(sk_weapon *w);

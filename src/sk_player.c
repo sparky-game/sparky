@@ -34,6 +34,7 @@ sk_player sk_player_create(i8 lobby_id, i8 lobby_slot_idx, sk_player_kind kind, 
   assert(lobby_id != -1);
   assert(lobby_slot_idx != -1);
   return (sk_player) {
+    .id = sk_uuid_gen(),
     .lobby_id = lobby_id,
     .lobby_slot_idx = lobby_slot_idx,
     .kind = kind,

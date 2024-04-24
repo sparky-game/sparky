@@ -30,6 +30,7 @@ typedef enum {
 } sk_player_kind;
 
 typedef struct sk_player {
+  sk_uuid id;
   i8 lobby_id;
   i8 lobby_slot_idx;
   sk_player_kind kind;

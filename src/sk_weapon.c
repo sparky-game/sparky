@@ -66,13 +66,17 @@ void sk_weapon_draw(sk_weapon *w, Camera3D *cam, Vector3 offset, f32 scale) {
               WHITE);
 }
 
-void sk_weapon_shoot(sk_weapon *w) {
-  if (!w->ammo.magazine || IsSoundPlaying(w->sound_reload)) return;
+u8 sk_weapon_shoot(sk_weapon *w, sk_uuid player_id, Camera3D *cam, sk_shot *shot) {
+  if (!w->ammo.magazine || IsSoundPlaying(w->sound_reload)) return 0;
   ++w->model_anim_frame_count;
   UpdateModelAnimation(w->model, w->model_anims[0], w->model_anim_frame_count);
   if (w->model_anim_frame_count >= w->model_anims[0].frameCount) w->model_anim_frame_count = 0;
   PlaySound(w->sound_shoot);
   --w->ammo.magazine;
+  shot->bullet = GetMouseRay(GetMousePosition(), *cam);
+  shot->shooter_id = player_id;
+  shot->weapon_kind = w->kind;
+  return 1;
 }
 
 void sk_weapon_reload(sk_weapon *w) {
