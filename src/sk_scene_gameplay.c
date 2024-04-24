@@ -37,11 +37,7 @@ void sk_scene_gameplay_draw(sk_state *s) {
   sk_map_draw(&s->map);
   EndMode3D();
   // HUD
-  DrawText("v" sk_xstr(SK_VERSION),
-           GetScreenWidth() - 100,
-           GetScreenHeight() - 20,
-           14,
-           GRAY);
+  DrawText("Client Version: " sk_xstr(SK_VERSION), GetScreenWidth() - 190, GetScreenHeight() - 20, 14, LIGHTGRAY);
   DrawFPS(10, 10);
   DrawText(TextFormat("%.4f ms", GetFrameTime() * 1000), 10, 33, 20, LIME);
   if (s->is_online) {
@@ -49,23 +45,11 @@ void sk_scene_gameplay_draw(sk_state *s) {
     DrawText(TextFormat("(d) N/A bps | (u) N/A bps"), 10, 70, 20, LIME);
   }
   // START: HUD's Crosshair
-  DrawCircle(GetScreenWidth() / 2,
-             GetScreenHeight() / 2,
-             s->config.crosshair.radius,
-             BLACK);
-  DrawCircle(GetScreenWidth() / 2,
-             GetScreenHeight() / 2,
-             s->config.crosshair.radius - 0.9f,
-             WHITE);
+  DrawCircle(GetScreenWidth() / 2, GetScreenHeight() / 2, s->config.crosshair.radius, BLACK);
+  DrawCircle(GetScreenWidth() / 2, GetScreenHeight() / 2, s->config.crosshair.radius - 0.9f, RAYWHITE);
   // END: HUD's Crosshair
-  DrawText(TextFormat("%u", s->player.hp),
-           100,
-           GetScreenHeight() - 100,
-           25,
-           RAYWHITE);
-  DrawText(TextFormat("%u | %u",
-                      s->player.weapon.ammo.magazine,
-                      s->player.weapon.ammo.reserve),
+  DrawText(TextFormat("%u", s->player.hp), 100, GetScreenHeight() - 100, 25, RAYWHITE);
+  DrawText(TextFormat("%u | %u", s->player.weapon.ammo.magazine, s->player.weapon.ammo.reserve),
            GetScreenWidth() - 100,
            GetScreenHeight() - 100,
            25,

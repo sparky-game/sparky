@@ -22,6 +22,11 @@
 #include <sk_scene_options.h>
 #include <sk_scene_main_menu.h>
 
+#define OPTIONS_TITLE       "OPTIONS"
+#define OPTIONS_TITLE_SIZE  50
+#define OPTIONS_RETURN      "<-- Press <ESC> to return"
+#define OPTIONS_RETURN_SIZE 20
+
 void sk_scene_options_update(sk_state *s) {
   if (IsMusicStreamPlaying(s->menu_music)) UpdateMusicStream(s->menu_music);
   if (IsKeyPressed(KEY_ESCAPE)) {
@@ -38,4 +43,11 @@ void sk_scene_options_draw(sk_state *s) {
   DrawText("[DEBUG MODE]", GetScreenWidth() - 155, 10, 20, YELLOW);
 #endif
   if (!s->is_online) DrawText("OFFLINE MODE", 10, 10, 20, YELLOW);
+  DrawText("v" sk_xstr(SK_VERSION), 10, GetScreenHeight() - 25, 20, RAYWHITE);
+  DrawText(OPTIONS_TITLE,
+           (GetScreenWidth() - MeasureText(OPTIONS_TITLE, OPTIONS_TITLE_SIZE)) / 2,
+           50,
+           OPTIONS_TITLE_SIZE,
+           RAYWHITE);
+  DrawText(OPTIONS_RETURN, 120, 60, OPTIONS_RETURN_SIZE, RAYWHITE);
 }

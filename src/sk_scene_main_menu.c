@@ -59,6 +59,7 @@ void sk_scene_main_menu_draw(sk_state *s) {
   DrawText("[DEBUG MODE]", GetScreenWidth() - 155, 10, 20, YELLOW);
 #endif
   if (!s->is_online) DrawText("OFFLINE MODE", 10, 10, 20, YELLOW);
+  DrawText("v" sk_xstr(SK_VERSION), 10, GetScreenHeight() - 25, 20, RAYWHITE);
   DrawText(MAIN_MENU_TITLE,
            (GetScreenWidth() - MeasureText(MAIN_MENU_TITLE,
                                            MAIN_MENU_TITLE_SIZE)) / 2,
@@ -80,11 +81,6 @@ void sk_scene_main_menu_draw(sk_state *s) {
            (GetScreenWidth() - MeasureText(MAIN_MENU_EXIT, MAIN_MENU_EXIT_SIZE)) / 2,
            ((GetScreenHeight() - MeasureText(MAIN_MENU_EXIT, MAIN_MENU_EXIT_SIZE)) / 2) + 225,
            MAIN_MENU_EXIT_SIZE,
-           RAYWHITE);
-  DrawText("v" sk_xstr(SK_VERSION),
-           10,
-           GetScreenHeight() - 25,
-           20,
            RAYWHITE);
   if (s->config.err_title            &&
       s->config.err_body             &&

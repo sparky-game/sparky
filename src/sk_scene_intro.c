@@ -46,27 +46,21 @@ void sk_scene_intro_draw(sk_state *s) {
   case 0:
     ClearBackground(BLACK);
     DrawText(INTRO_PHASE0_TXT1,
-             (GetScreenWidth() - MeasureText(INTRO_PHASE0_TXT1,
-                                             INTRO_PHASE0_TXT1_SIZE)) / 2,
-             (GetScreenHeight() - MeasureText(INTRO_PHASE0_TXT1,
-                                              INTRO_PHASE0_TXT1_SIZE)) / 2,
+             (GetScreenWidth() - MeasureText(INTRO_PHASE0_TXT1, INTRO_PHASE0_TXT1_SIZE)) / 2,
+             (GetScreenHeight() - MeasureText(INTRO_PHASE0_TXT1, INTRO_PHASE0_TXT1_SIZE)) / 2,
              INTRO_PHASE0_TXT1_SIZE,
              RAYWHITE);
     DrawText(INTRO_PHASE0_TXT2,
-             (GetScreenWidth() - MeasureText(INTRO_PHASE0_TXT2,
-                                             INTRO_PHASE0_TXT2_SIZE)) / 2,
-             ((GetScreenHeight() - MeasureText(INTRO_PHASE0_TXT2,
-                                               INTRO_PHASE0_TXT2_SIZE)) / 2) - 55,
+             (GetScreenWidth() - MeasureText(INTRO_PHASE0_TXT2, INTRO_PHASE0_TXT2_SIZE)) / 2,
+             ((GetScreenHeight() - MeasureText(INTRO_PHASE0_TXT2, INTRO_PHASE0_TXT2_SIZE)) / 2) - 55,
              INTRO_PHASE0_TXT2_SIZE,
              RAYWHITE);
     break;
   case 1:
     ClearBackground(BLACK);
     DrawText(INTRO_PHASE1_TXT,
-             (GetScreenWidth() - MeasureText(INTRO_PHASE1_TXT,
-                                             INTRO_PHASE1_TXT_SIZE)) / 2,
-             (GetScreenHeight() - MeasureText(INTRO_PHASE1_TXT,
-                                              INTRO_PHASE1_TXT_SIZE)) / 2,
+             (GetScreenWidth() - MeasureText(INTRO_PHASE1_TXT, INTRO_PHASE1_TXT_SIZE)) / 2,
+             (GetScreenHeight() - MeasureText(INTRO_PHASE1_TXT, INTRO_PHASE1_TXT_SIZE)) / 2,
              INTRO_PHASE1_TXT_SIZE,
              RAYWHITE);
     break;
