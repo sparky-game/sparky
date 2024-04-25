@@ -98,7 +98,7 @@ pub extern "C" fn sk_launcher_run() -> u8 {
     ..Default::default()
   };
   let _ = eframe::run_native(
-    "sparky-client::launcher",
+    SK_LAUNCHER_NAME,
     options,
     Box::new(|_| Box::new(Launcher::default()) as Box<dyn eframe::App>)
   );
