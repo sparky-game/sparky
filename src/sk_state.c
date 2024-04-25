@@ -77,6 +77,8 @@ void sk_state_destroy_offline(sk_state *s) {
   UnloadImage(s->win_icon);
   sk_config_destroy(&s->config);
   sk_renderer_destroy();
+  *s = (sk_state) {0};
+  s = 0;
 }
 
 sk_state sk_state_create_online(u8 lobby_id) {

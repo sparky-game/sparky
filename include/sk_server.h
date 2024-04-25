@@ -23,7 +23,7 @@
 
 #include <sk_defines.h>
 
-#define SK_SERVER_NAME         "sparky-server"
+#define SK_SERVER_NAME         "sparky::server"
 #define SK_SERVER_PORT         27015
 #define SK_SERVER_TICK_RATE    128
 #define SK_SERVER_MSG_MAX_SIZE 1024

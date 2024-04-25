@@ -23,6 +23,6 @@
 
 #include <sk_defines.h>
 
-#define SK_CLIENT_NAME "sparky-client"
+#define SK_CLIENT_NAME "sparky::client"
 
 u8 sk_client_run(const char *ip);

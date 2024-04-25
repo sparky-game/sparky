@@ -65,6 +65,8 @@ void sk_scene_intro_draw(sk_state *s) {
              RAYWHITE);
     break;
   case 2:
+    phase = 0;
+    time = 0;
     s->curr_scene.kind = SK_SCENE_KIND_MAIN_MENU;
     s->curr_scene.update = sk_scene_main_menu_update;
     s->curr_scene.draw = sk_scene_main_menu_draw;

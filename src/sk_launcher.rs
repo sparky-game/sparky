@@ -22,12 +22,18 @@
 extern crate libc;
 extern crate eframe;
 
+use std::thread;
+use std::sync::Arc;
+use std::sync::atomic::{AtomicBool, Ordering};
 use libc::c_char;
 use eframe::egui;
 
 struct Launcher {
   curr_tab: String,
-  ip: String
+  online_mode: bool,
+  ip: String,
+  is_client_running: Arc<AtomicBool>,
+  is_server_running: Arc<AtomicBool>
 }
 
 extern "C" {
@@ -43,7 +49,10 @@ impl Default for Launcher {
   fn default() -> Self {
     Self {
       curr_tab: "Modules".to_owned(),
-      ip: "".to_owned()
+      online_mode: false,
+      ip: "".to_owned(),
+      is_client_running: Arc::new(AtomicBool::new(false)),
+      is_server_running: Arc::new(AtomicBool::new(false))
     }
   }
 }
@@ -65,20 +74,42 @@ impl eframe::App for Launcher {
     egui::CentralPanel::default().show(ctx, |_| {
       if self.curr_tab == SK_LAUNCHER_TAB_MODULES {
         egui::Window::new("Client").show(ctx, |ui| {
-          ui.horizontal(|ui| {
-            let ip_label = ui.label("IP: ");
-            ui.text_edit_singleline(&mut self.ip).labelled_by(ip_label.id);
-          });
+          if self.is_client_running.load(Ordering::SeqCst) { ui.set_enabled(false); }
+          ui.checkbox(&mut self.online_mode, "Online mode");
+          if self.online_mode {
+            ui.horizontal(|ui| {
+              let ip_label = ui.label("IP: ");
+              ui.text_edit_singleline(&mut self.ip).labelled_by(ip_label.id);
+            });
+          }
           if ui.button("Play").clicked() {
-            if self.ip.is_empty() { unsafe { sk_client_run(std::ptr::null()); } }
+            self.is_client_running.store(true, Ordering::SeqCst);
+            let is_client_running = Arc::clone(&self.is_client_running);
+            if self.ip.is_empty() {
+              thread::spawn(move || {
+                unsafe { sk_client_run(std::ptr::null()); }
+                is_client_running.store(false, Ordering::SeqCst);
+              });
+            }
             else {
               let ip_addr = std::ffi::CString::new(self.ip.clone()).unwrap();
-              unsafe { sk_client_run(ip_addr.as_ptr()); }
+              thread::spawn(move || {
+                unsafe { sk_client_run(ip_addr.as_ptr()); }
+                is_client_running.store(false, Ordering::SeqCst);
+              });
             }
           }
         });
         egui::Window::new("Server").show(ctx, |ui| {
-          if ui.button("Start").clicked() { unsafe { sk_server_run(); } }
+          if self.is_server_running.load(Ordering::SeqCst) { ui.set_enabled(false); }
+          if ui.button("Start").clicked() {
+            self.is_server_running.store(true, Ordering::SeqCst);
+            let is_server_running = Arc::clone(&self.is_server_running);
+            thread::spawn(move || {
+              unsafe { sk_server_run(); }
+              is_server_running.store(false, Ordering::SeqCst);
+            });
+          }
         });
       }
       else if self.curr_tab == SK_LAUNCHER_TAB_LOG {
@@ -93,8 +124,8 @@ pub extern "C" fn sk_launcher_run() -> u8 {
   println!("INFO: Initializing {}", SK_LAUNCHER_NAME);
   let options = eframe::NativeOptions {
     viewport: egui::ViewportBuilder::default()
-      .with_inner_size([800.0, 600.0])
-      .with_min_inner_size([300.0, 220.0]),
+      .with_inner_size([600.0, 400.0])
+      .with_min_inner_size([600.0, 400.0]),
     ..Default::default()
   };
   let _ = eframe::run_native(
