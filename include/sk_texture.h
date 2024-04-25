@@ -24,25 +24,39 @@
 #include <raylib.h>
 
 typedef enum {
-  SK_MAP_CAMPING,
-  SK_MAP_MAX_COUNT
-} sk_map_kind;
+  SK_TEXTURE_GRASS1,
+  SK_TEXTURE_GRASS2,
+  SK_TEXTURE_LAVA,
+  SK_TEXTURE_METAL,
+  SK_TEXTURE_ROCK,
+  SK_TEXTURE_ROOF,
+  SK_TEXTURE_SAND,
+  SK_TEXTURE_SNOW,
+  SK_TEXTURE_STONE1,
+  SK_TEXTURE_STONE2,
+  SK_TEXTURE_TERRAIN,
+  SK_TEXTURE_TILE,
+  SK_TEXTURE_WOOD
+} sk_texture_kind;
 
 typedef struct {
-  sk_map_kind kind;
-  Shader pbr_shader;
-  Model floor;
-  Model wall1;
-  Model wall2;
-  Model wall3;
-} sk_map;
+  sk_texture_kind kind;
+} sk_texture;
 
-sk_map sk_map_create(sk_map_kind kind);
+static const char * const sk_texture_kind2name[] = {
+  [SK_TEXTURE_GRASS1] = "grass1",
+  [SK_TEXTURE_GRASS2] = "grass2",
+  [SK_TEXTURE_LAVA] = "lava",
+  [SK_TEXTURE_METAL] = "metal",
+  [SK_TEXTURE_ROCK] = "rock",
+  [SK_TEXTURE_ROOF] = "roof",
+  [SK_TEXTURE_SAND] = "sand",
+  [SK_TEXTURE_SNOW] = "snow",
+  [SK_TEXTURE_STONE1] = "stone1",
+  [SK_TEXTURE_STONE2] = "stone2",
+  [SK_TEXTURE_TERRAIN] = "terrain",
+  [SK_TEXTURE_TILE] = "tile",
+  [SK_TEXTURE_WOOD] = "wood"
+};
 
-void sk_map_destroy(sk_map *m);
-
-void sk_map_load(sk_map *m);
-
-void sk_map_draw(sk_map *m);
-
-sk_map_kind sk_map_get_rand(void);
+void sk_texture_set(sk_texture_kind kind, Material *m);

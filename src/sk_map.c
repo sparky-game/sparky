@@ -22,6 +22,7 @@
 #include <assert.h>
 #include <sk_map.h>
 #include <sk_defines.h>
+#include <sk_texture.h>
 
 sk_map sk_map_create(sk_map_kind kind) {
   return (sk_map) {
@@ -49,38 +50,22 @@ void sk_map_load(sk_map *m) {
   assert(m->floor.meshCount == 1);
   assert(m->floor.materialCount == 1);
   // m->floor.materials[0].shader = m->pbr_shader;
-  m->floor.materials[0].maps[MATERIAL_MAP_ALBEDO].texture    = LoadTexture("assets/textures/wood/albedo.png");
-  m->floor.materials[0].maps[MATERIAL_MAP_NORMAL].texture    = LoadTexture("assets/textures/wood/normal.png");
-  m->floor.materials[0].maps[MATERIAL_MAP_ROUGHNESS].texture = LoadTexture("assets/textures/wood/roughness.png");
-  m->floor.materials[0].maps[MATERIAL_MAP_HEIGHT].texture    = LoadTexture("assets/textures/wood/height.png");
-  m->floor.materials[0].maps[MATERIAL_MAP_OCCLUSION].texture = LoadTexture("assets/textures/wood/ao.png");
+  sk_texture_set(SK_TEXTURE_WOOD, &m->floor.materials[0]);
   m->wall1 = LoadModelFromMesh(GenMeshCube(1, 5, 32));
   assert(m->wall1.meshCount == 1);
   assert(m->wall1.materialCount == 1);
   // m->wall1.materials[0].shader = m->pbr_shader;
-  m->wall1.materials[0].maps[MATERIAL_MAP_ALBEDO].texture    = LoadTexture("assets/textures/stone1/albedo.png");
-  m->wall1.materials[0].maps[MATERIAL_MAP_NORMAL].texture    = LoadTexture("assets/textures/stone1/normal.png");
-  m->wall1.materials[0].maps[MATERIAL_MAP_ROUGHNESS].texture = LoadTexture("assets/textures/stone1/roughness.png");
-  m->wall1.materials[0].maps[MATERIAL_MAP_HEIGHT].texture    = LoadTexture("assets/textures/stone1/height.png");
-  m->wall1.materials[0].maps[MATERIAL_MAP_OCCLUSION].texture = LoadTexture("assets/textures/stone1/ao.png");
+  sk_texture_set(SK_TEXTURE_STONE1, &m->wall1.materials[0]);
   m->wall2 = LoadModelFromMesh(GenMeshCube(1, 5, 32));
   assert(m->wall2.meshCount == 1);
   assert(m->wall2.materialCount == 1);
   // m->wall2.materials[0].shader = m->pbr_shader;
-  m->wall2.materials[0].maps[MATERIAL_MAP_ALBEDO].texture    = LoadTexture("assets/textures/stone1/albedo.png");
-  m->wall2.materials[0].maps[MATERIAL_MAP_NORMAL].texture    = LoadTexture("assets/textures/stone1/normal.png");
-  m->wall2.materials[0].maps[MATERIAL_MAP_ROUGHNESS].texture = LoadTexture("assets/textures/stone1/roughness.png");
-  m->wall2.materials[0].maps[MATERIAL_MAP_HEIGHT].texture    = LoadTexture("assets/textures/stone1/height.png");
-  m->wall2.materials[0].maps[MATERIAL_MAP_OCCLUSION].texture = LoadTexture("assets/textures/stone1/ao.png");
+  sk_texture_set(SK_TEXTURE_STONE1, &m->wall2.materials[0]);
   m->wall3 = LoadModelFromMesh(GenMeshCube(32, 5, 1));
   assert(m->wall3.meshCount == 1);
   assert(m->wall3.materialCount == 1);
   // m->wall3.materials[0].shader = m->pbr_shader;
-  m->wall3.materials[0].maps[MATERIAL_MAP_ALBEDO].texture    = LoadTexture("assets/textures/stone1/albedo.png");
-  m->wall3.materials[0].maps[MATERIAL_MAP_NORMAL].texture    = LoadTexture("assets/textures/stone1/normal.png");
-  m->wall3.materials[0].maps[MATERIAL_MAP_ROUGHNESS].texture = LoadTexture("assets/textures/stone1/roughness.png");
-  m->wall3.materials[0].maps[MATERIAL_MAP_HEIGHT].texture    = LoadTexture("assets/textures/stone1/height.png");
-  m->wall3.materials[0].maps[MATERIAL_MAP_OCCLUSION].texture = LoadTexture("assets/textures/stone1/ao.png");
+  sk_texture_set(SK_TEXTURE_STONE1, &m->wall3.materials[0]);
 }
 
 void sk_map_draw(sk_map *m) {
@@ -88,4 +73,8 @@ void sk_map_draw(sk_map *m) {
   DrawModel(m->wall1, (Vector3) { -16, 2.5f, 0 }, 1, WHITE);
   DrawModel(m->wall2, (Vector3) { 16, 2.5f, 0 }, 1, WHITE);
   DrawModel(m->wall3, (Vector3) { 0, 2.5f, 16 }, 1, WHITE);
+}
+
+sk_map_kind sk_map_get_rand(void) {
+  return (sk_map_kind) GetRandomValue(0, SK_MAP_MAX_COUNT);
 }

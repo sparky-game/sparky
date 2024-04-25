@@ -41,7 +41,7 @@ typedef struct sk_player {
   u8 hp;
 } sk_player;
 
-static const char * const sk_player_kinds[] = {
+static const char * const sk_player_kind2name[] = {
   [SK_PLAYER_KIND_AGENT69] = "agent69"
 };
 

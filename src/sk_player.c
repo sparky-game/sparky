@@ -56,7 +56,7 @@ void sk_player_destroy(sk_player *p) {
 }
 
 void sk_player_load(sk_player *p, sk_weapon_kind initial_weapon_kind) {
-  p->model = LoadModel(TextFormat(MODEL_PATH_PLACEHOLDER, sk_player_kinds[p->kind]));
+  p->model = LoadModel(TextFormat(MODEL_PATH_PLACEHOLDER, sk_player_kind2name[p->kind]));
   p->weapon = sk_weapon_create(initial_weapon_kind);
 }
 

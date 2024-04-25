@@ -19,30 +19,15 @@
  */
 
 
-#pragma once
+#include <sk_texture.h>
 
-#include <raylib.h>
+#define TEXTURE_PATH_PLACEHOLDER "assets/textures/%s/%s.png"
 
-typedef enum {
-  SK_MAP_CAMPING,
-  SK_MAP_MAX_COUNT
-} sk_map_kind;
-
-typedef struct {
-  sk_map_kind kind;
-  Shader pbr_shader;
-  Model floor;
-  Model wall1;
-  Model wall2;
-  Model wall3;
-} sk_map;
-
-sk_map sk_map_create(sk_map_kind kind);
-
-void sk_map_destroy(sk_map *m);
-
-void sk_map_load(sk_map *m);
-
-void sk_map_draw(sk_map *m);
-
-sk_map_kind sk_map_get_rand(void);
+void sk_texture_set(sk_texture_kind kind, Material *m) {
+  const char * const name = sk_texture_kind2name[kind];
+  m->maps[MATERIAL_MAP_ALBEDO].texture = LoadTexture(TextFormat(TEXTURE_PATH_PLACEHOLDER, name, "albedo"));
+  m->maps[MATERIAL_MAP_NORMAL].texture = LoadTexture(TextFormat(TEXTURE_PATH_PLACEHOLDER, name, "normal"));
+  m->maps[MATERIAL_MAP_ROUGHNESS].texture = LoadTexture(TextFormat(TEXTURE_PATH_PLACEHOLDER, name, "roughness"));
+  m->maps[MATERIAL_MAP_HEIGHT].texture = LoadTexture(TextFormat(TEXTURE_PATH_PLACEHOLDER, name, "height"));
+  m->maps[MATERIAL_MAP_OCCLUSION].texture = LoadTexture(TextFormat(TEXTURE_PATH_PLACEHOLDER, name, "ao"));
+}
