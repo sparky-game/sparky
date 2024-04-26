@@ -36,6 +36,7 @@ void sk_map_destroy(sk_map *m) {
   UnloadModel(m->wall1);
   UnloadModel(m->wall2);
   UnloadModel(m->wall3);
+  UnloadModel(m->wall4);
   UnloadShader(m->pbr_shader);
 }
 
@@ -66,6 +67,11 @@ void sk_map_load(sk_map *m) {
   assert(m->wall3.materialCount == 1);
   // m->wall3.materials[0].shader = m->pbr_shader;
   sk_texture_set(SK_TEXTURE_STONE1, &m->wall3.materials[0]);
+  m->wall4 = LoadModelFromMesh(GenMeshCube(32, 5, 1));
+  assert(m->wall4.meshCount == 1);
+  assert(m->wall4.materialCount == 1);
+  // m->wall4.materials[0].shader = m->pbr_shader;
+  sk_texture_set(SK_TEXTURE_STONE1, &m->wall4.materials[0]);
 }
 
 void sk_map_draw(sk_map *m) {
@@ -73,6 +79,7 @@ void sk_map_draw(sk_map *m) {
   DrawModel(m->wall1, (Vector3) { -16, 2.5f, 0 }, 1, WHITE);
   DrawModel(m->wall2, (Vector3) { 16, 2.5f, 0 }, 1, WHITE);
   DrawModel(m->wall3, (Vector3) { 0, 2.5f, 16 }, 1, WHITE);
+  DrawModel(m->wall4, (Vector3) { 0, 2.5f, -16 }, 1, WHITE);
 }
 
 sk_map_kind sk_map_get_rand(void) {

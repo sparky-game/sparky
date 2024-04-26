@@ -35,6 +35,7 @@ typedef struct {
   Model wall1;
   Model wall2;
   Model wall3;
+  Model wall4;
 } sk_map;
 
 sk_map sk_map_create(sk_map_kind kind);
