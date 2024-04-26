@@ -26,8 +26,18 @@
 void sk_texture_set(sk_texture_kind kind, Material *m) {
   const char * const name = sk_texture_kind2name[kind];
   m->maps[MATERIAL_MAP_ALBEDO].texture = LoadTexture(TextFormat(TEXTURE_PATH_PLACEHOLDER, name, "albedo"));
+  SetTextureWrap(m->maps[MATERIAL_MAP_ALBEDO].texture, TEXTURE_WRAP_REPEAT);
+  GenTextureMipmaps(&m->maps[MATERIAL_MAP_ALBEDO].texture);
   m->maps[MATERIAL_MAP_NORMAL].texture = LoadTexture(TextFormat(TEXTURE_PATH_PLACEHOLDER, name, "normal"));
+  SetTextureWrap(m->maps[MATERIAL_MAP_NORMAL].texture, TEXTURE_WRAP_REPEAT);
+  GenTextureMipmaps(&m->maps[MATERIAL_MAP_NORMAL].texture);
   m->maps[MATERIAL_MAP_ROUGHNESS].texture = LoadTexture(TextFormat(TEXTURE_PATH_PLACEHOLDER, name, "roughness"));
+  SetTextureWrap(m->maps[MATERIAL_MAP_ROUGHNESS].texture, TEXTURE_WRAP_REPEAT);
+  GenTextureMipmaps(&m->maps[MATERIAL_MAP_ROUGHNESS].texture);
   m->maps[MATERIAL_MAP_HEIGHT].texture = LoadTexture(TextFormat(TEXTURE_PATH_PLACEHOLDER, name, "height"));
+  SetTextureWrap(m->maps[MATERIAL_MAP_HEIGHT].texture, TEXTURE_WRAP_REPEAT);
+  GenTextureMipmaps(&m->maps[MATERIAL_MAP_HEIGHT].texture);
   m->maps[MATERIAL_MAP_OCCLUSION].texture = LoadTexture(TextFormat(TEXTURE_PATH_PLACEHOLDER, name, "ao"));
+  SetTextureWrap(m->maps[MATERIAL_MAP_OCCLUSION].texture, TEXTURE_WRAP_REPEAT);
+  GenTextureMipmaps(&m->maps[MATERIAL_MAP_OCCLUSION].texture);
 }
