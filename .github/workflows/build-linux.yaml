@@ -47,7 +47,11 @@ jobs:
         uses: github/codeql-action/init@v3
         with:
           languages: c-cpp
+          config: |
+            paths-ignore: [vendor, docs/www/build]
       - name: build
         run: make -j$(nproc)
       - name: analyze
         uses: github/codeql-action/analyze@v3
+      - name: build-editor
+        run: make editor -j$(nproc)
