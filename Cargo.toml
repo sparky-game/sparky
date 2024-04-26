@@ -7,6 +7,10 @@ name = "sk_launcher"
 crate-type = ["staticlib"]
 path = "src/sk_launcher.rs"
 
+[[bin]]
+name = "sk_editor"
+path = "src/sk_editor.rs"
+
 [dependencies]
 eframe = "0.27.1"
 libc = "0.2.153"

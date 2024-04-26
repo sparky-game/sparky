@@ -22,7 +22,9 @@
 ##################
 # === MACROS === #
 ##################
-NAME = sparky
+LAUNCHER_NAME = sk_launcher
+GAME_NAME     = sparky
+EDITOR_NAME   = sk_editor
 
 include config.mk
 
@@ -43,6 +45,8 @@ FULL_VERSION = $(DIST_VERSION)$(DEVEXTRAVERSION)
 # Pretty Printing Output (PPO)
 PPO_MKDIR = MKDIR
 PPO_CLEAN = CLEAN
+PPO_RSAR  = RSAR
+PPO_RSLD  = RSLD
 PPO_RSC   = RSC
 PPO_CC    = CC
 PPO_AR    = AR
@@ -57,12 +61,12 @@ HDR_DIR                 = include
 BUILD_ROOT_DIR          = build
 BUILD_DEBUG_DIR         = $(BUILD_ROOT_DIR)/debug
 BUILD_RELEASE_DIR       = $(BUILD_ROOT_DIR)/release
-LAUNCHER_BUILD_ROOT_DIR = $(BUILD_ROOT_DIR)/$(NAME)_extras
+EXTRAS_BUILD_ROOT_DIR = $(BUILD_ROOT_DIR)/$(GAME_NAME)_extras
 ifdef D
-  LAUNCHER_BUILD_DIR = $(LAUNCHER_BUILD_ROOT_DIR)/debug
+  EXTRAS_BUILD_DIR   = $(EXTRAS_BUILD_ROOT_DIR)/debug
   BUILD_DIR          = $(BUILD_DEBUG_DIR)
 else
-  LAUNCHER_BUILD_DIR = $(LAUNCHER_BUILD_ROOT_DIR)/release
+  EXTRAS_BUILD_DIR   = $(EXTRAS_BUILD_ROOT_DIR)/release
   BUILD_DIR          = $(BUILD_RELEASE_DIR)
 endif
 VENDOR_DIR       = vendor
@@ -76,9 +80,10 @@ RAYLIB_SRCS   := $(wildcard $(RAYLIB_SRC_DIR)/*.c)
 RAYLIB_OBJS   := $(patsubst $(RAYLIB_SRC_DIR)/%.c, $(RAYLIB_BUILD_DIR)/%.o, $(RAYLIB_SRCS))
 LUA_SRCS      := $(filter-out $(LUA_SRC_DIR)/onelua.c, $(wildcard $(LUA_SRC_DIR)/*.c))
 LUA_OBJS      := $(patsubst $(LUA_SRC_DIR)/%.c, $(LUA_BUILD_DIR)/%.o, $(LUA_SRCS))
-LAUNCHER_SRCS := $(wildcard $(SRC_DIR)/sk_launcher*.rs)
+LAUNCHER_SRCS := $(wildcard $(SRC_DIR)/$(LAUNCHER_NAME)*.rs)
 SRCS          := $(wildcard $(SRC_DIR)/*.c)
 OBJS          := $(patsubst $(SRC_DIR)/%.c, $(BUILD_DIR)/%.o, $(SRCS))
+EDITOR_SRCS   := $(wildcard $(SRC_DIR)/$(EDITOR_NAME)*.rs)
 
 # Build flags
 MAKEFLAGS_JOBS := $(patsubst -j%, %, $(filter -j%, $(MAKEFLAGS)))
@@ -100,7 +105,7 @@ AR = ar -rc
 ifdef Q_RSC
   CARGO_QUIET_OPTS = -q --message-format=json
 endif
-RSC      = cargo b $(CARGO_QUIET_OPTS) --target-dir $(LAUNCHER_BUILD_ROOT_DIR) $(CARGO_JOBS) --locked
+RSC      = cargo b $(CARGO_QUIET_OPTS) --target-dir $(EXTRAS_BUILD_ROOT_DIR) $(CARGO_JOBS) --locked
 JQ_RSC   = jq -r 'if .reason == "compiler-artifact" and .target.name != "build-script-build" and .fresh == false then "  $(PPO_RSC)     " + .target.name else empty end'
 FIFO_RSC = /tmp/sparky_cargo_pipe
 ifdef D
@@ -173,10 +178,10 @@ define LDFLAGS
   $(STRIP_OPTS)                  \
   $(RELEASE_OPTS)                \
   -L $(BUILD_DIR)                \
-  -L $(LAUNCHER_BUILD_DIR)       \
+  -L $(EXTRAS_BUILD_DIR)         \
   -lraylib                       \
   -llua                          \
-  -lsk_launcher                  \
+  -l$(LAUNCHER_NAME)             \
   -lpthread                      \
   -lm                            \
   $(GCC_STATIC_LDFLAGS_OPTS)     \
@@ -185,21 +190,22 @@ define LDFLAGS
 endef
 
 # Build output
-LAUNCHER_OUT = $(LAUNCHER_BUILD_DIR)/libsk_launcher.a
+LAUNCHER_OUT = $(EXTRAS_BUILD_DIR)/lib$(LAUNCHER_NAME).a
 RAYLIB_OUT   = $(BUILD_DIR)/libraylib.a
 LUA_OUT      = $(BUILD_DIR)/liblua.a
 ifdef D
-  OUT = $(NAME)_debug
+  OUT = $(GAME_NAME)_debug
 else
-  OUT = $(NAME)
+  OUT = $(GAME_NAME)
 endif
+EDITOR_OUT = $(EXTRAS_BUILD_DIR)/$(EDITOR_NAME)
 
 
 ###################
 # === TARGETS === #
 ###################
 .WAIT:
-.PHONY: all checkdeps game clean mrproper version help
+.PHONY: all checkdeps game editor clean mrproper version help
 
 all: checkdeps .WAIT $(BUILD_DIR) $(RAYLIB_BUILD_DIR) $(LUA_BUILD_DIR) game
 	@:
@@ -241,8 +247,6 @@ $(RAYLIB_BUILD_DIR)/%.o: $(RAYLIB_SRC_DIR)/%.c
 	@echo "  $(PPO_CC)      $@"
 	$(Q)$(CC) $(RAYLIB_CPPFLAGS) $(RAYLIB_CFLAGS) -c -MD $< -o $@
 
--include $(RAYLIB_BUILD_DIR)/*.d
-
 $(LUA_OUT): $(LUA_OBJS)
 	@echo "  $(PPO_AR)      $@"
 	$(Q)$(AR) $@ $^
@@ -251,8 +255,6 @@ $(LUA_BUILD_DIR)/%.o: $(LUA_SRC_DIR)/%.c
 	@echo "  $(PPO_CC)      $@"
 	$(Q)$(CC) $(LUA_CPPFLAGS) $(LUA_CFLAGS) -c -MD $< -o $@
 
--include $(LUA_BUILD_DIR)/*.d
-
 $(LAUNCHER_OUT): $(LAUNCHER_SRCS)
 	@if [ ! -e $(FIFO_RSC) ]; then \
 	  mkfifo $(FIFO_RSC);          \
@@ -260,15 +262,28 @@ $(LAUNCHER_OUT): $(LAUNCHER_SRCS)
 	@$(JQ_RSC) < $(FIFO_RSC) &
 	$(Q)$(RSC) --lib > $(FIFO_RSC)
 	@rm $(FIFO_RSC)
-	@echo "  $(PPO_RSC)     $@"
-
--include $(LAUNCHER_BUILD_DIR)/*.d
+	@echo "  $(PPO_RSAR)    $@"
 
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
 	@echo "  $(PPO_CC)      $@"
 	$(Q)$(CC) $(CPPFLAGS) $(CFLAGS) -c -MD $< -o $@
 
+editor: checkdeps .WAIT $(EDITOR_OUT)
+	@echo "INFO: $(EDITOR_OUT) is ready  ($(FULL_VERSION))"
+
+$(EDITOR_OUT): $(EDITOR_SRCS)
+	@if [ ! -e $(FIFO_RSC) ]; then \
+	  mkfifo $(FIFO_RSC);          \
+	fi
+	@$(JQ_RSC) < $(FIFO_RSC) &
+	$(Q)$(RSC) --bin $(EDITOR_NAME) > $(FIFO_RSC)
+	@rm $(FIFO_RSC)
+	@echo "  $(PPO_RSLD)    $@"
+
 -include $(BUILD_DIR)/*.d
+-include $(LUA_BUILD_DIR)/*.d
+-include $(RAYLIB_BUILD_DIR)/*.d
+-include $(EXTRAS_BUILD_DIR)/*.d
 
 clean:
 	@if [ -d $(BUILD_ROOT_DIR) ]; then           \
@@ -281,13 +296,13 @@ clean:
 	fi
 
 mrproper: clean
-	@if [ -e $(NAME) ]; then           \
-	  echo "  $(PPO_CLEAN)   $(NAME)"; \
-	  rm $(NAME);                      \
+	@if [ -e $(GAME_NAME) ]; then           \
+	  echo "  $(PPO_CLEAN)   $(GAME_NAME)"; \
+	  rm $(GAME_NAME);                      \
 	fi
-	@if [ -e $(NAME)_debug ]; then           \
-	  echo "  $(PPO_CLEAN)   $(NAME)_debug"; \
-	  rm $(NAME)_debug;                      \
+	@if [ -e $(GAME_NAME)_debug ]; then           \
+	  echo "  $(PPO_CLEAN)   $(GAME_NAME)_debug"; \
+	  rm $(GAME_NAME)_debug;                      \
 	fi
 
 version:
@@ -299,6 +314,7 @@ help:
 	@echo "  all       :: Build all targets marked with [*]"
 	@echo "* checkdeps :: Check dependencies for build process"
 	@echo "* game      :: Build the bare game"
+	@echo "  editor    :: Build the editor"
 	@echo "  clean     :: Remove the 'build' directory"
 	@echo "  mrproper  :: Remove and cleans everything"
 	@echo "  version   :: Show the current version string"
