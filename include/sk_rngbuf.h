@@ -21,41 +21,23 @@
 
 #pragma once
 
-#include <sk_map.h>
-#include <sk_scene.h>
-#include <sk_lobby.h>
-#include <sk_config.h>
-#include <sk_rngbuf.h>
-
-#define SK_STATE_MAX_LOBBIES 256
+#include <sk_defines.h>
 
 typedef struct {
-  u8 lobbies_count;
-  sk_lobby lobbies[SK_STATE_MAX_LOBBIES];
-} sk_state_global;
+  u32 capacity;
+  u32 element_size;
+  u32 curr_len;
+  i32 head;
+  i32 tail;
+  void *data;
+} sk_rngbuf;
 
-typedef struct sk_state {
-  u8 is_online;
-  sk_config config;
-  Image win_icon;
-  sk_scene curr_scene;
-  Music menu_music;
-  union {
-    sk_lobby lobby;
-    struct {
-      sk_map map;
-      sk_player player;
-      sk_rngbuf shots_rb;
-    };
-  };
-} sk_state;
+sk_rngbuf sk_rngbuf_create(u32 capacity, u32 element_size);
 
-sk_state_global sk_state_global_create(void);
+void sk_rngbuf_destroy(sk_rngbuf *rb);
 
-void sk_state_global_assign_lobby(sk_state_global *sg, i8 *lobby_id, i8 *lobby_slot_idx);
+u8 sk_rngbuf_push(sk_rngbuf *rb, void *value);
 
-sk_state sk_state_create_offline(void);
+u8 sk_rngbuf_pop(sk_rngbuf *rb, void *out_value);
 
-void sk_state_destroy_offline(sk_state *s);
-
-sk_state sk_state_create_online(u8 lobby_id);
+u8 sk_rngbuf_peek(const sk_rngbuf *rb, void *out_value);
