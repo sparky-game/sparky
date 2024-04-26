@@ -19,21 +19,12 @@
  */
 
 
-#include <sk_log.h>
 #include <sk_scene_gameplay.h>
 
 void sk_scene_gameplay_update(sk_state *s) {
   if (IsMouseButtonPressed(s->config.controls.shoot)) {
     sk_shot shot = {0};
     if (!sk_weapon_shoot(&s->player.weapon, s->player.id, &s->player.camera, &shot)) return;
-    SK_LOG_DEBUG("sk_shot = {");
-    SK_LOG_DEBUG("  .bullet = {");
-    SK_LOG_DEBUG("    .position = (%f, %f, %f),", shot.bullet.position.x, shot.bullet.position.y, shot.bullet.position.z);
-    SK_LOG_DEBUG("    .direction = (%f, %f, %f)", shot.bullet.direction.x, shot.bullet.direction.y, shot.bullet.direction.z);
-    SK_LOG_DEBUG("  },");
-    SK_LOG_DEBUG("  .shooter_id = %s,", shot.shooter_id.value);
-    SK_LOG_DEBUG("  .weapon_kind = %d", shot.weapon_kind);
-    SK_LOG_DEBUG("};");
     sk_rngbuf_push(&s->shots_rb, &shot);
   }
   if (IsKeyPressed(s->config.controls.reload)) sk_weapon_reload(&s->player.weapon);

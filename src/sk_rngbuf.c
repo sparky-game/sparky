@@ -24,10 +24,11 @@
 #include <sk_log.h>
 #include <sk_rngbuf.h>
 
-sk_rngbuf sk_rngbuf_create(u32 capacity, u32 element_size) {
+sk_rngbuf sk_rngbuf_create(u32 capacity, u32 element_size, u8 overwrite) {
   return (sk_rngbuf) {
     .capacity = capacity,
     .element_size = element_size,
+    .overwrite = overwrite ? 1 : 0,
     .curr_len = 0,
     .head = 0,
     .tail = -1,
@@ -49,13 +50,15 @@ u8 sk_rngbuf_push(sk_rngbuf *rb, void *value) {
     SK_LOG_ERROR("sk_rngbuf_push :: `rb` and `value` need to be valid pointers");
     return 0;
   }
-  if (rb->curr_len == rb->capacity) {
+  if (!rb->overwrite && rb->curr_len == rb->capacity) {
     SK_LOG_ERROR("sk_rngbuf_push :: ring buffer is full (%p)", rb);
     return 0;
   }
   rb->tail = (rb->tail + 1) % rb->capacity;
   memcpy((void *) ((i32 *) rb->data + (rb->tail * rb->element_size)), value, rb->element_size);
-  ++rb->curr_len;
+  if (rb->overwrite) rb->curr_len = (rb->curr_len + 1) % rb->capacity;
+  else ++rb->curr_len;
+  SK_LOG_DEBUG("sk_rngbuf_push :: pushed new value (%u/%u)", rb->curr_len, rb->capacity);
   return 1;
 }
 
@@ -71,6 +74,7 @@ u8 sk_rngbuf_pop(sk_rngbuf *rb, void *out_value) {
   memcpy(out_value, (void *) ((i32 *) rb->data + (rb->head * rb->element_size)), rb->element_size);
   rb->head = (rb->head + 1) % rb->capacity;
   --rb->curr_len;
+  SK_LOG_DEBUG("sk_rngbuf_pop :: popped old value (%u/%u)", rb->curr_len, rb->capacity);
   return 1;
 }
 

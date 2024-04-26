@@ -22,6 +22,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <assert.h>
+#include <sk_log.h>
 #include <sk_weapon.h>
 #include <raymath.h>
 
@@ -76,6 +77,14 @@ u8 sk_weapon_shoot(sk_weapon *w, sk_uuid player_id, Camera3D *cam, sk_shot *shot
   shot->bullet = GetMouseRay(GetMousePosition(), *cam);
   shot->shooter_id = player_id;
   shot->weapon_kind = w->kind;
+  SK_LOG_DEBUG("sk_shot = {");
+  SK_LOG_DEBUG("  .bullet = {");
+  SK_LOG_DEBUG("    .position = (%f, %f, %f),", shot->bullet.position.x, shot->bullet.position.y, shot->bullet.position.z);
+  SK_LOG_DEBUG("    .direction = (%f, %f, %f)", shot->bullet.direction.x, shot->bullet.direction.y, shot->bullet.direction.z);
+  SK_LOG_DEBUG("  },");
+  SK_LOG_DEBUG("  .shooter_id = %s,", shot->shooter_id.value);
+  SK_LOG_DEBUG("  .weapon_kind = %d", shot->weapon_kind);
+  SK_LOG_DEBUG("};");
   return 1;
 }
 

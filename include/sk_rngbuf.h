@@ -26,13 +26,14 @@
 typedef struct {
   u32 capacity;
   u32 element_size;
+  u8 overwrite;
   u32 curr_len;
   i32 head;
   i32 tail;
   void *data;
 } sk_rngbuf;
 
-sk_rngbuf sk_rngbuf_create(u32 capacity, u32 element_size);
+sk_rngbuf sk_rngbuf_create(u32 capacity, u32 element_size, u8 overwrite);
 
 void sk_rngbuf_destroy(sk_rngbuf *rb);
 
