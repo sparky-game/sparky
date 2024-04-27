@@ -68,7 +68,7 @@ u8 sk_rngbuf_pop(sk_rngbuf *rb, void *out_value) {
     SK_LOG_ERROR("sk_rngbuf_pop :: `rb` and `out_value` need to be valid pointers");
     return 0;
   }
-  if (rb->curr_len == 0) {
+  if (!rb->curr_len) {
     SK_LOG_ERROR("sk_rngbuf_pop :: ring buffer is empty (%p)", rb);
     return 0;
   }
