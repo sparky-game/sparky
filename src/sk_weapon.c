@@ -53,6 +53,7 @@ void sk_weapon_destroy(sk_weapon *w) {
   UnloadSound(w->sound_shoot);
   UnloadModelAnimations(w->model_anims, w->model_anims_count);
   UnloadModel(w->model);
+  *w = (sk_weapon) {0};
   w = 0;
 }
 

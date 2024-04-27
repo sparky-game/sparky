@@ -52,6 +52,7 @@ sk_player sk_player_create(i8 lobby_id, i8 lobby_slot_idx, sk_player_kind kind, 
 void sk_player_destroy(sk_player *p) {
   sk_weapon_destroy(&p->weapon);
   UnloadModel(p->model);
+  *p = (sk_player) {0};
   p = 0;
 }
 
