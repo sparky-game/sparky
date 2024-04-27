@@ -56,7 +56,7 @@ u8 sk_rngbuf_push(sk_rngbuf *rb, void *value) {
     return 0;
   }
   rb->tail = (rb->tail + 1) % rb->capacity;
-  memcpy((void *) ((i32 *) rb->data + (rb->tail * rb->element_size)), value, rb->element_size);
+  memcpy((void *) ((u64) rb->data + (rb->tail * rb->element_size)), value, rb->element_size);
   if (rb->overwrite) rb->curr_len = (rb->curr_len + 1) % rb->capacity;
   else ++rb->curr_len;
   SK_LOG_DEBUG("sk_rngbuf_push :: pushed new value (%u/%u)", rb->curr_len, rb->capacity);
@@ -72,7 +72,7 @@ u8 sk_rngbuf_pop(sk_rngbuf *rb, void *out_value) {
     SK_LOG_ERROR("sk_rngbuf_pop :: ring buffer is empty (%p)", rb);
     return 0;
   }
-  memcpy(out_value, (void *) ((i32 *) rb->data + (rb->head * rb->element_size)), rb->element_size);
+  memcpy(out_value, (void *) ((u64) rb->data + (rb->head * rb->element_size)), rb->element_size);
   rb->head = (rb->head + 1) % rb->capacity;
   --rb->curr_len;
   SK_LOG_DEBUG("sk_rngbuf_pop :: popped old value (%u/%u)", rb->curr_len, rb->capacity);
@@ -88,6 +88,6 @@ u8 sk_rngbuf_peek(const sk_rngbuf *rb, void *out_value) {
     SK_LOG_ERROR("sk_rngbuf_peek :: ring buffer is empty (%p)", rb);
     return 0;
   }
-  memcpy(out_value, (void *) ((i32 *) rb->data + (rb->head * rb->element_size)), rb->element_size);
+  memcpy(out_value, (void *) ((u64) rb->data + (rb->head * rb->element_size)), rb->element_size);
   return 1;
 }
