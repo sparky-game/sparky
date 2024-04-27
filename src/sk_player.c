@@ -21,6 +21,7 @@
 
 #include <stdio.h>
 #include <assert.h>
+#include <sk_log.h>
 #include <sk_player.h>
 
 #define PLAYER_HEIGHT          2
@@ -33,7 +34,7 @@
 sk_player sk_player_create(i8 lobby_id, i8 lobby_slot_idx, sk_player_kind kind, sk_config *config) {
   assert(lobby_id != -1);
   assert(lobby_slot_idx != -1);
-  return (sk_player) {
+  sk_player p = {
     .id = sk_uuid_gen(),
     .lobby_id = lobby_id,
     .lobby_slot_idx = lobby_slot_idx,
@@ -47,6 +48,8 @@ sk_player sk_player_create(i8 lobby_id, i8 lobby_slot_idx, sk_player_kind kind, 
     },
     .hp = 100
   };
+  SK_LOG_INFO("sk_player_create :: created new player (%s)", p.id.value);
+  return p;
 }
 
 void sk_player_destroy(sk_player *p) {
