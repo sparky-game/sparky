@@ -23,33 +23,34 @@
 
 #include <raylib.h>
 #include <sk_uuid.h>
-#include <sk_darray.h>
-#include <sk_map_element.h>
+#include <sk_defines.h>
+#include <sk_texture.h>
 
 typedef enum {
-  SK_MAP_TRAINING,
-  SK_MAP_MAX_COUNT
-} sk_map_kind;
+  SK_MAP_ELEMENT_FLOOR,
+  SK_MAP_ELEMENT_WALL
+} sk_map_element_kind;
 
 typedef struct {
-  sk_map_kind kind;
-  Shader pbr_shader;
-  sk_darray elements;
-} sk_map;
+  sk_uuid id;
+  sk_map_element_kind kind;
+  char *name;
+  Model model;
+  Vector3 position;
+  f32 scale;
+} sk_map_element;
 
-sk_map_kind sk_map_get_rand(void);
+sk_map_element sk_map_element_create(sk_map_element_kind kind,
+                                     char *name,
+                                     sk_texture_kind texture_kind,
+                                     f32 w, f32 l, f32 h);
 
-sk_map sk_map_create(sk_map_kind kind);
+void sk_map_element_destroy(sk_map_element *e);
 
-void sk_map_destroy(sk_map *m);
+void sk_map_element_draw(sk_map_element *e);
 
-void sk_map_add_element(sk_darray *es,
-                        sk_map_element_kind kind,
-                        char *name,
-                        sk_texture_kind texture_kind,
-                        f32 w, f32 l, f32 h,
-                        Vector3 draw_pos);
+void sk_map_element_rename(sk_map_element *e, char *name);
 
-void sk_map_load(sk_map *m);
+void sk_map_element_move(sk_map_element *e, Vector3 new_position);
 
-void sk_map_draw(sk_map *m);
+void sk_map_element_scale(sk_map_element *e, f32 scale);

@@ -63,7 +63,7 @@ sk_state sk_state_create_offline(void) {
     .win_icon = LoadImage("assets/icon.png"),
     .curr_scene = sk_scene_create(SK_SCENE_KIND_INTRO),
     .menu_music = LoadMusicStream(TextFormat(MUSIC_PATH_PLACEHOLDER, "menu")),
-    .map = sk_map_create(SK_MAP_CAMPING),
+    .map = sk_map_create(SK_MAP_TRAINING),
     .player = sk_player_create(0, 0, SK_PLAYER_KIND_AGENT69, &config),
     .shots_rb = sk_rngbuf_create(2 << 14, sizeof(sk_shot), 1)
   };

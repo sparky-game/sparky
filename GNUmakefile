@@ -53,7 +53,7 @@ PPO_AR    = AR
 PPO_LD    = LD
 
 # Dependencies
-CHECKDEPS = mkdir mkfifo $(CC) ar cargo jq
+CHECKDEPS = mkdir mkfifo $(CC) ar rustc cargo jq
 
 # Directories
 SRC_DIR                 = src

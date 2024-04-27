@@ -19,25 +19,41 @@
  */
 
 
-#include <assert.h>
 #include <sk_map.h>
+#include <sk_log.h>
 #include <sk_defines.h>
 #include <sk_texture.h>
+
+sk_map_kind sk_map_get_rand(void) {
+  return (sk_map_kind) GetRandomValue(0, SK_MAP_MAX_COUNT);
+}
 
 sk_map sk_map_create(sk_map_kind kind) {
   return (sk_map) {
     .kind = kind,
-    .pbr_shader = LoadShader("assets/shaders/pbr.vert.glsl", "assets/shaders/pbr.frag.glsl")
+    .pbr_shader = LoadShader("assets/shaders/pbr.vert.glsl", "assets/shaders/pbr.frag.glsl"),
+    .elements = sk_darray_create(sizeof(sk_map_element))
   };
 }
 
 void sk_map_destroy(sk_map *m) {
-  UnloadModel(m->floor);
-  UnloadModel(m->wall1);
-  UnloadModel(m->wall2);
-  UnloadModel(m->wall3);
-  UnloadModel(m->wall4);
+  for (u32 i = 0; i < m->elements.curr_len; ++i) {
+    sk_map_element_destroy(&((sk_map_element *) m->elements.data)[i]);
+  }
+  sk_darray_destroy(&m->elements);
   UnloadShader(m->pbr_shader);
+}
+
+void sk_map_add_element(sk_darray *es,
+                        sk_map_element_kind kind,
+                        char *name,
+                        sk_texture_kind texture_kind,
+                        f32 w, f32 l, f32 h,
+                        Vector3 draw_pos) {
+  sk_map_element e = sk_map_element_create(kind, name, texture_kind, w, l, h);
+  sk_map_element_move(&e, draw_pos);
+  if (!sk_darray_push(es, &e)) SK_LOG_ERROR("sk_map_add_element :: unable to add new element");
+  // sk_map_element_destroy(&e);
 }
 
 void sk_map_load(sk_map *m) {
@@ -47,41 +63,40 @@ void sk_map_load(sk_map *m) {
   m->pbr_shader.locs[SHADER_LOC_MAP_EMISSION]  = GetShaderLocation(m->pbr_shader, "emissiveMap");
   m->pbr_shader.locs[SHADER_LOC_COLOR_DIFFUSE] = GetShaderLocation(m->pbr_shader, "albedoColor");
   m->pbr_shader.locs[SHADER_LOC_VECTOR_VIEW]   = GetShaderLocation(m->pbr_shader, "viewPos");
-  m->floor = LoadModelFromMesh(GenMeshPlane(32, 32, 1, 1));
-  assert(m->floor.meshCount == 1);
-  assert(m->floor.materialCount == 1);
-  // m->floor.materials[0].shader = m->pbr_shader;
-  sk_texture_set(SK_TEXTURE_WOOD, &m->floor.materials[0]);
-  m->wall1 = LoadModelFromMesh(GenMeshCube(1, 5, 32));
-  assert(m->wall1.meshCount == 1);
-  assert(m->wall1.materialCount == 1);
-  // m->wall1.materials[0].shader = m->pbr_shader;
-  sk_texture_set(SK_TEXTURE_STONE1, &m->wall1.materials[0]);
-  m->wall2 = LoadModelFromMesh(GenMeshCube(1, 5, 32));
-  assert(m->wall2.meshCount == 1);
-  assert(m->wall2.materialCount == 1);
-  // m->wall2.materials[0].shader = m->pbr_shader;
-  sk_texture_set(SK_TEXTURE_STONE1, &m->wall2.materials[0]);
-  m->wall3 = LoadModelFromMesh(GenMeshCube(32, 5, 1));
-  assert(m->wall3.meshCount == 1);
-  assert(m->wall3.materialCount == 1);
-  // m->wall3.materials[0].shader = m->pbr_shader;
-  sk_texture_set(SK_TEXTURE_STONE1, &m->wall3.materials[0]);
-  m->wall4 = LoadModelFromMesh(GenMeshCube(32, 5, 1));
-  assert(m->wall4.meshCount == 1);
-  assert(m->wall4.materialCount == 1);
-  // m->wall4.materials[0].shader = m->pbr_shader;
-  sk_texture_set(SK_TEXTURE_STONE1, &m->wall4.materials[0]);
+  sk_map_add_element(&m->elements,
+                     SK_MAP_ELEMENT_FLOOR,
+                     "floor",
+                     SK_TEXTURE_WOOD,
+                     32, 32, 0,
+                     (Vector3) { 0, 0, 0 });
+  sk_map_add_element(&m->elements,
+                     SK_MAP_ELEMENT_WALL,
+                     "wall1",
+                     SK_TEXTURE_STONE1,
+                     1, 32, 5,
+                     (Vector3) { -16, 2.5f, 0 });
+  sk_map_add_element(&m->elements,
+                     SK_MAP_ELEMENT_WALL,
+                     "wall2",
+                     SK_TEXTURE_STONE1,
+                     1, 32, 5,
+                     (Vector3) { 16, 2.5f, 0 });
+  sk_map_add_element(&m->elements,
+                     SK_MAP_ELEMENT_WALL,
+                     "wall3",
+                     SK_TEXTURE_STONE1,
+                     32, 1, 5,
+                     (Vector3) { 0, 2.5f, 16 });
+  sk_map_add_element(&m->elements,
+                     SK_MAP_ELEMENT_WALL,
+                     "wall4",
+                     SK_TEXTURE_STONE1,
+                     32, 1, 5,
+                     (Vector3) { 0, 2.5f, -16 });
 }
 
 void sk_map_draw(sk_map *m) {
-  DrawModel(m->floor, (Vector3) { 0, 0, 0 }, 1, WHITE);
-  DrawModel(m->wall1, (Vector3) { -16, 2.5f, 0 }, 1, WHITE);
-  DrawModel(m->wall2, (Vector3) { 16, 2.5f, 0 }, 1, WHITE);
-  DrawModel(m->wall3, (Vector3) { 0, 2.5f, 16 }, 1, WHITE);
-  DrawModel(m->wall4, (Vector3) { 0, 2.5f, -16 }, 1, WHITE);
-}
-
-sk_map_kind sk_map_get_rand(void) {
-  return (sk_map_kind) GetRandomValue(0, SK_MAP_MAX_COUNT);
+  for (u32 i = 0; i < m->elements.curr_len; ++i) {
+    sk_map_element_draw(&((sk_map_element *) m->elements.data)[i]);
+  }
 }
