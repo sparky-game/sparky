@@ -41,6 +41,7 @@ void sk_rngbuf_destroy(sk_rngbuf *rb) {
     SK_LOG_WARN("sk_rngbuf_destroy :: `rb` is not a valid pointer, skipping destruction");
     return;
   }
+  free(rb->data);
   *rb = (sk_rngbuf) {0};
   rb = 0;
 }
