@@ -21,17 +21,16 @@
 
 #pragma once
 
-#include <stddef.h>
 #include <sk_defines.h>
 
 typedef struct {
   u32 capacity;
-  size_t element_size;
+  usz element_size;
   u32 curr_len;
   void *data;
 } sk_darray;
 
-sk_darray sk_darray_create(size_t element_size);
+sk_darray sk_darray_create(usz element_size);
 
 void sk_darray_destroy(sk_darray *da);
 

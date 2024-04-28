@@ -21,14 +21,13 @@
 
 #pragma once
 
-#include <stddef.h>
 #include <sk_defines.h>
 
-#define SK_RNGBUF_AT(rb, i) ((void *) ((i32 *) (rb)->data + ((((rb)->head + (i)) % (rb)->capacity) * (rb)->element_size)))
+#define SK_RNGBUF_AT(rb, i) ((void *) ((u64) (rb)->data + ((((rb)->head + (i)) % (rb)->capacity) * (rb)->element_size)))
 
 typedef struct {
   u32 capacity;
-  size_t element_size;
+  usz element_size;
   u8 overwrite;
   u32 curr_len;
   i32 head;

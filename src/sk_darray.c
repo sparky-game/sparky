@@ -27,7 +27,7 @@
 #define INITIAL_CAPACITY 1
 #define RESIZE_FACTOR    2
 
-sk_darray sk_darray_create(size_t element_size) {
+sk_darray sk_darray_create(usz element_size) {
   return (sk_darray) {
     .capacity = INITIAL_CAPACITY,
     .element_size = element_size,
