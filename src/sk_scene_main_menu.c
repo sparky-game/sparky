@@ -61,10 +61,8 @@ void sk_scene_main_menu_draw(sk_state *s) {
   if (!s->is_online) DrawText("OFFLINE MODE", 10, 10, 20, YELLOW);
   DrawText("v" sk_xstr(SK_VERSION), 10, GetScreenHeight() - 25, 20, RAYWHITE);
   DrawText(MAIN_MENU_TITLE,
-           (GetScreenWidth() - MeasureText(MAIN_MENU_TITLE,
-                                           MAIN_MENU_TITLE_SIZE)) / 2,
-           (GetScreenHeight() - MeasureText(MAIN_MENU_TITLE,
-                                            MAIN_MENU_TITLE_SIZE)) / 2,
+           (GetScreenWidth() - MeasureText(MAIN_MENU_TITLE, MAIN_MENU_TITLE_SIZE)) / 2,
+           (GetScreenHeight() - MeasureText(MAIN_MENU_TITLE, MAIN_MENU_TITLE_SIZE)) / 2,
            MAIN_MENU_TITLE_SIZE,
            RAYWHITE);
   DrawText(MAIN_MENU_START,
@@ -86,15 +84,7 @@ void sk_scene_main_menu_draw(sk_state *s) {
       s->config.err_body             &&
       strcmp(s->config.err_body, "") &&
       strcmp(s->config.err_title, "")) {
-    DrawText(s->config.err_title,
-             GetScreenWidth() - 500,
-             GetScreenHeight() - 200,
-             20,
-             RED);
-    DrawText(s->config.err_body,
-             GetScreenWidth() - 650,
-             GetScreenHeight() - 150,
-             18,
-             RED);
+    DrawText(s->config.err_title, GetScreenWidth() - 500, GetScreenHeight() - 200, 20, RED);
+    DrawText(s->config.err_body, GetScreenWidth() - 650, GetScreenHeight() - 150, 18, RED);
   }
 }
