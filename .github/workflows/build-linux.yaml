@@ -48,7 +48,7 @@ jobs:
         with:
           languages: c-cpp
           config: |
-            paths-ignore: [vendor, docs/www/build]
+            paths-ignore: [vendor]
       - name: build
         run: make -j$(nproc)
       - name: analyze
