@@ -48,7 +48,7 @@ static SK_LAUNCHER_TAB_LOG: &str = "Console Log";
 impl Default for Launcher {
   fn default() -> Self {
     Self {
-      curr_tab: "Modules".to_owned(),
+      curr_tab: SK_LAUNCHER_TAB_MODULES.to_owned(),
       online_mode: false,
       ip: "".to_owned(),
       is_client_running: Arc::new(AtomicBool::new(false)),
