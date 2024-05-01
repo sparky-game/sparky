@@ -24,10 +24,11 @@
 void sk_scene_gameplay_update(sk_state *s) {
   if (IsMouseButtonPressed(s->config.controls.shoot)) {
     sk_shot shot = {0};
-    if (!sk_weapon_shoot(&s->player.weapon, s->player.id, &s->player.camera, &shot)) return;
+    if (!sk_weapon_shoot(s->player.weapon, s->player.id, &s->player.camera, &shot)) return;
     sk_rngbuf_push(&s->shots_rb, &shot);
   }
-  if (IsKeyPressed(s->config.controls.reload)) sk_weapon_reload(&s->player.weapon);
+  if (IsKeyPressed(s->config.controls.reload)) sk_weapon_reload(s->player.weapon);
+  if (GetMouseWheelMove()) sk_player_rotate_weapon(&s->player);
   sk_player_jump(&s->player, &s->config);
   sk_player_move(&s->player, &s->config, sk_player_peek(&s->player, &s->config));
 }
@@ -36,7 +37,7 @@ void sk_scene_gameplay_draw(sk_state *s) {
   // World
   ClearBackground(SKYBLUE);
   BeginMode3D(s->player.camera);
-  sk_weapon_draw(&s->player.weapon, &s->player.camera, (Vector3) { 1, -1, -3 }, 0.5f);
+  sk_weapon_draw(s->player.weapon, &s->player.camera);
   sk_player_draw(&s->player);
   sk_map_draw(&s->map);
   EndMode3D();
@@ -53,7 +54,7 @@ void sk_scene_gameplay_draw(sk_state *s) {
   DrawCircle(GetScreenWidth() / 2, GetScreenHeight() / 2, s->config.crosshair.radius - 0.9f, RAYWHITE);
   // END: HUD's Crosshair
   DrawText(TextFormat("%u", s->player.hp), 100, GetScreenHeight() - 100, 25, RAYWHITE);
-  DrawText(TextFormat("%u | %u", s->player.weapon.ammo.magazine, s->player.weapon.ammo.reserve),
+  DrawText(TextFormat("%u | %u", s->player.weapon->ammo.magazine, s->player.weapon->ammo.reserve),
            GetScreenWidth() - 100,
            GetScreenHeight() - 100,
            25,

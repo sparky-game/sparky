@@ -26,7 +26,8 @@
 #include <sk_defines.h>
 
 typedef enum {
-  SK_WEAPON_KIND_7MM
+  SK_WEAPON_KIND_7MM,
+  SK_WEAPON_KIND_AKM
 } sk_weapon_kind;
 
 typedef struct {
@@ -52,18 +53,20 @@ typedef struct {
 } sk_shot;
 
 static const char * const sk_weapon_kind2name[] = {
-  [SK_WEAPON_KIND_7MM] = "7mm"
+  [SK_WEAPON_KIND_7MM] = "7mm",
+  [SK_WEAPON_KIND_AKM] = "akm"
 };
 
 static const sk_weapon_ammo_spec sk_weapon_kind2ammo[] = {
-  [SK_WEAPON_KIND_7MM] = { 12, 3 }
+  [SK_WEAPON_KIND_7MM] = { 12, 3 },
+  [SK_WEAPON_KIND_AKM] = { 25, 2 }
 };
 
 sk_weapon sk_weapon_create(sk_weapon_kind kind);
 
 void sk_weapon_destroy(sk_weapon *w);
 
-void sk_weapon_draw(sk_weapon *w, Camera3D *cam, Vector3 offset, f32 scale);
+void sk_weapon_draw(sk_weapon *w, Camera3D *cam);
 
 u8 sk_weapon_shoot(sk_weapon *w, sk_uuid id, Camera3D *cam, sk_shot *shot);
 

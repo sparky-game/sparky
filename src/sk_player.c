@@ -31,6 +31,11 @@
 #define WALK_VELOCITY          14
 #define MODEL_PATH_PLACEHOLDER "assets/models/%s.glb"
 
+enum {
+  SIDE_WEAPON_IDX,
+  MAIN_WEAPON_IDX
+};
+
 sk_player sk_player_create(i8 lobby_id, i8 lobby_slot_idx, sk_player_kind kind, sk_config *config) {
   assert(lobby_id != -1);
   assert(lobby_slot_idx != -1);
@@ -53,16 +58,18 @@ sk_player sk_player_create(i8 lobby_id, i8 lobby_slot_idx, sk_player_kind kind, 
 }
 
 void sk_player_destroy(sk_player *p) {
-  sk_weapon_destroy(&p->weapon);
+  for (usz i = 0; i < SK_PLAYER_WEAPON_SLOTS; ++i) sk_weapon_destroy(&p->weapon_slots[i]);
   UnloadModel(p->model);
   SK_LOG_INFO("sk_player_destroy :: destroyed player (%s)", p->id.value);
   *p = (sk_player) {0};
   p = 0;
 }
 
-void sk_player_load(sk_player *p, sk_weapon_kind initial_weapon_kind) {
+void sk_player_load(sk_player *p) {
   p->model = LoadModel(TextFormat(MODEL_PATH_PLACEHOLDER, sk_player_kind2name[p->kind]));
-  p->weapon = sk_weapon_create(initial_weapon_kind);
+  p->weapon_slots[SIDE_WEAPON_IDX] = sk_weapon_create(SK_WEAPON_KIND_7MM);
+  p->weapon_slots[MAIN_WEAPON_IDX] = sk_weapon_create(SK_WEAPON_KIND_AKM);
+  p->weapon = &p->weapon_slots[SIDE_WEAPON_IDX];
 }
 
 void sk_player_jump(sk_player *p, sk_config *config) {
@@ -108,6 +115,12 @@ void sk_player_move(sk_player *p, sk_config *config, f32 roll) {
                     roll
                   },
                   0);
+}
+
+void sk_player_rotate_weapon(sk_player *p) {
+  static usz i = SIDE_WEAPON_IDX;
+  i = (i + 1) % SK_PLAYER_WEAPON_SLOTS;
+  p->weapon = &p->weapon_slots[i];
 }
 
 void sk_player_draw(sk_player *p) {

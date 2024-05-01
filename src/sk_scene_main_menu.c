@@ -40,7 +40,7 @@ void sk_scene_main_menu_update(sk_state *s) {
     s->curr_scene.update = sk_scene_gameplay_update;
     s->curr_scene.draw = sk_scene_gameplay_draw;
     StopMusicStream(s->menu_music);
-    sk_player_load(&s->player, SK_WEAPON_KIND_7MM);
+    sk_player_load(&s->player);
     sk_map_load(&s->map);
     SetExitKey(KEY_ESCAPE);
     DisableCursor();

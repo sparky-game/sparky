@@ -25,6 +25,8 @@
 #include <sk_config.h>
 #include <sk_weapon.h>
 
+#define SK_PLAYER_WEAPON_SLOTS 2
+
 typedef enum {
   SK_PLAYER_KIND_AGENT69
 } sk_player_kind;
@@ -36,7 +38,8 @@ typedef struct sk_player {
   sk_player_kind kind;
   Camera3D camera;
   Model model;
-  sk_weapon weapon;
+  sk_weapon *weapon;
+  sk_weapon weapon_slots[SK_PLAYER_WEAPON_SLOTS];
   f32 v_y;
   u8 hp;
 } sk_player;
@@ -49,12 +52,14 @@ sk_player sk_player_create(i8 lobby_id, i8 lobby_slot_idx, sk_player_kind kind, 
 
 void sk_player_destroy(sk_player *p);
 
-void sk_player_load(sk_player *p, sk_weapon_kind initial_weapon_kind);
+void sk_player_load(sk_player *p);
 
 void sk_player_jump(sk_player *p, sk_config *config);
 
 f32 sk_player_peek(sk_player *p, sk_config *config);
 
 void sk_player_move(sk_player *p, sk_config *config, f32 roll);
+
+void sk_player_rotate_weapon(sk_player *p);
 
 void sk_player_draw(sk_player *p);

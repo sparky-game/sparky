@@ -44,8 +44,7 @@ sk_weapon sk_weapon_create(sk_weapon_kind kind) {
       .reserve = ammo_spec.reserve * ammo_spec.magazine
     }
   };
-  assert(w.model_anims_count == 1);
-  assert(IsModelAnimationValid(w.model, w.model_anims[0]));
+  for (usz i = 0; i < w.model_anims_count; ++i) assert(IsModelAnimationValid(w.model, w.model_anims[i]));
   return w;
 }
 
@@ -57,14 +56,32 @@ void sk_weapon_destroy(sk_weapon *w) {
   w = 0;
 }
 
-void sk_weapon_draw(sk_weapon *w, Camera3D *cam, Vector3 offset, f32 scale) {
-  Vector3 weapon_pos = Vector3Add(cam->position, offset);
-  // Vector3 weapon_pos = Vector3Project(Vector3Add(cam->position, offset), cam->target);
+void sk_weapon_draw(sk_weapon *w, Camera3D *cam) {
+  Vector3 weapon_pos;
+  Vector3 rotation_axis;
+  f32 rotation_angle;
+  Vector3 scale;
+  switch (w->kind) {
+  case SK_WEAPON_KIND_7MM:
+    weapon_pos = Vector3Add(cam->position, (Vector3) { 1, -1, -3 });
+    rotation_axis = (Vector3) { 1, 0, 0 };
+    rotation_angle = 275;
+    scale = (Vector3) { 0.5f, 0.5f, 0.5f };
+    break;
+  case SK_WEAPON_KIND_AKM:
+    weapon_pos = Vector3Add(cam->position, (Vector3) { 1, -1, -3 });
+    rotation_axis = (Vector3) { 0, 1, 0 };
+    rotation_angle = 90;
+    scale = (Vector3) { 0.025f, 0.025f, 0.025f };
+    break;
+  default:
+    assert(0 && "Unreachable");
+  }
   DrawModelEx(w->model,
               weapon_pos,
-              (Vector3) { 1, 0, 0 },
-              275,
-              (Vector3) { scale, scale, scale },
+              rotation_axis,
+              rotation_angle,
+              scale,
               WHITE);
 }
 
