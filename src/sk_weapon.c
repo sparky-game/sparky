@@ -57,10 +57,10 @@ void sk_weapon_destroy(sk_weapon *w) {
 }
 
 void sk_weapon_draw(sk_weapon *w, Camera3D *cam) {
-  Vector3 weapon_pos;
-  Vector3 rotation_axis;
-  f32 rotation_angle;
-  Vector3 scale;
+  Vector3 weapon_pos = Vector3Zero();
+  Vector3 rotation_axis = Vector3Zero();
+  f32 rotation_angle = 0;
+  Vector3 scale = Vector3One();
   switch (w->kind) {
   case SK_WEAPON_KIND_7MM:
     weapon_pos = Vector3Add(cam->position, (Vector3) { 1, -1, -3 });
