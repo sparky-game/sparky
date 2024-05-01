@@ -45,12 +45,10 @@ FULL_VERSION = $(DIST_VERSION)$(DEVEXTRAVERSION)
 # Pretty Printing Output (PPO)
 PPO_MKDIR = MKDIR
 PPO_CLEAN = CLEAN
-PPO_RSAR  = RSAR
-PPO_RSLD  = RSLD
-PPO_AR    = CCAR
-PPO_LD    = CCLD
 PPO_RSC   = RSC
 PPO_CC    = CC
+PPO_AR    = AR
+PPO_LD    = LD
 
 # Dependencies
 CHECKDEPS = mkdir mkfifo $(CC) ar rustc cargo jq
@@ -236,11 +234,11 @@ game: $(OUT)
 	@echo "INFO: $(OUT) is ready  ($(FULL_VERSION))"
 
 $(OUT): $(RAYLIB_OUT) $(LUA_OUT) $(LAUNCHER_OUT) $(OBJS)
-	@echo "  $(PPO_LD)    $@"
+	@echo "  $(PPO_LD)      $@"
 	$(Q)$(CC) $(OBJS) $(LDFLAGS) -o $@
 
 $(RAYLIB_OUT): $(RAYLIB_OBJS)
-	@echo "  $(PPO_AR)    $@"
+	@echo "  $(PPO_AR)      $@"
 	$(Q)$(AR) $@ $^
 
 $(RAYLIB_BUILD_DIR)/%.o: $(RAYLIB_SRC_DIR)/%.c
@@ -248,7 +246,7 @@ $(RAYLIB_BUILD_DIR)/%.o: $(RAYLIB_SRC_DIR)/%.c
 	$(Q)$(CC) $(RAYLIB_CPPFLAGS) $(RAYLIB_CFLAGS) -c -MD $< -o $@
 
 $(LUA_OUT): $(LUA_OBJS)
-	@echo "  $(PPO_AR)    $@"
+	@echo "  $(PPO_AR)      $@"
 	$(Q)$(AR) $@ $^
 
 $(LUA_BUILD_DIR)/%.o: $(LUA_SRC_DIR)/%.c
@@ -262,7 +260,7 @@ $(LAUNCHER_OUT): $(LAUNCHER_SRCS)
 	@$(JQ_RSC) < $(FIFO_RSC) &
 	$(Q)$(RSC) --lib > $(FIFO_RSC)
 	@rm $(FIFO_RSC)
-	@echo "  $(PPO_RSAR)    $@"
+	@echo "  $(PPO_AR)      $@"
 
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
 	@echo "  $(PPO_CC)      $@"
@@ -278,7 +276,7 @@ $(EDITOR_OUT): $(EDITOR_SRCS)
 	@$(JQ_RSC) < $(FIFO_RSC) &
 	$(Q)$(RSC) --bin $(EDITOR_NAME) > $(FIFO_RSC)
 	@rm $(FIFO_RSC)
-	@echo "  $(PPO_RSLD)    $@"
+	@echo "  $(PPO_LD)      $@"
 
 -include $(BUILD_DIR)/*.d
 -include $(LUA_BUILD_DIR)/*.d
