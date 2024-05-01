@@ -23,6 +23,7 @@
 #include <sk_scene.h>
 #include <sk_scene_intro.h>
 #include <sk_scene_options.h>
+#include <sk_scene_loading.h>
 #include <sk_scene_gameplay.h>
 #include <sk_scene_main_menu.h>
 
@@ -42,6 +43,10 @@ sk_scene sk_scene_create(sk_scene_kind kind) {
   case SK_SCENE_KIND_OPTIONS:
     s.update = sk_scene_options_update;
     s.draw = sk_scene_options_draw;
+    break;
+  case SK_SCENE_KIND_LOADING:
+    s.update = sk_scene_loading_update;
+    s.draw = sk_scene_loading_draw;
     break;
   case SK_SCENE_KIND_GAMEPLAY:
     s.update = sk_scene_gameplay_update;

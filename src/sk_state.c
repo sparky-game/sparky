@@ -19,6 +19,7 @@
  */
 
 
+#include <assert.h>
 #include <sk_log.h>
 #include <sk_state.h>
 #include <sk_renderer.h>
@@ -63,11 +64,15 @@ sk_state sk_state_create_offline(void) {
     .win_icon = LoadImage("assets/icon.png"),
     .curr_scene = sk_scene_create(SK_SCENE_KIND_INTRO),
     .menu_music = LoadMusicStream(TextFormat(MUSIC_PATH_PLACEHOLDER, "menu")),
+    .loading_controls = LoadTexture("assets/loading-controls.png"),
     .map = sk_map_create(SK_MAP_TRAINING),
     .player = sk_player_create(0, 0, SK_PLAYER_KIND_AGENT69, &config),
     .shots_rb = sk_rngbuf_create(2 << 14, sizeof(sk_shot), 1)
   };
+  assert(IsImageReady(s.win_icon));
   SetWindowIcon(s.win_icon);
+  assert(IsTextureReady(s.loading_controls));
+  GenTextureMipmaps(&s.loading_controls);
   return s;
 }
 
@@ -75,6 +80,7 @@ void sk_state_destroy_offline(sk_state *s) {
   sk_rngbuf_destroy(&s->shots_rb);
   sk_player_destroy(&s->player);
   sk_map_destroy(&s->map);
+  UnloadTexture(s->loading_controls);
   UnloadMusicStream(s->menu_music);
   UnloadImage(s->win_icon);
   sk_config_destroy(&s->config);

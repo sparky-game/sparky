@@ -40,6 +40,7 @@ typedef struct sk_state {
   Image win_icon;
   sk_scene curr_scene;
   Music menu_music;
+  Texture2D loading_controls;
   union {
     sk_lobby lobby;
     struct {

@@ -21,7 +21,7 @@
 
 #include <string.h>
 #include <sk_scene_options.h>
-#include <sk_scene_gameplay.h>
+#include <sk_scene_loading.h>
 #include <sk_scene_main_menu.h>
 
 #define MAIN_MENU_TITLE        "SPARKY"
@@ -36,14 +36,10 @@
 void sk_scene_main_menu_update(sk_state *s) {
   if (IsMusicStreamPlaying(s->menu_music)) UpdateMusicStream(s->menu_music);
   if (IsKeyPressed(KEY_ONE)) {
-    s->curr_scene.kind = SK_SCENE_KIND_GAMEPLAY;
-    s->curr_scene.update = sk_scene_gameplay_update;
-    s->curr_scene.draw = sk_scene_gameplay_draw;
-    StopMusicStream(s->menu_music);
-    sk_player_load(&s->player);
-    sk_map_load(&s->map);
-    SetExitKey(KEY_ESCAPE);
-    DisableCursor();
+    s->curr_scene.kind = SK_SCENE_KIND_LOADING;
+    s->curr_scene.update = sk_scene_loading_update;
+    s->curr_scene.draw = sk_scene_loading_draw;
+    SetExitKey(KEY_NULL);
   }
   if (IsKeyPressed(KEY_TWO)) {
     s->curr_scene.kind = SK_SCENE_KIND_OPTIONS;
