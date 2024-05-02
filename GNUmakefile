@@ -51,7 +51,9 @@ PPO_AR    = AR
 PPO_LD    = LD
 
 # Dependencies
-CHECKDEPS = mkdir mkfifo $(CC) ar rustc cargo jq
+CHECKDEPS_BINS  = mkdir mkfifo $(CC) ar rustc cargo jq
+CHECKDEPS_HDRS  = stdint.h stddef.h
+CHECKDEPS_TYPES = uint8_t int8_t uint16_t int16_t uint32_t int32_t uint64_t int64_t size_t long float double
 
 # Directories
 SRC_DIR                 = src
@@ -209,13 +211,29 @@ all: checkdeps .WAIT $(BUILD_DIR) $(RAYLIB_BUILD_DIR) $(LUA_BUILD_DIR) game
 	@:
 
 checkdeps:
-	@for i in $(CHECKDEPS); do             \
+	@for i in $(CHECKDEPS_BINS); do        \
 	  if which $${i} >/dev/null 2>&1; then \
 	    echo "checking for $${i}... yes";  \
 	  else                                 \
 	    echo "checking for $${i}... no";   \
 	    exit 1;                            \
 	  fi;                                  \
+	done
+	@for i in $(CHECKDEPS_HDRS); do                                 \
+	  if echo "#include <$${i}>" | $(CC) -E - >/dev/null 2>&1; then \
+	    echo "checking for $${i}... yes";                           \
+	  else                                                          \
+	    echo "checking for $${i}... no";                            \
+	    exit 1;                                                     \
+	  fi;                                                           \
+	done
+	@for i in $(CHECKDEPS_TYPES); do                                                                                    \
+	  if echo "#include <stdint.h>\n#include <stddef.h>\n$${i} x;" | gcc -x c -S - -o /dev/stdout >/dev/null 2>&1; then \
+	    echo "checking for $${i}... yes";                                                                               \
+	  else                                                                                                              \
+	    echo "checking for $${i}... no";                                                                                \
+	    exit 1;                                                                                                         \
+	  fi;                                                                                                               \
 	done
 
 $(BUILD_DIR):
