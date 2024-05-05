@@ -32,8 +32,8 @@ static const char * const sk_text_help_msg = "Usage: %s [OPTION]\n"
   "  -s, --server \t\t start the server\n"
   "  -h, --help \t\t display this help and exit\n"
   "  -v, --version \t output version information and exit\n\n"
-  "Report bugs to: <https://github.com/iWas-Coder/sparky/issues>\n"
-  "GNU Sparky home page: <https://github.com/iWas-Coder/sparky>\n"
+  "Report bugs to: <https://github.com/sparky-game/sparky/issues>\n"
+  "GNU Sparky home page: <https://sparky-game.github.io/sparky>\n"
   "General help using GNU software: <https://www.gnu.org/gethelp/>\n";
 
 static const char * const sk_text_version_msg = "GNU Sparky %s\n"

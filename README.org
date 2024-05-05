@@ -53,10 +53,10 @@ A 5v5 character-based libre tactical shooter
 # Repository info badges
 #+begin_html
 <p align="center">
-<img src="https://img.shields.io/github/license/iwas-coder/sparky?color=blue" alt="License">
+<img src="https://img.shields.io/github/license/sparky-game/sparky?color=blue" alt="License">
 <img src="https://img.shields.io/badge/C-11-blue" alt="C Standard">
-<img src="https://img.shields.io/github/repo-size/iwas-coder/sparky?color=blue" alt="Size">
-<img src="https://img.shields.io/github/v/tag/iwas-coder/sparky?color=blue" alt="Release">
+<img src="https://img.shields.io/github/repo-size/sparky-game/sparky?color=blue" alt="Size">
+<img src="https://img.shields.io/github/v/tag/sparky-game/sparky?color=blue" alt="Release">
 <img src="https://img.shields.io/badge/speed-%F0%9F%94%A5blazing-blue" alt="Blazing Speed">
 </p>
 #+end_html
@@ -64,11 +64,11 @@ A 5v5 character-based libre tactical shooter
 # Repository CI badges
 #+begin_html
 <p align="center">
-<a href="https://github.com/iWas-Coder/sparky/actions/workflows/build-linux.yaml">
-<img src="https://github.com/iWas-Coder/sparky/actions/workflows/build-linux.yaml/badge.svg" alt="CI Build Linux">
+<a href="https://github.com/sparky-game/sparky/actions/workflows/build-linux.yaml">
+<img src="https://github.com/sparky-game/sparky/actions/workflows/build-linux.yaml/badge.svg" alt="CI Build Linux">
 </a>
-<a href="https://github.com/iWas-Coder/sparky/actions/workflows/website.yaml">
-<img src="https://github.com/iWas-Coder/sparky/actions/workflows/website.yaml/badge.svg" alt="CI Website">
+<a href="https://github.com/sparky-game/sparky/actions/workflows/website.yaml">
+<img src="https://github.com/sparky-game/sparky/actions/workflows/website.yaml/badge.svg" alt="CI Website">
 </a>
 </p>
 #+end_html
@@ -117,7 +117,7 @@ You should have received a copy of the GNU General Public License along with Spa
 
 * Project's roadmap
 
-For information about the detailed project's roadmap, including delivered milestones, see [[https://github.com/users/iWas-Coder/projects/5][the Sparky's Roadmap on GitHub]].
+For information about the detailed project's roadmap, including delivered milestones, see [https://github.com/orgs/sparky-game/projects/1][the Sparky's Roadmap on GitHub]].
 
 * Usage
 
@@ -135,8 +135,8 @@ Options:
   -h, --help 		display this help and exit
   -v, --version 	output version information and exit
 
-Report bugs to: <https://github.com/iWas-Coder/sparky/issues>
-GNU Sparky home page: <https://github.com/iWas-Coder/sparky>
+Report bugs to: <https://github.com/sparky-game/sparky/issues>
+GNU Sparky home page: <https://sparky-game.github.io/sparky>
 General help using GNU software: <https://www.gnu.org/gethelp/>
 #+end_example
 
@@ -146,12 +146,12 @@ In order to build /Sparky/ from source, preparation is needed so as to the envir
 
 ** Get the code
 
-First, download the codebase of the project. It's important to do so via the *OFFICIAL* Git repository hosted on [[https://github.com/iWas-Coder/sparky][GitHub]], and not through any tarball or compressed archive to ensure no tampering is done with the code. Appart from that, any ref can be checked out, being ~master~ (the trunk of all dev progress), a tagged commit (e.g. ~v1.0~), an actively maintained version branch (e.g. ~v1.0.y/stable~) or a LTS version branch (e.g. ~v1.0.y/lts~) the preferred ones.
+First, download the codebase of the project. It's important to do so via the *OFFICIAL* Git repository hosted on [[https://github.com/sparky-game/sparky][GitHub]], and not through any tarball or compressed archive to ensure no tampering is done with the code. Appart from that, any ref can be checked out, being ~master~ (the trunk of all dev progress), a tagged commit (e.g. ~v1.0~), an actively maintained version branch (e.g. ~v1.0.y/stable~) or a LTS version branch (e.g. ~v1.0.y/lts~) the preferred ones.
 
 To clone the official repo as well as all its submodules, issue the following command:
 
 #+begin_src sh
-git clone --recurse-submodules https://github.com/iWas-Coder/sparky
+git clone --recurse-submodules https://github.com/sparky-game/sparky
 #+end_src
 
 ** Dependencies
