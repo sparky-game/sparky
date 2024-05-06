@@ -41,7 +41,7 @@ const config = {
     navbar: {
       logo: {
         alt: 'Sparky Logo',
-        src: 'img/logo.png'
+        src: 'img/favicon.png'
       },
       items: [
         {
