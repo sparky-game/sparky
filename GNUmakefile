@@ -22,9 +22,10 @@
 ##################
 # === MACROS === #
 ##################
-LAUNCHER_NAME = sk_launcher
-GAME_NAME     = sparky
-EDITOR_NAME   = sk_editor
+LAUNCHER_NAME    = sk_launcher
+GAME_NAME        = sparky
+TEST_ENGINE_NAME = carbon
+EDITOR_NAME      = sk_editor
 
 include config.mk
 
@@ -43,32 +44,36 @@ endif
 FULL_VERSION = $(DIST_VERSION)$(DEVEXTRAVERSION)
 
 # Pretty Printing Output (PPO)
-PPO_MKDIR = MKDIR
-PPO_CLEAN = CLEAN
-PPO_RSC   = RSC
-PPO_CC    = CC
-PPO_AR    = AR
-PPO_LD    = LD
+PPO_HOSTCC = HOSTCC
+PPO_HOSTLD = HOSTLD
+PPO_MKDIR  = MKDIR
+PPO_CLEAN  = CLEAN
+PPO_RSC    = RSC
+PPO_CC     = CC
+PPO_AR     = AR
+PPO_LD     = LD
 
 # Dependencies
 CHECKDEPS_BINS  = mkdir mkfifo $(CC) ar rustc cargo jq
-CHECKDEPS_HDRS  = stdint.h stddef.h
+CHECKDEPS_HDRS  = stdint.h stddef.h X11/Xlib.h X11/Xcursor/Xcursor.h X11/extensions/Xrandr.h X11/extensions/Xinerama.h X11/extensions/XInput2.h
 CHECKDEPS_TYPES = uint8_t int8_t uint16_t int16_t uint32_t int32_t uint64_t int64_t size_t long float double
 
 # Directories
-SRC_DIR                 = src
-HDR_DIR                 = include
-BUILD_ROOT_DIR          = build
-BUILD_DEBUG_DIR         = $(BUILD_ROOT_DIR)/debug
-BUILD_RELEASE_DIR       = $(BUILD_ROOT_DIR)/release
+HDR_DIR               = include
+SRC_DIR               = src
+TEST_DIR              = test
+BUILD_ROOT_DIR        = build
+BUILD_DEBUG_DIR       = $(BUILD_ROOT_DIR)/debug
+BUILD_RELEASE_DIR     = $(BUILD_ROOT_DIR)/release
 EXTRAS_BUILD_ROOT_DIR = $(BUILD_ROOT_DIR)/$(GAME_NAME)_extras
 ifdef D
-  EXTRAS_BUILD_DIR   = $(EXTRAS_BUILD_ROOT_DIR)/debug
-  BUILD_DIR          = $(BUILD_DEBUG_DIR)
+  EXTRAS_BUILD_DIR = $(EXTRAS_BUILD_ROOT_DIR)/debug
+  BUILD_DIR        = $(BUILD_DEBUG_DIR)
 else
-  EXTRAS_BUILD_DIR   = $(EXTRAS_BUILD_ROOT_DIR)/release
-  BUILD_DIR          = $(BUILD_RELEASE_DIR)
+  EXTRAS_BUILD_DIR = $(EXTRAS_BUILD_ROOT_DIR)/release
+  BUILD_DIR        = $(BUILD_RELEASE_DIR)
 endif
+TEST_BUILD_DIR   = $(BUILD_DIR)/$(TEST_DIR)
 VENDOR_DIR       = vendor
 RAYLIB_SRC_DIR   = $(VENDOR_DIR)/raylib/$(SRC_DIR)
 RAYLIB_BUILD_DIR = $(BUILD_DIR)/raylib
@@ -76,14 +81,17 @@ LUA_SRC_DIR      = $(VENDOR_DIR)/lua
 LUA_BUILD_DIR    = $(BUILD_DIR)/lua
 
 # Files
-RAYLIB_SRCS   := $(wildcard $(RAYLIB_SRC_DIR)/*.c)
-RAYLIB_OBJS   := $(patsubst $(RAYLIB_SRC_DIR)/%.c, $(RAYLIB_BUILD_DIR)/%.o, $(RAYLIB_SRCS))
-LUA_SRCS      := $(filter-out $(LUA_SRC_DIR)/onelua.c, $(wildcard $(LUA_SRC_DIR)/*.c))
-LUA_OBJS      := $(patsubst $(LUA_SRC_DIR)/%.c, $(LUA_BUILD_DIR)/%.o, $(LUA_SRCS))
-LAUNCHER_SRCS := $(wildcard $(SRC_DIR)/$(LAUNCHER_NAME)*.rs)
-SRCS          := $(wildcard $(SRC_DIR)/*.c)
-OBJS          := $(patsubst $(SRC_DIR)/%.c, $(BUILD_DIR)/%.o, $(SRCS))
-EDITOR_SRCS   := $(wildcard $(SRC_DIR)/$(EDITOR_NAME)*.rs)
+RAYLIB_SRCS    := $(wildcard $(RAYLIB_SRC_DIR)/*.c)
+RAYLIB_OBJS    := $(patsubst $(RAYLIB_SRC_DIR)/%.c, $(RAYLIB_BUILD_DIR)/%.o, $(RAYLIB_SRCS))
+LUA_SRCS       := $(filter-out $(LUA_SRC_DIR)/onelua.c, $(wildcard $(LUA_SRC_DIR)/*.c))
+LUA_OBJS       := $(patsubst $(LUA_SRC_DIR)/%.c, $(LUA_BUILD_DIR)/%.o, $(LUA_SRCS))
+LAUNCHER_SRCS  := $(wildcard $(SRC_DIR)/$(LAUNCHER_NAME)*.rs)
+SRCS           := $(wildcard $(SRC_DIR)/*.c)
+OBJS           := $(patsubst $(SRC_DIR)/%.c, $(BUILD_DIR)/%.o, $(SRCS))
+TEST_SRCS      := $(wildcard $(TEST_DIR)/$(SRC_DIR)/*.c)
+TEST_OBJS      := $(patsubst $(TEST_DIR)/$(SRC_DIR)/%.c, $(TEST_BUILD_DIR)/%.o, $(TEST_SRCS))
+TEST_DEPS_OBJS := $(filter-out $(BUILD_DIR)/$(GAME_NAME).o, $(OBJS))
+EDITOR_SRCS    := $(wildcard $(SRC_DIR)/$(EDITOR_NAME)*.rs)
 
 # Build flags
 MAKEFLAGS_JOBS := $(patsubst -j%, %, $(filter -j%, $(MAKEFLAGS)))
@@ -148,6 +156,12 @@ define CPPFLAGS
   -isystem $(LUA_SRC_DIR)       \
   -I $(HDR_DIR)
 endef
+define TEST_CPPFLAGS
+  $(DISABLE_ASSERTS_OPTS)                    \
+  -isystem $(VENDOR_DIR)/$(TEST_ENGINE_NAME) \
+  -I $(HDR_DIR)                              \
+  -I $(TEST_DIR)/$(HDR_DIR)
+endef
 define RAYLIB_CFLAGS
   -std=gnu99                    \
   $(HIDE_WARNS_OPTS)            \
@@ -172,6 +186,17 @@ define CFLAGS
   $(RELEASE_OPTS)   \
   $(MACOS_SPECIFIC_CFLAGS_OPTS)
 endef
+define TEST_CFLAGS
+  -std=c99                     \
+  -Wall                        \
+  -Wextra                      \
+  -pedantic                    \
+  -Werror                      \
+  -fsanitize=address,undefined \
+  $(DEBUG_SYM_OPTS)            \
+  $(RELEASE_OPTS)              \
+  $(MACOS_SPECIFIC_CFLAGS_OPTS)
+endef
 define LDFLAGS
   $(BUILDID_OPTS)                \
   $(HIDE_WARNS_OPTS)             \
@@ -188,6 +213,18 @@ define LDFLAGS
   $(MACOS_SPECIFIC_LDFLAGS_OPTS) \
   $(OPENBSD_SPECIFIC_LDFLAGS_OPTS)
 endef
+define TEST_LDFLAGS
+  $(BUILDID_OPTS)    \
+  $(HIDE_WARNS_OPTS) \
+  $(STRIP_OPTS)      \
+  $(RELEASE_OPTS)    \
+  -L $(BUILD_DIR)    \
+  -lasan             \
+  -lubsan            \
+  -lraylib           \
+  -llua              \
+  -lm
+endef
 
 # Build output
 LAUNCHER_OUT = $(EXTRAS_BUILD_DIR)/lib$(LAUNCHER_NAME).a
@@ -198,6 +235,7 @@ ifdef D
 else
   OUT = $(GAME_NAME)
 endif
+TEST_OUT   = $(TEST_BUILD_DIR)/$(TEST_ENGINE_NAME)
 EDITOR_OUT = $(EXTRAS_BUILD_DIR)/$(EDITOR_NAME)
 
 
@@ -205,7 +243,7 @@ EDITOR_OUT = $(EXTRAS_BUILD_DIR)/$(EDITOR_NAME)
 # === TARGETS === #
 ###################
 .WAIT:
-.PHONY: all checkdeps game editor clean mrproper version help
+.PHONY: all checkdeps game check editor clean mrproper version help
 
 all: checkdeps .WAIT $(BUILD_DIR) $(RAYLIB_BUILD_DIR) $(LUA_BUILD_DIR) game
 	@:
@@ -248,6 +286,10 @@ $(LUA_BUILD_DIR):
 	@echo "  $(PPO_MKDIR)   $@"
 	$(Q)mkdir -p $@
 
+$(TEST_BUILD_DIR):
+	@echo "  $(PPO_MKDIR)   $@"
+	$(Q)mkdir -p $@
+
 game: $(OUT)
 	@echo "INFO: $(OUT) is ready  ($(FULL_VERSION))"
 
@@ -284,6 +326,18 @@ $(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
 	@echo "  $(PPO_CC)      $@"
 	$(Q)$(CC) $(CPPFLAGS) $(CFLAGS) -c -MD $< -o $@
 
+check: checkdeps .WAIT $(BUILD_DIR) $(RAYLIB_BUILD_DIR) $(LUA_BUILD_DIR) $(TEST_BUILD_DIR) $(TEST_OUT)
+	@echo "INFO: $(TEST_OUT) is ready  ($(FULL_VERSION))"
+	$(Q)./$(TEST_OUT)
+
+$(TEST_OUT): $(RAYLIB_OUT) $(LUA_OUT) $(TEST_DEPS_OBJS) $(TEST_OBJS)
+	@echo "  $(PPO_HOSTLD)  $@"
+	$(Q)$(CC) $(TEST_DEPS_OBJS) $(TEST_OBJS) $(TEST_LDFLAGS) -o $@
+
+$(TEST_BUILD_DIR)/%.o: $(TEST_DIR)/$(SRC_DIR)/%.c
+	@echo "  $(PPO_HOSTCC)  $@"
+	$(Q)$(CC) $(TEST_CPPFLAGS) $(TEST_CFLAGS) -c -MD $< -o $@
+
 editor: checkdeps .WAIT $(EDITOR_OUT)
 	@echo "INFO: $(EDITOR_OUT) is ready  ($(FULL_VERSION))"
 
@@ -298,6 +352,7 @@ $(EDITOR_OUT): $(EDITOR_SRCS)
 
 -include $(BUILD_DIR)/*.d
 -include $(LUA_BUILD_DIR)/*.d
+-include $(TEST_BUILD_DIR)/*.d
 -include $(RAYLIB_BUILD_DIR)/*.d
 -include $(EXTRAS_BUILD_DIR)/*.d
 
@@ -330,6 +385,7 @@ help:
 	@echo "  all       :: Build all targets marked with [*]"
 	@echo "* checkdeps :: Check dependencies for build process"
 	@echo "* game      :: Build the bare game"
+	@echo "  check     :: Build and run the test engine"
 	@echo "  editor    :: Build the editor"
 	@echo "  clean     :: Remove the 'build' directory"
 	@echo "  mrproper  :: Remove and cleans everything"

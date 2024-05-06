@@ -4,3 +4,6 @@
 [submodule "vendor/lua"]
 	path = vendor/lua
 	url = https://github.com/lua/lua
+[submodule "vendor/carbon"]
+	path = vendor/carbon
+	url = https://github.com/sparky-game/carbon
