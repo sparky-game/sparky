@@ -21,9 +21,10 @@
 
 #include <carbon.h>
 #include <sk_darray.h>
+#include <sk_defines.h>
 #include <sk_darray_test.h>
 
-static unsigned char sk_darray_test_create_destroy(void) {
+static u8 sk_darray_test_create_destroy(void) {
   sk_darray x = sk_darray_create(sizeof(int));
   carbon_should_be(1, x.capacity);
   carbon_should_be(sizeof(int), x.element_size);
@@ -37,6 +38,58 @@ static unsigned char sk_darray_test_create_destroy(void) {
   return 1;
 }
 
+static u8 sk_darray_test_push_element(void) {
+  sk_darray x = sk_darray_create(sizeof(int));
+  int i = 7;
+  carbon_should_be_true(sk_darray_push(&x, &i));
+  carbon_should_be(1, x.curr_len);
+  sk_darray_destroy(&x);
+  return 1;
+}
+
+static u8 sk_darray_test_pop_element(void) {
+  sk_darray x = sk_darray_create(sizeof(int));
+  int i = 7, j;
+  sk_darray_push(&x, &i);
+  carbon_should_be_true(sk_darray_pop(&x, &j));
+  carbon_should_be(0, x.curr_len);
+  carbon_should_be(i, j);
+  sk_darray_destroy(&x);
+  return 1;
+}
+
+static u8 sk_darray_test_pop_element_from_empty_array(void) {
+  sk_darray x = sk_darray_create(sizeof(int));
+  int i = 7;
+  carbon_should_be_false(sk_darray_pop(&x, &i));
+  carbon_should_be(7, i);
+  sk_darray_destroy(&x);
+  return 1;
+}
+
+static u8 sk_darray_test_access_element(void) {
+  sk_darray x = sk_darray_create(sizeof(int));
+  int i = 7;
+  sk_darray_push(&x, &i);
+  int j = ((int *) x.data)[0];
+  carbon_should_be(i, j);
+  sk_darray_destroy(&x);
+  return 1;
+}
+
+static u8 sk_darray_test_resizing(void) {
+  sk_darray x = sk_darray_create(sizeof(int));
+  for (int i = 0; i < 100; ++i) sk_darray_push(&x, &i);
+  carbon_should_be(2 << 6, x.capacity);
+  sk_darray_destroy(&x);
+  return 1;
+}
+
 void sk_darray_test_register(void) {
   CARBON_REGISTER_TEST(sk_darray_test_create_destroy);
+  CARBON_REGISTER_TEST(sk_darray_test_push_element);
+  CARBON_REGISTER_TEST(sk_darray_test_pop_element);
+  CARBON_REGISTER_TEST(sk_darray_test_pop_element_from_empty_array);
+  CARBON_REGISTER_TEST(sk_darray_test_access_element);
+  CARBON_REGISTER_TEST(sk_darray_test_resizing);
 }
