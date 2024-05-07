@@ -25,7 +25,7 @@
 
 static unsigned char sk_darray_test_create_destroy(void) {
   sk_darray x = sk_darray_create(sizeof(int));
-  carbon_should_be_true(x.capacity);
+  carbon_should_be(1, x.capacity);
   carbon_should_be(sizeof(int), x.element_size);
   carbon_should_be(0, x.curr_len);
   carbon_should_be_true(x.data);
