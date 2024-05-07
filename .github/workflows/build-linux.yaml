@@ -52,7 +52,7 @@ jobs:
       - name: build
         run: make -j$(nproc)
       - name: test
-        run: make check -j$(nproc)
+        run: make check
       - name: analyze
         uses: github/codeql-action/analyze@v3
       - name: build-editor
