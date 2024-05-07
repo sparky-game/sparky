@@ -219,8 +219,8 @@ define TEST_LDFLAGS
   $(STRIP_OPTS)      \
   $(RELEASE_OPTS)    \
   -L $(BUILD_DIR)    \
-  -lasan             \
-  -lubsan            \
+  -l:libasan.a       \
+  -l:libubsan.a      \
   -lraylib           \
   -llua              \
   -lm
