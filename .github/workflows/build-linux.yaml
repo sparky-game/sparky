@@ -51,9 +51,9 @@ jobs:
             paths-ignore: [vendor]
       - name: build
         run: make -j$(nproc)
-      - name: test
-        run: make check
       - name: analyze
         uses: github/codeql-action/analyze@v3
+      - name: test
+        run: make check -j$(nproc)
       - name: build-editor
         run: make editor -j$(nproc)
