@@ -177,14 +177,15 @@ define LUA_CFLAGS
   $(MACOS_SPECIFIC_CFLAGS_OPTS)
 endef
 define CFLAGS
-  -std=gnu11        \
-  -Wall             \
-  -Wextra           \
-  -pedantic         \
-  -Werror           \
-  $(DEBUG_SYM_OPTS) \
-  $(RELEASE_OPTS)   \
-  $(MACOS_SPECIFIC_CFLAGS_OPTS)
+  -std=gnu11                    \
+  -Wall                         \
+  -Wextra                       \
+  -pedantic                     \
+  -Werror                       \
+  $(DEBUG_SYM_OPTS)             \
+  $(RELEASE_OPTS)               \
+  $(MACOS_SPECIFIC_CFLAGS_OPTS) \
+  -Wno-gnu-zero-variadic-macro-arguments
 endef
 define TEST_CFLAGS
   -std=c99                     \
