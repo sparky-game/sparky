@@ -265,13 +265,13 @@ checkdeps:
 	    exit 1;                                                     \
 	  fi;                                                           \
 	done
-	@for i in $(CHECKDEPS_TYPES); do                                                                                    \
-	  if echo "#include <stdint.h>\n#include <stddef.h>\n$${i} x;" | gcc -x c -S - -o /dev/stdout >/dev/null 2>&1; then \
-	    printf "checking for $${i}... \033[1;32myes\033[0m\n";                                                          \
-	  else                                                                                                              \
-	    printf "checking for $${i}... \033[1;31mno\033[0m\n";                                                           \
-	    exit 1;                                                                                                         \
-	  fi;                                                                                                               \
+	@for i in $(CHECKDEPS_TYPES); do                                                                                      \
+	  if echo "#include <stdint.h>\n#include <stddef.h>\n$${i} x;" | $(CC) -x c -S - -o /dev/stdout >/dev/null 2>&1; then \
+	    printf "checking for $${i}... \033[1;32myes\033[0m\n";                                                            \
+	  else                                                                                                                \
+	    printf "checking for $${i}... \033[1;31mno\033[0m\n";                                                             \
+	    exit 1;                                                                                                           \
+	  fi;                                                                                                                 \
 	done
 
 $(BUILD_DIR):
