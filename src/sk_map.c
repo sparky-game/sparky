@@ -53,7 +53,6 @@ void sk_map_add_element(sk_darray *es,
   sk_map_element e = sk_map_element_create(kind, name, texture_kind, w, l, h);
   sk_map_element_move(&e, draw_pos);
   if (!sk_darray_push(es, &e)) SK_LOG_ERROR("sk_map_add_element :: unable to add new element");
-  // sk_map_element_destroy(&e);
 }
 
 void sk_map_load(sk_map *m) {
