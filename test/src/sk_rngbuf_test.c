@@ -19,13 +19,30 @@
  */
 
 
-#define CARBON_IMPLEMENTATION
 #include <carbon.h>
-#include <sk_darray_test.h>
+#include <sk_rngbuf.h>
+#include <sk_defines.h>
 #include <sk_rngbuf_test.h>
 
-int main(void) {
-  sk_darray_test_register();
-  sk_rngbuf_test_register();
-  return carbon_test_manager_run();
+static u8 sk_rngbuf_test_create_destroy(void) {
+  sk_rngbuf x = sk_rngbuf_create(5, sizeof(int), 0);
+  carbon_should_be(5, x.capacity);
+  carbon_should_be(sizeof(int), x.element_size);
+  carbon_should_be_false(x.overwrite);
+  carbon_should_be(0, x.curr_len);
+  carbon_should_be(0, x.head);
+  carbon_should_be(-1, x.tail);
+  carbon_should_be_true(x.data);
+  sk_rngbuf_destroy(&x);
+  carbon_should_be(0, x.capacity);
+  carbon_should_be(0, x.element_size);
+  carbon_should_be(0, x.curr_len);
+  carbon_should_be(0, x.head);
+  carbon_should_be(0, x.tail);
+  carbon_should_be_p(0, x.data);
+  return 1;
+}
+
+void sk_rngbuf_test_register(void) {
+  CARBON_REGISTER_TEST(sk_rngbuf_test_create_destroy);
 }

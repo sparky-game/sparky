@@ -19,13 +19,6 @@
  */
 
 
-#define CARBON_IMPLEMENTATION
-#include <carbon.h>
-#include <sk_darray_test.h>
-#include <sk_rngbuf_test.h>
+#pragma once
 
-int main(void) {
-  sk_darray_test_register();
-  sk_rngbuf_test_register();
-  return carbon_test_manager_run();
-}
+void sk_rngbuf_test_register(void);
