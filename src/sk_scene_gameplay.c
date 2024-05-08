@@ -28,7 +28,7 @@ void sk_scene_gameplay_update(sk_state *s) {
     sk_rngbuf_push(&s->shots_rb, &shot);
   }
   if (IsKeyPressed(s->config.controls.reload)) sk_weapon_reload(s->player.weapon);
-  if (GetMouseWheelMove()) sk_player_rotate_weapon(&s->player);
+  if (GetMouseWheelMove() && !IsSoundPlaying(s->player.weapon->sound_reload)) sk_player_rotate_weapon(&s->player);
   sk_player_jump(&s->player, &s->config);
   sk_player_move(&s->player, &s->config, sk_player_peek(&s->player, &s->config));
 }
