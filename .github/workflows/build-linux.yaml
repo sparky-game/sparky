@@ -6,6 +6,7 @@ on:
     paths:
       - 'include/**'
       - 'src/**'
+      - 'test/**'
       - 'vendor/**'
       - 'BSDmakefile'
       - 'GNUmakefile'
@@ -16,6 +17,7 @@ on:
     paths:
       - 'include/**'
       - 'src/**'
+      - 'test/**'
       - 'vendor/**'
       - 'BSDmakefile'
       - 'GNUmakefile'
