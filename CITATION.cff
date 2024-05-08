@@ -11,5 +11,5 @@ contact:
     email: wasymatieh01@gmail.com
 abstract: "A 5v5, blazingly fast, character-based libre tactical shooter written in pure C."
 license: GPL-3.0-or-later
-repository-code: "https://github.com/iWas-Coder/sparky"
-url: "https://iwas-coder.github.io/sparky"
+repository-code: "https://github.com/sparky-game/sparky"
+url: "https://sparky-game.github.io/sparky"
