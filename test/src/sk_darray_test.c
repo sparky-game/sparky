@@ -34,7 +34,7 @@ static u8 sk_darray_test_create_destroy(void) {
   carbon_should_be(0, x.capacity);
   carbon_should_be(0, x.element_size);
   carbon_should_be(0, x.curr_len);
-  carbon_should_be(0, x.data);
+  carbon_should_be_p(0, x.data);
   return 1;
 }
 
