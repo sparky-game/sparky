@@ -177,7 +177,7 @@ define LUA_CFLAGS
   $(MACOS_SPECIFIC_CFLAGS_OPTS)
 endef
 define CFLAGS
-  -std=c11          \
+  -std=gnu11        \
   -Wall             \
   -Wextra           \
   -pedantic         \
@@ -249,27 +249,27 @@ all: checkdeps .WAIT $(BUILD_DIR) $(RAYLIB_BUILD_DIR) $(LUA_BUILD_DIR) game
 	@:
 
 checkdeps:
-	@for i in $(CHECKDEPS_BINS); do        \
-	  if which $${i} >/dev/null 2>&1; then \
-	    echo "checking for $${i}... yes";  \
-	  else                                 \
-	    echo "checking for $${i}... no";   \
-	    exit 1;                            \
-	  fi;                                  \
+	@for i in $(CHECKDEPS_BINS); do                            \
+	  if which $${i} >/dev/null 2>&1; then                     \
+	    printf "checking for $${i}... \033[1;32myes\033[0m\n"; \
+	  else                                                     \
+	    printf "checking for $${i}... \033[1;31mno\033[0m\n";  \
+	    exit 1;                                                \
+	  fi;                                                      \
 	done
 	@for i in $(CHECKDEPS_HDRS); do                                 \
 	  if echo "#include <$${i}>" | $(CC) -E - >/dev/null 2>&1; then \
-	    echo "checking for $${i}... yes";                           \
+	    printf "checking for $${i}... \033[1;32myes\033[0m\n";      \
 	  else                                                          \
-	    echo "checking for $${i}... no";                            \
+	    printf "checking for $${i}... \033[1;31mno\033[0m\n";       \
 	    exit 1;                                                     \
 	  fi;                                                           \
 	done
 	@for i in $(CHECKDEPS_TYPES); do                                                                                    \
 	  if echo "#include <stdint.h>\n#include <stddef.h>\n$${i} x;" | gcc -x c -S - -o /dev/stdout >/dev/null 2>&1; then \
-	    echo "checking for $${i}... yes";                                                                               \
+	    printf "checking for $${i}... \033[1;32myes\033[0m\n";                                                          \
 	  else                                                                                                              \
-	    echo "checking for $${i}... no";                                                                                \
+	    printf "checking for $${i}... \033[1;31mno\033[0m\n";                                                           \
 	    exit 1;                                                                                                         \
 	  fi;                                                                                                               \
 	done
@@ -291,7 +291,7 @@ $(TEST_BUILD_DIR):
 	$(Q)mkdir -p $@
 
 game: $(OUT)
-	@echo "INFO: $(OUT) is ready  ($(FULL_VERSION))"
+	@printf "INFO: \033[1;35m$(OUT) is ready  ($(FULL_VERSION))\033[0m\n"
 
 $(OUT): $(RAYLIB_OUT) $(LUA_OUT) $(LAUNCHER_OUT) $(OBJS)
 	@echo "  $(PPO_LD)      $@"
@@ -327,7 +327,7 @@ $(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
 	$(Q)$(CC) $(CPPFLAGS) $(CFLAGS) -c -MD $< -o $@
 
 check: checkdeps .WAIT $(BUILD_DIR) $(RAYLIB_BUILD_DIR) $(LUA_BUILD_DIR) $(TEST_BUILD_DIR) $(TEST_OUT)
-	@echo "INFO: $(TEST_OUT) is ready  ($(FULL_VERSION))"
+	@printf "INFO: \033[1;35m$(TEST_OUT) is ready  ($(FULL_VERSION))\033[0m\n"
 	$(Q)./$(TEST_OUT)
 
 $(TEST_OUT): $(RAYLIB_OUT) $(LUA_OUT) $(TEST_DEPS_OBJS) $(TEST_OBJS)
@@ -339,7 +339,7 @@ $(TEST_BUILD_DIR)/%.o: $(TEST_DIR)/$(SRC_DIR)/%.c
 	$(Q)$(CC) $(TEST_CPPFLAGS) $(TEST_CFLAGS) -c -MD $< -o $@
 
 editor: checkdeps .WAIT $(EDITOR_OUT)
-	@echo "INFO: $(EDITOR_OUT) is ready  ($(FULL_VERSION))"
+	@printf "INFO: \033[1;35m$(EDITOR_OUT) is ready  ($(FULL_VERSION))\033[0m\n"
 
 $(EDITOR_OUT): $(EDITOR_SRCS)
 	@if [ ! -e $(FIFO_RSC) ]; then \

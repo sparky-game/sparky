@@ -54,7 +54,7 @@ A 5v5 character-based libre tactical shooter
 #+begin_html
 <p align="center">
 <img src="https://img.shields.io/github/license/sparky-game/sparky?color=blue" alt="License">
-<img src="https://img.shields.io/badge/C-11-blue" alt="C Standard">
+<img src="https://img.shields.io/badge/C-gnu11-blue" alt="C Standard">
 <img src="https://img.shields.io/github/repo-size/sparky-game/sparky?color=blue" alt="Size">
 <img src="https://img.shields.io/github/v/tag/sparky-game/sparky?color=blue" alt="Release">
 <img src="https://img.shields.io/badge/speed-%F0%9F%94%A5blazing-blue" alt="Blazing Speed">
