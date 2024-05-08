@@ -43,6 +43,7 @@ static u8 sk_darray_test_push_element(void) {
   int i = 7;
   carbon_should_be_true(sk_darray_push(&x, &i));
   carbon_should_be(1, x.curr_len);
+  carbon_should_be(i, ((int *) x.data)[0]);
   sk_darray_destroy(&x);
   return 1;
 }
