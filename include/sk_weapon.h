@@ -41,6 +41,7 @@ typedef struct {
   ModelAnimation *model_anims;
   u8 model_anims_count;
   u8 model_anim_frame_count;
+  Sound sound_equip;
   Sound sound_shoot;
   Sound sound_reload;
   sk_weapon_ammo_spec ammo;

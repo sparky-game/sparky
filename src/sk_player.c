@@ -118,9 +118,11 @@ void sk_player_move(sk_player *p, sk_config *config, f32 roll) {
 }
 
 void sk_player_rotate_weapon(sk_player *p) {
+  if (IsSoundPlaying(p->weapon->sound_equip) || IsSoundPlaying(p->weapon->sound_reload)) return;
   static usz i = SIDE_WEAPON_IDX;
   i = (i + 1) % SK_PLAYER_WEAPON_SLOTS;
   p->weapon = &p->weapon_slots[i];
+  PlaySound(p->weapon->sound_equip);
 }
 
 void sk_player_draw(sk_player *p) {

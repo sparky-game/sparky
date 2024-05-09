@@ -22,15 +22,15 @@
 #include <sk_scene_gameplay.h>
 
 void sk_scene_gameplay_update(sk_state *s) {
+  sk_player_move(&s->player, &s->config, sk_player_peek(&s->player, &s->config));
+  sk_player_jump(&s->player, &s->config);
+  if (GetMouseWheelMove()) sk_player_rotate_weapon(&s->player);
+  if (IsKeyPressed(s->config.controls.reload)) sk_weapon_reload(s->player.weapon);
   if (IsMouseButtonPressed(s->config.controls.shoot)) {
     sk_shot shot = {0};
     if (!sk_weapon_shoot(s->player.weapon, s->player.id, &s->player.camera, &shot)) return;
     sk_rngbuf_push(&s->shots_rb, &shot);
   }
-  if (IsKeyPressed(s->config.controls.reload)) sk_weapon_reload(s->player.weapon);
-  if (GetMouseWheelMove() && !IsSoundPlaying(s->player.weapon->sound_reload)) sk_player_rotate_weapon(&s->player);
-  sk_player_jump(&s->player, &s->config);
-  sk_player_move(&s->player, &s->config, sk_player_peek(&s->player, &s->config));
 }
 
 void sk_scene_gameplay_draw(sk_state *s) {

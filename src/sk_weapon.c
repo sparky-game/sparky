@@ -27,6 +27,7 @@
 #include <raymath.h>
 
 #define MODEL_PATH_PLACEHOLDER        "assets/models/%s.glb"
+#define SOUND_EQUIP_PATH_PLACEHOLDER  "assets/sounds/%s/equip.wav"
 #define SOUND_SHOOT_PATH_PLACEHOLDER  "assets/sounds/%s/shoot.wav"
 #define SOUND_RELOAD_PATH_PLACEHOLDER "assets/sounds/%s/reload.wav"
 
@@ -37,6 +38,7 @@ sk_weapon sk_weapon_create(sk_weapon_kind kind) {
     .kind = kind,
     .model = LoadModel(TextFormat(MODEL_PATH_PLACEHOLDER, name)),
     .model_anims = LoadModelAnimations(TextFormat(MODEL_PATH_PLACEHOLDER, name), (int *) &w.model_anims_count),
+    .sound_equip = LoadSound(TextFormat(SOUND_EQUIP_PATH_PLACEHOLDER, name)),
     .sound_shoot = LoadSound(TextFormat(SOUND_SHOOT_PATH_PLACEHOLDER, name)),
     .sound_reload = LoadSound(TextFormat(SOUND_RELOAD_PATH_PLACEHOLDER, name)),
     .ammo = (sk_weapon_ammo_spec) {
@@ -45,11 +47,16 @@ sk_weapon sk_weapon_create(sk_weapon_kind kind) {
     }
   };
   for (usz i = 0; i < w.model_anims_count; ++i) assert(IsModelAnimationValid(w.model, w.model_anims[i]));
+  assert(IsSoundReady(w.sound_equip));
+  assert(IsSoundReady(w.sound_shoot));
+  assert(IsSoundReady(w.sound_reload));
   return w;
 }
 
 void sk_weapon_destroy(sk_weapon *w) {
+  UnloadSound(w->sound_reload);
   UnloadSound(w->sound_shoot);
+  UnloadSound(w->sound_equip);
   UnloadModelAnimations(w->model_anims, w->model_anims_count);
   UnloadModel(w->model);
   *w = (sk_weapon) {0};
