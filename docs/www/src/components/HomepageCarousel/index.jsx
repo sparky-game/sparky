@@ -2,7 +2,7 @@ import {useState} from 'react';
 import Heading from '@theme/Heading';
 import styles from './styles.module.css';
 
-const imgLogoRootPath = '/sparky/img/os-logos';
+const imgLogoRootPath = '/img/os-logos';
 
 const osList = [
   'debian',

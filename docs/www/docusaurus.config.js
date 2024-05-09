@@ -4,9 +4,9 @@ const config = {
   title: 'Sparky - 5v5 character-based libre tactical shooter',
   tagline: 'A 5v5, blazingly flast, character-based libre tactical shooter written in pure C.',
   favicon: 'img/favicon.png',
-  url: 'https://iwas-coder.github.io',
-  baseUrl: '/sparky',
-  organizationName: 'iWas-Coder',
+  url: 'https://sparky-game.org',
+  baseUrl: '/',
+  organizationName: 'sparky-game',
   projectName: 'sparky',
   trailingSlash: false,
   onBrokenLinks: 'throw',
@@ -23,12 +23,12 @@ const config = {
       {
         docs: {
           sidebarPath: './sidebars.js',
-          editUrl: 'https://github.com/iWas-Coder/sparky/blob/master/docs/www/docs/',
+          editUrl: 'https://github.com/sparky-game/sparky/blob/master/docs/www/docs/',
           showLastUpdateTime: true
         },
         blog: {
           showReadingTime: true,
-          editUrl: 'https://github.com/iWas-Coder/sparky/blob/master/docs/www/blog/'
+          editUrl: 'https://github.com/sparky-game/sparky/blob/master/docs/www/blog/'
         },
         theme: {
           customCss: './src/css/custom.css'
@@ -45,7 +45,7 @@ const config = {
       },
       items: [
         {
-          href: 'https://github.com/iWas-Coder/sparky',
+          href: 'https://github.com/sparky-game/sparky',
           className: 'header-github-link',
           'aria-label': 'GitHub',
           position: 'right'
@@ -102,11 +102,11 @@ const config = {
           items: [
             {
               label: 'Contributing',
-              href: 'https://github.com/iWas-Coder/sparky/blob/master/CONTRIBUTING.org'
+              href: 'https://github.com/sparky-game/sparky/blob/master/CONTRIBUTING.org'
             },
             {
               label: 'Code of Conduct',
-              href: 'https://github.com/iWas-Coder/sparky/blob/master/CODE_OF_CONDUCT.md'
+              href: 'https://github.com/sparky-game/sparky/blob/master/CODE_OF_CONDUCT.md'
             }
           ]
         },
@@ -115,7 +115,7 @@ const config = {
           items: [
             {
               label: 'GitHub',
-              href: 'https://github.com/iWas-Coder/sparky'
+              href: 'https://github.com/sparky-game/sparky'
             },
             {
               label: 'itch.io',

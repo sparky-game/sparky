@@ -85,7 +85,7 @@ function Logo() {
   return (
     <img
       className={styles.Logo}
-      src='/sparky/img/3d-low-poly-scene.png' />
+      src='/img/3d-low-poly-scene.png' />
   );
 }
 

@@ -2,7 +2,7 @@ import clsx from 'clsx';
 import Heading from '@theme/Heading';
 import styles from './styles.module.css';
 
-const imgRootPath = '/sparky/img';
+const imgRootPath = '/img';
 
 const featureList = [
   {
