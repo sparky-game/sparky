@@ -55,7 +55,10 @@ PPO_LD     = LD
 
 # Dependencies
 CHECKDEPS_BINS  = mkdir mkfifo $(CC) ar rustc cargo jq
-CHECKDEPS_HDRS  = stdint.h stddef.h X11/Xlib.h X11/Xcursor/Xcursor.h X11/extensions/Xrandr.h X11/extensions/Xinerama.h X11/extensions/XInput2.h
+ifneq ($(shell uname), Darwin)
+  CHECKDEPS_HDRS_X11 = X11/Xlib.h X11/Xcursor/Xcursor.h X11/extensions/Xrandr.h X11/extensions/Xinerama.h X11/extensions/XInput2.h
+endif
+CHECKDEPS_HDRS  = stdint.h stddef.h $(CHECKDEPS_HDRS_X11)
 CHECKDEPS_TYPES = uint8_t int8_t uint16_t int16_t uint32_t int32_t uint64_t int64_t size_t long float double
 
 # Directories
