@@ -203,7 +203,6 @@ define TEST_CFLAGS
 endef
 define LDFLAGS
   $(BUILDID_OPTS)                \
-  $(HIDE_WARNS_OPTS)             \
   $(STRIP_OPTS)                  \
   $(RELEASE_OPTS)                \
   -L $(BUILD_DIR)                \
@@ -219,7 +218,6 @@ define LDFLAGS
 endef
 define TEST_LDFLAGS
   $(BUILDID_OPTS)    \
-  $(HIDE_WARNS_OPTS) \
   $(STRIP_OPTS)      \
   $(RELEASE_OPTS)    \
   -L $(BUILD_DIR)    \
