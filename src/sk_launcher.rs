@@ -21,8 +21,9 @@
 
 extern crate libc;
 extern crate eframe;
+extern crate image;
 
-use std::thread;
+use std::{env, thread};
 use std::sync::Arc;
 use std::sync::atomic::{AtomicBool, Ordering};
 use libc::c_char;
@@ -122,17 +123,26 @@ impl eframe::App for Launcher {
 #[no_mangle]
 pub extern "C" fn sk_launcher_run() -> u8 {
   println!("INFO: Initializing {}", SK_LAUNCHER_NAME);
-  let options = eframe::NativeOptions {
-    viewport: egui::ViewportBuilder::default()
-      .with_inner_size([600.0, 400.0])
-      .with_min_inner_size([600.0, 400.0]),
-    ..Default::default()
-  };
-  let _ = eframe::run_native(
+  env::set_current_dir(env::current_exe().expect("ERROR: Unable to get binary path")
+                       .parent().expect("ERROR: Unable to get binary parent directory path")
+  ).expect("ERROR: Could not change CWD to the game's root directory");
+  let win_icon = image::open("assets/icon.png").expect("ERROR: Failed to open icon path").to_rgba8();
+  let (win_icon_width, win_icon_height) = win_icon.dimensions();
+  eframe::run_native(
     SK_LAUNCHER_NAME,
-    options,
+    eframe::NativeOptions {
+      viewport: egui::ViewportBuilder::default()
+        .with_inner_size([600.0, 400.0])
+        .with_min_inner_size([600.0, 400.0])
+        .with_icon(egui::IconData {
+          rgba: win_icon.into_raw(),
+          width: win_icon_width,
+          height: win_icon_height
+        }),
+      ..Default::default()
+    },
     Box::new(|_| Box::new(Launcher::default()) as Box<dyn eframe::App>)
-  );
+  ).expect("Unexpected error. Shutting down...");
   println!("INFO: {} closed successfully", SK_LAUNCHER_NAME);
   return 0;
 }
