@@ -136,7 +136,7 @@ Options:
   -v, --version 	output version information and exit
 
 Report bugs to: <https://github.com/sparky-game/sparky/issues>
-GNU Sparky home page: <https://sparky-game.github.io/sparky>
+GNU Sparky home page: <https://sparky-game.org>
 General help using GNU software: <https://www.gnu.org/gethelp/>
 #+end_example
 
