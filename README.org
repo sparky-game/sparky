@@ -117,7 +117,7 @@ You should have received a copy of the GNU General Public License along with Spa
 
 * Project's roadmap
 
-For information about the detailed project's roadmap, including delivered milestones, see [https://github.com/orgs/sparky-game/projects/1][the Sparky's Roadmap on GitHub]].
+For information about the detailed project's roadmap, including delivered milestones, see [[https://github.com/orgs/sparky-game/projects/1][the Sparky's Roadmap on GitHub]].
 
 * Usage
 
