@@ -35,7 +35,7 @@ typedef struct {
   void *data;
 } sk_rngbuf;
 
-sk_rngbuf sk_rngbuf_create(u32 capacity, u32 element_size, u8 overwrite);
+sk_rngbuf sk_rngbuf_create(u32 capacity, usz element_size, u8 overwrite);
 
 void sk_rngbuf_destroy(sk_rngbuf *rb);
 

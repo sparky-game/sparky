@@ -24,7 +24,7 @@
 #include <sk_log.h>
 #include <sk_rngbuf.h>
 
-sk_rngbuf sk_rngbuf_create(u32 capacity, u32 element_size, u8 overwrite) {
+sk_rngbuf sk_rngbuf_create(u32 capacity, usz element_size, u8 overwrite) {
   return (sk_rngbuf) {
     .capacity = capacity,
     .element_size = element_size,
@@ -32,7 +32,7 @@ sk_rngbuf sk_rngbuf_create(u32 capacity, u32 element_size, u8 overwrite) {
     .curr_len = 0,
     .head = 0,
     .tail = -1,
-    .data = malloc(capacity * element_size)
+    .data = malloc((usz) capacity * element_size)
   };
 }
 
