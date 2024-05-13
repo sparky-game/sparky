@@ -27,6 +27,11 @@
 
 #define SK_PLAYER_WEAPON_SLOTS 2
 
+enum {
+  SK_PLAYER_IDX_SIDE_WEAPON,
+  SK_PLAYER_IDX_MAIN_WEAPON
+};
+
 typedef enum {
   SK_PLAYER_KIND_AGENT69
 } sk_player_kind;

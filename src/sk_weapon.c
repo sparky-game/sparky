@@ -26,6 +26,7 @@
 #include <sk_weapon.h>
 #include <raymath.h>
 
+#define ICON_PATH_PLACEHOLDER         "assets/images/%s/icon.png"
 #define MODEL_PATH_PLACEHOLDER        "assets/models/%s.glb"
 #define SOUND_EQUIP_PATH_PLACEHOLDER  "assets/sounds/%s/equip.wav"
 #define SOUND_SHOOT_PATH_PLACEHOLDER  "assets/sounds/%s/shoot.wav"
@@ -36,6 +37,7 @@ sk_weapon sk_weapon_create(sk_weapon_kind kind) {
   const sk_weapon_ammo_spec ammo_spec = sk_weapon_kind2ammo[kind];
   sk_weapon w = {
     .kind = kind,
+    .icon = LoadTexture(TextFormat(ICON_PATH_PLACEHOLDER, name)),
     .model = LoadModel(TextFormat(MODEL_PATH_PLACEHOLDER, name)),
     .model_anims = LoadModelAnimations(TextFormat(MODEL_PATH_PLACEHOLDER, name), (int *) &w.model_anims_count),
     .sound_equip = LoadSound(TextFormat(SOUND_EQUIP_PATH_PLACEHOLDER, name)),
@@ -59,6 +61,7 @@ void sk_weapon_destroy(sk_weapon *w) {
   UnloadSound(w->sound_equip);
   UnloadModelAnimations(w->model_anims, w->model_anims_count);
   UnloadModel(w->model);
+  UnloadTexture(w->icon);
   *w = (sk_weapon) {0};
   w = 0;
 }

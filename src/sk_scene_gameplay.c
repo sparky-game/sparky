@@ -49,14 +49,20 @@ void sk_scene_gameplay_draw(sk_state *s) {
     DrawText(TextFormat("N/A ms"), 10, 50, 20, LIME);
     DrawText(TextFormat("(d) N/A bps | (u) N/A bps"), 10, 70, 20, LIME);
   }
-  // START: HUD's Crosshair
   DrawCircle(GetScreenWidth() / 2, GetScreenHeight() / 2, s->config.crosshair.radius, BLACK);
   DrawCircle(GetScreenWidth() / 2, GetScreenHeight() / 2, s->config.crosshair.radius - 0.9f, RAYWHITE);
-  // END: HUD's Crosshair
   DrawText(TextFormat("%u", s->player.hp), 100, GetScreenHeight() - 100, 25, RAYWHITE);
   DrawText(TextFormat("%u | %u", s->player.weapon->ammo.magazine, s->player.weapon->ammo.reserve),
            GetScreenWidth() - 100,
            GetScreenHeight() - 100,
            25,
            RAYWHITE);
+  DrawTexture(s->player.weapon_slots[SK_PLAYER_IDX_SIDE_WEAPON].icon,
+              GetScreenWidth() - s->player.weapon_slots[SK_PLAYER_IDX_SIDE_WEAPON].icon.width - 30,
+              GetScreenHeight() - 260,
+              s->player.weapon == &s->player.weapon_slots[SK_PLAYER_IDX_SIDE_WEAPON] ? YELLOW : WHITE);
+  DrawTexture(s->player.weapon_slots[SK_PLAYER_IDX_MAIN_WEAPON].icon,
+              GetScreenWidth() - s->player.weapon_slots[SK_PLAYER_IDX_MAIN_WEAPON].icon.width - 30,
+              GetScreenHeight() - 200,
+              s->player.weapon == &s->player.weapon_slots[SK_PLAYER_IDX_MAIN_WEAPON] ? YELLOW : WHITE);
 }

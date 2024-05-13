@@ -37,6 +37,7 @@ typedef struct {
 
 typedef struct {
   sk_weapon_kind kind;
+  Texture2D icon;
   Model model;
   ModelAnimation *model_anims;
   u8 model_anims_count;
