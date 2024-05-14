@@ -23,8 +23,6 @@
 
 #include <sk_defines.h>
 
-#define SK_RNGBUF_AT(rb, i) ((void *) ((u64) (rb)->data + ((((rb)->head + (i)) % (rb)->capacity) * (rb)->element_size)))
-
 typedef struct {
   u32 capacity;
   usz element_size;

@@ -25,8 +25,8 @@
 #include <sk_rngbuf_test.h>
 
 static u8 sk_rngbuf_test_create_destroy(void) {
-  sk_rngbuf x = sk_rngbuf_create(5, sizeof(int), 0);
-  carbon_should_be(5, x.capacity);
+  sk_rngbuf x = sk_rngbuf_create(2 << 1, sizeof(int), 0);
+  carbon_should_be(2 << 1, x.capacity);
   carbon_should_be(sizeof(int), x.element_size);
   carbon_should_be_false(x.overwrite);
   carbon_should_be(0, x.curr_len);
@@ -43,6 +43,59 @@ static u8 sk_rngbuf_test_create_destroy(void) {
   return 1;
 }
 
+static u8 sk_rngbuf_test_push_element(void) {
+  sk_rngbuf x = sk_rngbuf_create(2 << 1, sizeof(int), 0);
+  int i = 7;
+  carbon_should_be_true(sk_rngbuf_push(&x, &i));
+  carbon_should_be(1, x.curr_len);
+  carbon_should_be(i, ((int *) x.data)[0]);
+  sk_rngbuf_destroy(&x);
+  return 1;
+}
+
+static u8 sk_rngbuf_test_pop_element(void) {
+  sk_rngbuf x = sk_rngbuf_create(2 << 1, sizeof(int), 0);
+  int i = 7, j;
+  sk_rngbuf_push(&x, &i);
+  carbon_should_be_true(sk_rngbuf_pop(&x, &j));
+  carbon_should_be(0, x.curr_len);
+  carbon_should_be(i, j);
+  sk_rngbuf_destroy(&x);
+  return 1;
+}
+
+static u8 sk_rngbuf_test_pop_element_from_empty_array(void) {
+  sk_rngbuf x = sk_rngbuf_create(2 << 1, sizeof(int), 0);
+  int i = 7;
+  carbon_should_be_false(sk_rngbuf_pop(&x, &i));
+  carbon_should_be(7, i);
+  sk_rngbuf_destroy(&x);
+  return 1;
+}
+
+static u8 sk_rngbuf_test_access_element(void) {
+  sk_rngbuf x = sk_rngbuf_create(2 << 1, sizeof(int), 0);
+  int i = 7;
+  sk_rngbuf_push(&x, &i);
+  int j = ((int *) x.data)[0];
+  carbon_should_be(i, j);
+  sk_rngbuf_destroy(&x);
+  return 1;
+}
+
+static u8 sk_rngbuf_test_overwriting(void) {
+  sk_rngbuf x = sk_rngbuf_create(2 << 6, sizeof(int), 1);
+  for (int i = 0; i < 2 * (2 << 6); ++i) sk_rngbuf_push(&x, &i);
+  for (int i = 2 << 6; i < 2 * (2 << 6); ++i) carbon_should_be(i, ((int *) x.data)[i % (2 << 6)]);
+  sk_rngbuf_destroy(&x);
+  return 1;
+}
+
 void sk_rngbuf_test_register(void) {
   CARBON_REGISTER_TEST(sk_rngbuf_test_create_destroy);
+  CARBON_REGISTER_TEST(sk_rngbuf_test_push_element);
+  CARBON_REGISTER_TEST(sk_rngbuf_test_pop_element);
+  CARBON_REGISTER_TEST(sk_rngbuf_test_pop_element_from_empty_array);
+  CARBON_REGISTER_TEST(sk_rngbuf_test_access_element);
+  CARBON_REGISTER_TEST(sk_rngbuf_test_overwriting);
 }
