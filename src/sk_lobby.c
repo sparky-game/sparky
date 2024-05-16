@@ -37,7 +37,8 @@ sk_lobby sk_lobby_create(u8 id) {
 }
 
 void sk_lobby_destroy(sk_lobby *l) {
-  (void) l;
+  *l = (sk_lobby) {0};
+  l = 0;
 }
 
 u8 sk_lobby_add(sk_lobby *l, sk_player p) {
