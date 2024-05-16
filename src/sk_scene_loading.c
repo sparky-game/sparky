@@ -51,6 +51,6 @@ void sk_scene_loading_draw(sk_state *s) {
            50,
            LOADING_TITLE_SIZE,
            RAYWHITE);
-  DrawTexture(s->loading_controls, GetScreenWidth() - s->loading_controls.width - 100, 100, WHITE);
+  DrawTexture(s->loading_controls, GetScreenWidth() / 2 - s->loading_controls.width / 2, 100, WHITE);
   is_loading_drawn_once = 1;
 }
