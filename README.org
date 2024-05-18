@@ -212,7 +212,34 @@ brew install rust jq
 
 ** Compilation & Linkage
 
-(...)
+#+begin_example
+Targets
+=======
+  all       :: Build all targets marked with [*]
+,* checkdeps :: Check dependencies for build process
+,* game      :: Build the bare game
+  check     :: Build and run the test engine
+  editor    :: Build the editor
+  clean     :: Remove the 'build' directory
+  mrproper  :: Remove and cleans everything
+  version   :: Show the current version string
+  help      :: Show this help and usage panel
+
+Execute 'make' or 'make all' to build all targets marked with [*]
+For further info see the ./README.org file
+#+end_example
+
+To build the game, issue the following command:
+
+#+begin_src sh
+make
+#+end_src
+
+Next, run the test suite:
+
+#+begin_src sh
+make check
+#+end_src
 
 * Binary distributions
 
