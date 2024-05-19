@@ -52,4 +52,6 @@ void sk_map_add_element(sk_darray *es,
 
 void sk_map_load(sk_map *m);
 
+void sk_map_unload(sk_map *m);
+
 void sk_map_draw(sk_map *m);

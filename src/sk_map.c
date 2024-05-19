@@ -37,9 +37,7 @@ sk_map sk_map_create(sk_map_kind kind) {
 }
 
 void sk_map_destroy(sk_map *m) {
-  for (u32 i = 0; i < m->elements.curr_len; ++i) {
-    sk_map_element_destroy(&((sk_map_element *) m->elements.data)[i]);
-  }
+  sk_map_unload(m);
   sk_darray_destroy(&m->elements);
   UnloadShader(m->pbr_shader);
 }
@@ -92,6 +90,14 @@ void sk_map_load(sk_map *m) {
                      SK_TEXTURE_STONE1,
                      32, 1, 5,
                      (Vector3) { 0, 2.5f, -16 });
+}
+
+void sk_map_unload(sk_map *m) {
+  sk_map_element e = {0};
+  while (m->elements.curr_len) {
+    if (!sk_darray_pop(&m->elements, &e)) SK_LOG_ERROR("sk_map_unload :: unable to delete element");
+    sk_map_element_destroy(&e);
+  }
 }
 
 void sk_map_draw(sk_map *m) {
