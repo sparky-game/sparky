@@ -59,6 +59,8 @@ void sk_player_destroy(sk_player *p);
 
 void sk_player_load(sk_player *p);
 
+void sk_player_unload(sk_player *p);
+
 void sk_player_jump(sk_player *p, sk_config *config);
 
 f32 sk_player_peek(sk_player *p, sk_config *config);

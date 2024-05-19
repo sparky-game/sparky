@@ -53,8 +53,7 @@ sk_player sk_player_create(i8 lobby_id, i8 lobby_slot_idx, sk_player_kind kind, 
 }
 
 void sk_player_destroy(sk_player *p) {
-  for (usz i = 0; i < SK_PLAYER_WEAPON_SLOTS; ++i) sk_weapon_destroy(&p->weapon_slots[i]);
-  UnloadModel(p->model);
+  sk_player_unload(p);
   SK_LOG_INFO("sk_player_destroy :: destroyed player (%s)", p->id.value);
   *p = (sk_player) {0};
   p = 0;
@@ -65,6 +64,11 @@ void sk_player_load(sk_player *p) {
   p->weapon_slots[SK_PLAYER_IDX_SIDE_WEAPON] = sk_weapon_create(SK_WEAPON_KIND_7MM);
   p->weapon_slots[SK_PLAYER_IDX_MAIN_WEAPON] = sk_weapon_create(SK_WEAPON_KIND_AKM);
   p->weapon = &p->weapon_slots[SK_PLAYER_IDX_SIDE_WEAPON];
+}
+
+void sk_player_unload(sk_player *p) {
+  for (usz i = 0; i < SK_PLAYER_WEAPON_SLOTS; ++i) sk_weapon_destroy(&p->weapon_slots[i]);
+  UnloadModel(p->model);
 }
 
 void sk_player_jump(sk_player *p, sk_config *config) {
