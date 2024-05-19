@@ -213,6 +213,7 @@ brew install rust jq
 ** Compilation & Linkage
 
 #+begin_example
+$ make help
 Targets
 =======
   all       :: Build all targets marked with [*]
