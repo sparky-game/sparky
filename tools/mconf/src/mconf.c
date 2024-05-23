@@ -23,11 +23,14 @@
 #include <dialog.h>
 #include <sys/ioctl.h>
 
+#define sk_xstr(s) sk_str(s)
+#define sk_str(s) #s
+
 #ifndef SK_VERSION
 #define SK_VERSION "v0.0-UNDEFINED"
 #endif
 #define CONFIG_FILE "config.mk"
-#define TITLE "Sparky " SK_VERSION " Build Configuration"
+#define TITLE "Sparky " sk_xstr(SK_VERSION) " Build Configuration"
 #define PADDING_HEIGHT 8
 #define PADDING_WIDTH 7
 
