@@ -19,13 +19,36 @@
  */
 
 
-#include <stdio.h>
+#include <time.h>
 #include <skap_header.h>
 
-int main(void) {
-  skap_header header = skap_header_create();
-  printf("header.signature => %s\n", header.signature);
-  printf("header.fmt_ver => %hhu\n", header.fmt_ver);
-  printf("header.build_ver => %ld\n", header.build_ver);
-  return 0;
+static u64 concat_num(u64 x, u64 y) {
+  u64 n = 10;
+  while (y >= n) n *= 10;
+  return n * x + y;
+}
+
+static u64 compute_build_ver(void) {
+  time_t t = time(0);
+  struct tm *t_spec = localtime(&t);
+  u64 t_spec_arr[] = {
+    t_spec->tm_mon + 1,
+    t_spec->tm_mday,
+    t_spec->tm_hour,
+    t_spec->tm_min
+  };
+  u64 build_ver = t_spec->tm_year + 1900;
+  for (size_t i = 0; i < 4; ++i) {
+    if (t_spec_arr[i] < 10) build_ver *= 10;
+    build_ver = concat_num(build_ver, t_spec_arr[i]);
+  }
+  return build_ver;
+}
+
+skap_header skap_header_create(void) {
+  return (skap_header) {
+    .signature = { 'S', 'K', 'A', 'P' },
+    .fmt_ver = 1,
+    .build_ver = compute_build_ver()
+  };
 }

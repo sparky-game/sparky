@@ -19,13 +19,9 @@
  */
 
 
-#include <stdio.h>
-#include <skap_header.h>
+#pragma once
 
-int main(void) {
-  skap_header header = skap_header_create();
-  printf("header.signature => %s\n", header.signature);
-  printf("header.fmt_ver => %hhu\n", header.fmt_ver);
-  printf("header.build_ver => %ld\n", header.build_ver);
-  return 0;
-}
+#include <stdint.h>
+
+typedef uint8_t u8;
+typedef uint64_t u64;
