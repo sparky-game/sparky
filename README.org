@@ -218,6 +218,7 @@ Targets
 =======
   all       :: Build all targets marked with [*]
 ,* checkdeps :: Check dependencies for build process
+  menuconfig :: Edit build options with ncurses menu
 ,* game      :: Build the bare game
   check     :: Build and run the test engine
   editor    :: Build the editor
