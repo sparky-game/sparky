@@ -23,6 +23,7 @@
 # === MACROS === #
 ##################
 MCONF_NAME       = mconf
+SKAP_NAME        = skap
 LAUNCHER_NAME    = sk_launcher
 GAME_NAME        = sparky
 TEST_ENGINE_NAME = carbon
@@ -63,6 +64,7 @@ CHECKDEPS_HDRS  = stdint.h stddef.h $(CHECKDEPS_HDRS_X11)
 CHECKDEPS_TYPES = uint8_t int8_t uint16_t int16_t uint32_t int32_t uint64_t int64_t size_t long float double
 
 # Directories
+ASSETS_DIR            = assets
 HDR_DIR               = include
 SRC_DIR               = src
 TEST_DIR              = test
@@ -77,6 +79,7 @@ ifdef D
 else
   EXTRAS_BUILD_DIR = $(EXTRAS_BUILD_ROOT_DIR)/release
   BUILD_DIR        = $(BUILD_RELEASE_DIR)
+  SKAP_BUILD_DIR   = $(BUILD_DIR)/$(SKAP_NAME)
 endif
 TEST_BUILD_DIR   = $(BUILD_DIR)/$(TEST_DIR)
 MCONF_BUILD_DIR  = $(BUILD_DIR)/$(MCONF_NAME)
@@ -100,6 +103,9 @@ TEST_DEPS_OBJS := $(filter-out $(BUILD_DIR)/$(GAME_NAME).o, $(OBJS))
 EDITOR_SRCS    := $(wildcard $(SRC_DIR)/$(EDITOR_NAME)*.rs)
 MCONF_SRCS     := $(wildcard $(TOOLS_DIR)/$(MCONF_NAME)/$(SRC_DIR)/*.c)
 MCONF_OBJS     := $(patsubst $(TOOLS_DIR)/$(MCONF_NAME)/$(SRC_DIR)/%.c, $(MCONF_BUILD_DIR)/%.o, $(MCONF_SRCS))
+SKAP_SRCS      := $(wildcard $(TOOLS_DIR)/$(SKAP_NAME)/$(SRC_DIR)/*.c)
+SKAP_OBJS      := $(patsubst $(TOOLS_DIR)/$(SKAP_NAME)/$(SRC_DIR)/%.c, $(SKAP_BUILD_DIR)/%.o, $(SKAP_SRCS))
+SKAP_ASSETS    := $(shell find $(ASSETS_DIR) -type f 2>/dev/null)
 
 # Build flags
 MAKEFLAGS_JOBS := $(patsubst -j%, %, $(filter -j%, $(MAKEFLAGS)))
@@ -174,6 +180,10 @@ define MCONF_CPPFLAGS
   $(DISABLE_ASSERTS_OPTS) \
   -I $(TOOLS_DIR)/$(MCONF_NAME)/$(HDR_DIR)
 endef
+define SKAP_CPPFLAGS
+  $(DISABLE_ASSERTS_OPTS) \
+  -I $(TOOLS_DIR)/$(SKAP_NAME)/$(HDR_DIR)
+endef
 define RAYLIB_CFLAGS
   -std=gnu99                    \
   $(HIDE_WARNS_OPTS)            \
@@ -220,6 +230,16 @@ define MCONF_CFLAGS
   $(RELEASE_OPTS)   \
   $(MACOS_SPECIFIC_CFLAGS_OPTS)
 endef
+define SKAP_CFLAGS
+  -std=c99          \
+  -Wall             \
+  -Wextra           \
+  -pedantic         \
+  -Werror           \
+  $(DEBUG_SYM_OPTS) \
+  $(RELEASE_OPTS)   \
+  $(MACOS_SPECIFIC_CFLAGS_OPTS)
+endef
 define LDFLAGS
   $(BUILDID_OPTS)                \
   $(STRIP_OPTS)                  \
@@ -252,6 +272,11 @@ define MCONF_LDFLAGS
   $(RELEASE_OPTS) \
   -ldialog
 endef
+define SKAP_LDFLAGS
+  $(BUILDID_OPTS) \
+  $(STRIP_OPTS)   \
+  $(RELEASE_OPTS)
+endef
 
 # Build output
 LAUNCHER_OUT = $(EXTRAS_BUILD_DIR)/lib$(LAUNCHER_NAME).a
@@ -265,6 +290,9 @@ endif
 TEST_OUT   = $(TEST_BUILD_DIR)/$(TEST_ENGINE_NAME)
 EDITOR_OUT = $(EXTRAS_BUILD_DIR)/$(EDITOR_NAME)
 MCONF_OUT  = $(MCONF_BUILD_DIR)/$(MCONF_NAME)
+ifndef D
+  SKAP_OUT   = $(SKAP_BUILD_DIR)/$(SKAP_NAME)
+endif
 
 
 ###################
@@ -273,7 +301,7 @@ MCONF_OUT  = $(MCONF_BUILD_DIR)/$(MCONF_NAME)
 .WAIT:
 .PHONY: all checkdeps menuconfig game check editor clean mrproper version help
 
-all: checkdeps .WAIT $(BUILD_DIR) $(RAYLIB_BUILD_DIR) $(LUA_BUILD_DIR) game
+all: checkdeps .WAIT $(BUILD_DIR) $(RAYLIB_BUILD_DIR) $(LUA_BUILD_DIR) $(SKAP_BUILD_DIR) game
 	@:
 
 checkdeps:
@@ -322,6 +350,10 @@ $(MCONF_BUILD_DIR):
 	@echo "  $(PPO_MKDIR)   $@"
 	$(Q)mkdir -p $@
 
+$(SKAP_BUILD_DIR):
+	@echo "  $(PPO_MKDIR)   $@"
+	$(Q)mkdir -p $@
+
 menuconfig: checkdeps .WAIT $(BUILD_DIR) $(MCONF_BUILD_DIR) $(MCONF_OUT)
 	@printf "INFO: \033[1;35m$(MCONF_OUT) is ready  ($(FULL_VERSION))\033[0m\n"
 	$(Q)./$(MCONF_OUT)
@@ -334,7 +366,7 @@ $(MCONF_BUILD_DIR)/%.o: $(TOOLS_DIR)/$(MCONF_NAME)/$(SRC_DIR)/%.c
 	@echo "  $(PPO_HOSTCC)  $@"
 	$(Q)$(CC) $(MCONF_CPPFLAGS) $(MCONF_CFLAGS) -c -MD $< -o $@
 
-game: $(OUT)
+game: $(OUT) $(SKAP_OUT)
 	@printf "INFO: \033[1;35m$(OUT) is ready  ($(FULL_VERSION))\033[0m\n"
 
 $(OUT): $(RAYLIB_OUT) $(LUA_OUT) $(LAUNCHER_OUT) $(OBJS)
@@ -370,6 +402,15 @@ $(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
 	@echo "  $(PPO_CC)      $@"
 	$(Q)$(CC) $(CPPFLAGS) $(CFLAGS) -c -MD $< -o $@
 
+$(SKAP_OUT): $(SKAP_OBJS) $(SKAP_ASSETS)
+	@echo "  $(PPO_HOSTLD)  $@"
+	$(Q)$(CC) $(SKAP_OBJS) $(SKAP_LDFLAGS) -o $@
+	$(Q)./$@
+
+$(SKAP_BUILD_DIR)/%.o: $(TOOLS_DIR)/$(SKAP_NAME)/$(SRC_DIR)/%.c
+	@echo "  $(PPO_HOSTCC)  $@"
+	$(Q)$(CC) $(SKAP_CPPFLAGS) $(SKAP_CFLAGS) -c -MD $< -o $@
+
 check: checkdeps .WAIT $(BUILD_DIR) $(RAYLIB_BUILD_DIR) $(LUA_BUILD_DIR) $(TEST_BUILD_DIR) $(TEST_OUT)
 	@printf "INFO: \033[1;35m$(TEST_OUT) is ready  ($(FULL_VERSION))\033[0m\n"
 	$(Q)./$(TEST_OUT)
@@ -396,6 +437,7 @@ $(EDITOR_OUT): $(EDITOR_SRCS)
 
 -include $(BUILD_DIR)/*.d
 -include $(LUA_BUILD_DIR)/*.d
+-include $(SKAP_BUILD_DIR)/*.d
 -include $(TEST_BUILD_DIR)/*.d
 -include $(MCONF_BUILD_DIR)/*.d
 -include $(RAYLIB_BUILD_DIR)/*.d
