@@ -411,7 +411,7 @@ $(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
 $(SKAP_ASSETPACK_OUT): $(SKAP_OUT) $(SKAP_ASSETS)
 	$(Q)./$<
 
-$(SKAP_OUT): $(SKAP_OBJS)
+$(SKAP_OUT): $(RAYLIB_OUT) $(SKAP_OBJS)
 	@echo "  $(PPO_HOSTLD)  $@"
 	$(Q)$(CC) $(SKAP_OBJS) $(SKAP_LDFLAGS) -o $@
 
