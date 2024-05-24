@@ -21,14 +21,8 @@
 
 #pragma once
 
-#include <skap_defines.h>
+#include <stdio.h>
 
-typedef struct {
-  char signature[4];
-  u8 fmt_ver;
-  u64 build_ver;
-} skap_header;
+FILE *skap_file_create(void);
 
-skap_header skap_header_create(void);
-
-u8 skap_header_append(FILE *fd, skap_header *h);
+void skap_file_destroy(FILE *fd);

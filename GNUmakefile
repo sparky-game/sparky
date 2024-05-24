@@ -182,7 +182,8 @@ define MCONF_CPPFLAGS
   -I $(TOOLS_DIR)/$(MCONF_NAME)/$(HDR_DIR)
 endef
 define SKAP_CPPFLAGS
-  $(DISABLE_ASSERTS_OPTS) \
+  $(DISABLE_ASSERTS_OPTS)    \
+  -isystem $(RAYLIB_SRC_DIR) \
   -I $(TOOLS_DIR)/$(SKAP_NAME)/$(HDR_DIR)
 endef
 define RAYLIB_CFLAGS
@@ -276,7 +277,10 @@ endef
 define SKAP_LDFLAGS
   $(BUILDID_OPTS) \
   $(STRIP_OPTS)   \
-  $(RELEASE_OPTS)
+  $(RELEASE_OPTS) \
+  -L $(BUILD_DIR) \
+  -lraylib        \
+  -lm
 endef
 
 # Build output
@@ -292,7 +296,8 @@ TEST_OUT   = $(TEST_BUILD_DIR)/$(TEST_ENGINE_NAME)
 EDITOR_OUT = $(EXTRAS_BUILD_DIR)/$(EDITOR_NAME)
 MCONF_OUT  = $(MCONF_BUILD_DIR)/$(MCONF_NAME)
 ifndef D
-  SKAP_OUT   = $(SKAP_BUILD_DIR)/$(SKAP_NAME)
+  SKAP_OUT           = $(SKAP_BUILD_DIR)/$(SKAP_NAME)
+  SKAP_ASSETPACK_OUT = $(ASSETS_DIR).$(SKAP_NAME)
 endif
 
 
@@ -367,7 +372,7 @@ $(MCONF_BUILD_DIR)/%.o: $(TOOLS_DIR)/$(MCONF_NAME)/$(SRC_DIR)/%.c
 	@echo "  $(PPO_HOSTCC)  $@"
 	$(Q)$(CC) $(MCONF_CPPFLAGS) $(MCONF_CFLAGS) -c -MD $< -o $@
 
-game: $(OUT) $(SKAP_OUT)
+game: $(OUT) $(SKAP_ASSETPACK_OUT)
 	@printf "INFO: \033[1;35m$(OUT) is ready  ($(FULL_VERSION))\033[0m\n"
 
 $(OUT): $(RAYLIB_OUT) $(LUA_OUT) $(LAUNCHER_OUT) $(OBJS)
@@ -403,10 +408,12 @@ $(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
 	@echo "  $(PPO_CC)      $@"
 	$(Q)$(CC) $(CPPFLAGS) $(CFLAGS) -c -MD $< -o $@
 
-$(SKAP_OUT): $(SKAP_OBJS) $(SKAP_ASSETS)
+$(SKAP_ASSETPACK_OUT): $(SKAP_OUT) $(SKAP_ASSETS)
+	$(Q)./$<
+
+$(SKAP_OUT): $(SKAP_OBJS)
 	@echo "  $(PPO_HOSTLD)  $@"
 	$(Q)$(CC) $(SKAP_OBJS) $(SKAP_LDFLAGS) -o $@
-	$(Q)./$@
 
 $(SKAP_BUILD_DIR)/%.o: $(TOOLS_DIR)/$(SKAP_NAME)/$(SRC_DIR)/%.c
 	@echo "  $(PPO_HOSTCC)  $@"

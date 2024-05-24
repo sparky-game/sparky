@@ -20,6 +20,7 @@
 
 
 #include <time.h>
+#include <stdio.h>
 #include <skap_header.h>
 
 static u64 concat_num(u64 x, u64 y) {
@@ -51,4 +52,17 @@ skap_header skap_header_create(void) {
     .fmt_ver = 1,
     .build_ver = compute_build_ver()
   };
+}
+
+u8 skap_header_append(FILE *fd, skap_header *h) {
+  if (!fd || !h) {
+    fprintf(stderr, "ERROR: skap_header_append :: `fd` and `h` need to be valid pointers\n");
+    return 0;
+  }
+  printf("  WRITE   skap_header >> " SKAP_FILENAME "\n");
+  if (fwrite(h, sizeof(skap_header), 1, fd) != 1) {
+    fprintf(stderr, "ERROR: skap_header_append :: unable to write to file\n");
+    return 0;
+  }
+  return 1;
 }

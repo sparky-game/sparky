@@ -21,14 +21,26 @@
 
 #pragma once
 
+#include <stdio.h>
+#include <raylib.h>
 #include <skap_defines.h>
 
 typedef struct {
-  char signature[4];
-  u8 fmt_ver;
-  u64 build_ver;
-} skap_header;
+  const char *name;
+  u32 width;
+  u32 height;
+  u32 mipmaps;
+  u8 format;
+} skap_idx_image_md;
 
-skap_header skap_header_create(void);
+typedef struct {
+  skap_idx_image_md metadata;
+  usz blob_offset;
+  usz blob_size;
+} skap_idx_image;
 
-u8 skap_header_append(FILE *fd, skap_header *h);
+skap_idx_image skap_idx_image_create(const char *name, Image *img);
+
+u8 skap_idx_image_append(FILE *fd, skap_idx_image *i);
+
+void skap_idx_image_link_blob(skap_idx_image *i, usz blob_offset, usz blob_size);

@@ -19,16 +19,28 @@
  */
 
 
-#pragma once
-
+#include <errno.h>
+#include <unistd.h>
+#include <string.h>
+#include <skap_file.h>
 #include <skap_defines.h>
 
-typedef struct {
-  char signature[4];
-  u8 fmt_ver;
-  u64 build_ver;
-} skap_header;
+FILE *skap_file_create(void) {
+  if (!access(SKAP_FILENAME, F_OK)) {
+    printf("  RENAME  " SKAP_FILENAME " -> " SKAP_FILENAME ".old\n");
+    if (rename(SKAP_FILENAME, SKAP_FILENAME ".old") == -1) {
+      fprintf(stderr, "ERROR: rename(2) unable to rename the file (%s)\n", strerror(errno));
+      return 0;
+    }
+  }
+  else printf("  TOUCH   " SKAP_FILENAME "\n");
+  return fopen(SKAP_FILENAME, "ab");
+}
 
-skap_header skap_header_create(void);
-
-u8 skap_header_append(FILE *fd, skap_header *h);
+void skap_file_destroy(FILE *fd) {
+  if (!fd) {
+    printf("WARNING: skap_file_destroy :: `fd` is not a valid pointer, skipping destruction\n");
+    return;
+  }
+  fclose(fd);
+}

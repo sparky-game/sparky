@@ -1,0 +1,59 @@
+/*
+ * GNU Sparky --- A 5v5 character-based libre tactical shooter
+ * Copyright (C) 2024 Wasym A. Alonso
+ *
+ * This file is part of Sparky.
+ *
+ * Sparky is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Sparky is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Sparky.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+
+#include <skap_idx_image.h>
+
+skap_idx_image skap_idx_image_create(const char *name, Image *img) {
+  return (skap_idx_image) {
+    .metadata = (skap_idx_image_md) {
+      .name = name,
+      .width = img->width,
+      .height = img->height,
+      .mipmaps = img->mipmaps,
+      .format = img->format
+    },
+    .blob_offset = 0,
+    .blob_size = 0
+  };
+}
+
+u8 skap_idx_image_append(FILE *fd, skap_idx_image *i) {
+  if (!fd || !i) {
+    fprintf(stderr, "ERROR: skap_idx_image_append :: `fd` and `i` need to be valid pointers\n");
+    return 0;
+  }
+  printf("  WRITE   skap_idx_image(%s) >> " SKAP_FILENAME "\n", i->metadata.name);
+  if (fwrite(i, sizeof(skap_idx_image), 1, fd) != 1) {
+    fprintf(stderr, "ERROR: skap_idx_image_append :: unable to write to file\n");
+    return 0;
+  }
+  return 1;
+}
+
+void skap_idx_image_link_blob(skap_idx_image *i, usz blob_offset, usz blob_size) {
+  if (!i || !blob_offset || !blob_size) {
+    printf("WARNING: skap_idx_image_link_blob :: args need to be valid, skipping linkage\n");
+    return;
+  }
+  printf("  LINK    skap_idx_image(%s) -> {%zu, %zu}\n", i->metadata.name, blob_offset, blob_size);
+  i->blob_offset = blob_offset;
+  i->blob_size = blob_size;
+}
