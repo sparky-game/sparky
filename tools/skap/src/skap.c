@@ -64,9 +64,9 @@ int main(void) {
     }
   }
   for (usz i = 0; i < ARRLEN(imgs_paths); ++i) {
-    skap_idx_image_link_blob(&img_idxs[i], ftell(fd), imgs[i].width * imgs[i].height);
+    skap_idx_image_link_blob(&img_idxs[i], ftell(fd), (usz) imgs[i].width * imgs[i].height);
     printf("  WRITE   %s >> " SKAP_FILENAME "\n", imgs_paths[i]);
-    if (fwrite(imgs[i].data, sizeof(Color), imgs[i].width * imgs[i].height, fd) != (usz) (imgs[i].width * imgs[i].height)) {
+    if (fwrite(imgs[i].data, sizeof(Color), (usz) imgs[i].width * imgs[i].height, fd) != (usz) imgs[i].width * imgs[i].height) {
       fprintf(stderr, "ERROR: unable to write to file\n");
       skap_file_destroy(fd);
       unload_imgs();
