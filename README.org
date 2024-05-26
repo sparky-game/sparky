@@ -124,10 +124,10 @@ For information about the detailed project's roadmap, including delivered milest
 
 The documentation of /Sparky/ includes:
 
-- Main documentation
-- Reference manual
-- GDD (Game Design Document)
-- API documentation
+- Main documentation /(Coming soon!)/
+- Reference manual /(Coming soon!)/
+- GDD (Game Design Document) /(Coming soon!)/
+- API documentation /(Coming soon!)/
 
 * Usage
 
