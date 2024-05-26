@@ -101,7 +101,9 @@ You should have received a copy of the GNU General Public License along with Spa
 
 * Table of Contents :toc:
 - [[#projects-roadmap][Project's roadmap]]
+- [[#documentation][Documentation]]
 - [[#usage][Usage]]
+- [[#binary-distributions][Binary distributions]]
 - [[#build-from-source][Build from source]]
   - [[#get-the-code][Get the code]]
   - [[#dependencies][Dependencies]]
@@ -113,11 +115,19 @@ You should have received a copy of the GNU General Public License along with Spa
     - [[#openbsd][OpenBSD]]
     - [[#macos][macOS]]
   - [[#compilation--linkage][Compilation & Linkage]]
-- [[#binary-distributions][Binary distributions]]
 
 * Project's roadmap
 
 For information about the detailed project's roadmap, including delivered milestones, see [[https://github.com/orgs/sparky-game/projects/1][the Sparky's Roadmap on GitHub]].
+
+* Documentation
+
+The documentation of /Sparky/ includes:
+
+- Main documentation
+- Reference manual
+- GDD (Game Design Document)
+- API documentation
 
 * Usage
 
@@ -139,6 +149,10 @@ Report bugs to: <https://github.com/sparky-game/sparky/issues>
 GNU Sparky home page: <https://sparky-game.org>
 General help using GNU software: <https://www.gnu.org/gethelp/>
 #+end_example
+
+* Binary distributions
+
+(...)
 
 * Build from source
 
@@ -248,7 +262,3 @@ Next, run the test suite:
 #+begin_src sh
 make check
 #+end_src
-
-* Binary distributions
-
-(...)
