@@ -1,0 +1,9 @@
+make
+gcc
+cargo
+jq
+libx11-dev
+libxcursor-dev
+libxrandr-dev
+libxinerama-dev
+libxi-dev

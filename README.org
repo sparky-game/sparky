@@ -160,7 +160,7 @@ These are the packages needed to be able to build /Sparky/ from source, they are
 
 - ~make~
 - ~gcc~ / ~clang~
-- ~rust~
+- ~rustc~ + ~cargo~
 - ~jq~
 - ~libX11~
 - ~libXcursor~
@@ -171,7 +171,7 @@ These are the packages needed to be able to build /Sparky/ from source, they are
 *** Debian/Ubuntu
 
 #+begin_src sh
-sudo apt install -y make gcc rustc jq libx11-dev libxcursor-dev libxrandr-dev libxinerama-dev libxi-dev
+xargs sudo apt install -y < Aptfile
 #+end_src
 
 *** Fedora
