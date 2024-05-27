@@ -19,7 +19,21 @@
  */
 
 
+#include <assert.h>
 #include <skap_idx_image.h>
+
+void skap_idx_image_loadall(Image *imgs, const char **img_paths, usz size) {
+  for (usz i = 0; i < size; ++i) {
+    imgs[i] = LoadImage(img_paths[i]);
+    assert(imgs[i].data);
+  }
+}
+
+void skap_idx_image_unloadall(Image *imgs, usz size) {
+  for (usz i = 0; i < size; ++i) {
+    UnloadImage(imgs[i]);
+  }
+}
 
 skap_idx_image skap_idx_image_create(const char *name, Image *img) {
   return (skap_idx_image) {

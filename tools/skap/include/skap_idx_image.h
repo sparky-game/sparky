@@ -39,6 +39,10 @@ typedef struct {
   usz blob_size;
 } skap_idx_image;
 
+void skap_idx_image_loadall(Image *imgs, const char **img_paths, usz size);
+
+void skap_idx_image_unloadall(Image *imgs, usz size);
+
 skap_idx_image skap_idx_image_create(const char *name, Image *img);
 
 u8 skap_idx_image_append(FILE *fd, skap_idx_image *i);

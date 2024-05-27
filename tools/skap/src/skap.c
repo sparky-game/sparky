@@ -19,7 +19,6 @@
  */
 
 
-#include <assert.h>
 #include <skap_file.h>
 #include <skap_header.h>
 #include <skap_idx_image.h>
@@ -27,43 +26,30 @@
 #define ARRLEN(x) (sizeof((x)) / sizeof((x)[0]))
 #define return_defer(x) do { result = 1; goto defer; } while(0)
 
-static const char *imgs_paths[] = {
+static const char *img_paths[] = {
   "assets/icon.png",
   "assets/images/loading-controls.png"
 };
-static Image imgs[ARRLEN(imgs_paths)] = {0};
-static skap_idx_image img_idxs[ARRLEN(imgs_paths)] = {0};
-static usz img_idx_locs[ARRLEN(imgs_paths)] = {0};
-
-static void load_imgs(void) {
-  for (usz i = 0; i < ARRLEN(imgs_paths); ++i) {
-    imgs[i] = LoadImage(imgs_paths[i]);
-    assert(imgs[i].data);
-  }
-}
-
-static void unload_imgs(void) {
-  for (usz i = 0; i < ARRLEN(imgs_paths); ++i) {
-    UnloadImage(imgs[i]);
-  }
-}
+static Image imgs[ARRLEN(img_paths)] = {0};
+static skap_idx_image img_idxs[ARRLEN(img_paths)] = {0};
+static usz img_idx_locs[ARRLEN(img_paths)] = {0};
 
 int main(void) {
   int result = 0;
-  load_imgs();
+  skap_idx_image_loadall(imgs, img_paths, ARRLEN(img_paths));
   FILE *fd = skap_file_create();
   skap_header header = skap_header_create();
   if (!skap_header_append(fd, &header)) {
     return_defer(1);
   }
-  for (usz i = 0; i < ARRLEN(imgs_paths); ++i) {
-    img_idxs[i] = skap_idx_image_create(imgs_paths[i], &imgs[i]);
+  for (usz i = 0; i < ARRLEN(img_paths); ++i) {
+    img_idxs[i] = skap_idx_image_create(img_paths[i], &imgs[i]);
     img_idx_locs[i] = ftell(fd);
     if (!skap_idx_image_append(fd, &img_idxs[i])) {
       return_defer(1);
     }
   }
-  for (usz i = 0; i < ARRLEN(imgs_paths); ++i) {
+  for (usz i = 0; i < ARRLEN(img_paths); ++i) {
     usz blob_loc = ftell(fd);
     skap_idx_image_link_blob(&img_idxs[i], blob_loc, (usz) imgs[i].width * imgs[i].height);
     fseek(fd, img_idx_locs[i], SEEK_SET);
@@ -71,12 +57,12 @@ int main(void) {
       return_defer(1);
     }
     fseek(fd, blob_loc, SEEK_SET);
-    if (!skap_idx_image_blob_append(fd, imgs_paths[i], &imgs[i])) {
+    if (!skap_idx_image_blob_append(fd, img_paths[i], &imgs[i])) {
       return_defer(1);
     }
   }
  defer:
   skap_file_destroy(fd);
-  unload_imgs();
+  skap_idx_image_unloadall(imgs, ARRLEN(img_paths));
   return result;
 }
