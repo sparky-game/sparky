@@ -23,46 +23,43 @@
 #include <skap_header.h>
 #include <skap_idx_image.h>
 
-#define ARRLEN(x) (sizeof((x)) / sizeof((x)[0]))
-#define return_defer(x) do { result = 1; goto defer; } while(0)
-
 static const char *img_paths[] = {
   "assets/icon.png",
   "assets/images/loading-controls.png"
 };
-static Image imgs[ARRLEN(img_paths)] = {0};
-static skap_idx_image img_idxs[ARRLEN(img_paths)] = {0};
-static usz img_idx_locs[ARRLEN(img_paths)] = {0};
+static Image imgs[SKAP_ARRLEN(img_paths)] = {0};
+static skap_idx_image img_idxs[SKAP_ARRLEN(img_paths)] = {0};
+static usz img_idx_locs[SKAP_ARRLEN(img_paths)] = {0};
 
 int main(void) {
   int result = 0;
-  skap_idx_image_loadall(imgs, img_paths, ARRLEN(img_paths));
+  skap_idx_image_loadall(imgs, img_paths, SKAP_ARRLEN(img_paths));
   FILE *fd = skap_file_create();
   skap_header header = skap_header_create();
   if (!skap_header_append(fd, &header)) {
-    return_defer(1);
+    skap_return_defer(1);
   }
-  for (usz i = 0; i < ARRLEN(img_paths); ++i) {
+  for (usz i = 0; i < SKAP_ARRLEN(img_paths); ++i) {
     img_idxs[i] = skap_idx_image_create(img_paths[i], &imgs[i]);
     img_idx_locs[i] = ftell(fd);
     if (!skap_idx_image_append(fd, &img_idxs[i])) {
-      return_defer(1);
+      skap_return_defer(1);
     }
   }
-  for (usz i = 0; i < ARRLEN(img_paths); ++i) {
+  for (usz i = 0; i < SKAP_ARRLEN(img_paths); ++i) {
     usz blob_loc = ftell(fd);
     skap_idx_image_link_blob(&img_idxs[i], blob_loc, (usz) imgs[i].width * imgs[i].height);
     fseek(fd, img_idx_locs[i], SEEK_SET);
     if (!skap_idx_image_append(fd, &img_idxs[i])) {
-      return_defer(1);
+      skap_return_defer(1);
     }
     fseek(fd, blob_loc, SEEK_SET);
     if (!skap_idx_image_blob_append(fd, img_paths[i], &imgs[i])) {
-      return_defer(1);
+      skap_return_defer(1);
     }
   }
  defer:
   skap_file_destroy(fd);
-  skap_idx_image_unloadall(imgs, ARRLEN(img_paths));
+  skap_idx_image_unloadall(imgs, SKAP_ARRLEN(img_paths));
   return result;
 }

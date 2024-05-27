@@ -25,6 +25,8 @@
 #include <stddef.h>
 
 #define SKAP_FILENAME "assets.skap"
+#define SKAP_ARRLEN(x) (sizeof((x)) / sizeof((x)[0]))
+#define skap_return_defer(x) do { result = 1; goto defer; } while(0)
 
 typedef uint8_t u8;
 typedef uint8_t u32;
