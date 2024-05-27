@@ -25,6 +25,7 @@
 #include <skap_idx_image.h>
 
 #define ARRLEN(x) (sizeof((x)) / sizeof((x)[0]))
+#define return_defer(x) do { result = 1; goto defer; } while(0)
 
 static const char *imgs_paths[] = {
   "assets/icon.png",
@@ -48,21 +49,18 @@ static void unload_imgs(void) {
 }
 
 int main(void) {
+  int result = 0;
   load_imgs();
   FILE *fd = skap_file_create();
   skap_header header = skap_header_create();
   if (!skap_header_append(fd, &header)) {
-    skap_file_destroy(fd);
-    unload_imgs();
-    return 1;
+    return_defer(1);
   }
   for (usz i = 0; i < ARRLEN(imgs_paths); ++i) {
     img_idxs[i] = skap_idx_image_create(imgs_paths[i], &imgs[i]);
     img_idx_locs[i] = ftell(fd);
     if (!skap_idx_image_append(fd, &img_idxs[i])) {
-      skap_file_destroy(fd);
-      unload_imgs();
-      return 1;
+      return_defer(1);
     }
   }
   for (usz i = 0; i < ARRLEN(imgs_paths); ++i) {
@@ -70,18 +68,15 @@ int main(void) {
     skap_idx_image_link_blob(&img_idxs[i], blob_loc, (usz) imgs[i].width * imgs[i].height);
     fseek(fd, img_idx_locs[i], SEEK_SET);
     if (!skap_idx_image_append(fd, &img_idxs[i])) {
-      skap_file_destroy(fd);
-      unload_imgs();
-      return 1;
+      return_defer(1);
     }
     fseek(fd, blob_loc, SEEK_SET);
     if (!skap_idx_image_blob_append(fd, imgs_paths[i], &imgs[i])) {
-      skap_file_destroy(fd);
-      unload_imgs();
-      return 1;
+      return_defer(1);
     }
   }
+ defer:
   skap_file_destroy(fd);
   unload_imgs();
-  return 0;
+  return result;
 }
