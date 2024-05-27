@@ -24,14 +24,15 @@
 #include <skap_header.h>
 #include <skap_idx_image.h>
 
-#define ASSETPATH(s) "assets/" s
 #define ARRLEN(x) (sizeof((x)) / sizeof((x)[0]))
 
 static const char *imgs_paths[] = {
-  ASSETPATH("icon.png")
+  "assets/icon.png",
+  "assets/images/loading-controls.png"
 };
 static Image imgs[ARRLEN(imgs_paths)] = {0};
 static skap_idx_image img_idxs[ARRLEN(imgs_paths)] = {0};
+static usz img_idx_locs[ARRLEN(imgs_paths)] = {0};
 
 static void load_imgs(void) {
   for (usz i = 0; i < ARRLEN(imgs_paths); ++i) {
@@ -57,6 +58,7 @@ int main(void) {
   }
   for (usz i = 0; i < ARRLEN(imgs_paths); ++i) {
     img_idxs[i] = skap_idx_image_create(imgs_paths[i], &imgs[i]);
+    img_idx_locs[i] = ftell(fd);
     if (!skap_idx_image_append(fd, &img_idxs[i])) {
       skap_file_destroy(fd);
       unload_imgs();
@@ -64,7 +66,15 @@ int main(void) {
     }
   }
   for (usz i = 0; i < ARRLEN(imgs_paths); ++i) {
-    skap_idx_image_link_blob(&img_idxs[i], ftell(fd), (usz) imgs[i].width * imgs[i].height);
+    usz blob_loc = ftell(fd);
+    skap_idx_image_link_blob(&img_idxs[i], blob_loc, (usz) imgs[i].width * imgs[i].height);
+    fseek(fd, img_idx_locs[i], SEEK_SET);
+    if (!skap_idx_image_append(fd, &img_idxs[i])) {
+      skap_file_destroy(fd);
+      unload_imgs();
+      return 1;
+    }
+    fseek(fd, blob_loc, SEEK_SET);
     if (!skap_idx_image_blob_append(fd, imgs_paths[i], &imgs[i])) {
       skap_file_destroy(fd);
       unload_imgs();
