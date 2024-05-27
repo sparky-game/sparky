@@ -44,3 +44,5 @@ skap_idx_image skap_idx_image_create(const char *name, Image *img);
 u8 skap_idx_image_append(FILE *fd, skap_idx_image *i);
 
 void skap_idx_image_link_blob(skap_idx_image *i, usz blob_offset, usz blob_size);
+
+u8 skap_idx_image_blob_append(FILE *fd, const char *name, Image *img);

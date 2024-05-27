@@ -57,3 +57,16 @@ void skap_idx_image_link_blob(skap_idx_image *i, usz blob_offset, usz blob_size)
   i->blob_offset = blob_offset;
   i->blob_size = blob_size;
 }
+
+u8 skap_idx_image_blob_append(FILE *fd, const char *name, Image *img) {
+  if (!fd || !img) {
+    fprintf(stderr, "ERROR: skap_idx_image_blob_append :: `fd` and `img` need to be valid pointers\n");
+    return 0;
+  }
+  printf("  WRITE   %s >> " SKAP_FILENAME "\n", name);
+  if (fwrite(img->data, sizeof(Color), (usz) img->width * img->height, fd) != (usz) img->width * img->height) {
+    fprintf(stderr, "ERROR: skap_idx_image_blob_append :: unable to write to file\n");
+    return 0;
+  }
+  return 1;
+}
