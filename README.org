@@ -67,6 +67,9 @@ A 5v5 character-based libre tactical shooter
 <a href="https://github.com/sparky-game/sparky/actions/workflows/build-linux.yaml">
 <img src="https://github.com/sparky-game/sparky/actions/workflows/build-linux.yaml/badge.svg" alt="CI Build Linux">
 </a>
+<a href="https://codecov.io/gh/sparky-game/sparky">
+<img src="https://codecov.io/gh/sparky-game/sparky/graph/badge.svg?token=8RZC7IQ33W" alt="CI Test Coverage">
+</a>
 <a href="https://github.com/sparky-game/sparky/actions/workflows/website.yaml">
 <img src="https://github.com/sparky-game/sparky/actions/workflows/website.yaml/badge.svg" alt="CI Website">
 </a>

@@ -46,7 +46,7 @@ jobs:
         with:
           submodules: recursive
       - name: install-dependencies
-        run: sudo apt-get install -y libx11-dev libxcursor-dev libxrandr-dev libxinerama-dev libxi-dev
+        run: xargs sudo apt-get install -y < Aptfile
       - name: setup-rust-cache
         uses: Swatinem/rust-cache@v2
         with:
@@ -59,9 +59,13 @@ jobs:
             paths-ignore: [vendor]
       - name: build
         run: make -j$(nproc)
-      - name: test
-        run: make check -j$(nproc)
-      - name: analyze
-        uses: github/codeql-action/analyze@v3
       - name: build-editor
         run: make editor -j$(nproc)
+      - name: test
+        run: make check -j$(nproc)
+      - name: test-coverage-report
+        uses: codecov/codecov-action@v4.0.1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+      - name: analyze
+        uses: github/codeql-action/analyze@v3
