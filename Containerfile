@@ -20,13 +20,7 @@
 
 
 FROM rust as builder
-RUN apt-get update && apt-get install -y \
-  jq                                     \
-  libx11-dev                             \
-  libxcursor-dev                         \
-  libxrandr-dev                          \
-  libxinerama-dev                        \
-  libxi-dev
+RUN apt-get update && xargs apt-get install -y < Aptfile
 WORKDIR /
 COPY . .
 RUN make mrproper && make && make check
