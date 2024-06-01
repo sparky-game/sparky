@@ -24,8 +24,9 @@
 
 void skap_idx_image_loadall(Image *imgs, const char **img_paths, usz size) {
   for (usz i = 0; i < size; ++i) {
+    printf("  LOAD    %s\n", img_paths[i]);
     imgs[i] = LoadImage(img_paths[i]);
-    assert(imgs[i].data);
+    assert(IsImageReady(imgs[i]));
   }
 }
 

@@ -37,6 +37,7 @@ static usz img_idx_locs[IMG_COUNT] = {0};
 
 int main(void) {
   int result = 0;
+  SetTraceLogLevel(LOG_WARNING);
   skap_idx_image_loadall(imgs, img_paths, IMG_COUNT);
   FILE *fd = skap_file_create();
   skap_header header = skap_header_create();
