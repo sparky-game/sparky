@@ -24,7 +24,14 @@
 #include <raylib.h>
 
 #define SK_LOG_ENABLE_DEBUG_LEVEL SetTraceLogLevel(LOG_DEBUG)
-#define SK_LOG_DEBUG(msg, ...) TraceLog(LOG_DEBUG, "\033[1;36m" msg "\033[0m", ##__VA_ARGS__)
-#define SK_LOG_INFO(msg, ...)  TraceLog(LOG_INFO, "\033[1;35m" msg "\033[0m", ##__VA_ARGS__)
-#define SK_LOG_WARN(msg, ...)  TraceLog(LOG_WARNING, "\033[1;33m" msg "\033[0m", ##__VA_ARGS__)
-#define SK_LOG_ERROR(msg, ...) TraceLog(LOG_ERROR, "\033[1;31m" msg "\033[0m", ##__VA_ARGS__)
+
+#define SK_LOG_COLOR_RESET   "\033[0m"
+#define SK_LOG_COLOR_RED     "\033[1;31m"
+#define SK_LOG_COLOR_YELLOW  "\033[1;33m"
+#define SK_LOG_COLOR_MAGENTA "\033[1;35m"
+#define SK_LOG_COLOR_CYAN    "\033[1;36m"
+
+#define SK_LOG_DEBUG(msg, ...) TraceLog(LOG_DEBUG, SK_LOG_COLOR_CYAN msg SK_LOG_COLOR_RESET, ##__VA_ARGS__)
+#define SK_LOG_INFO(msg, ...)  TraceLog(LOG_INFO, SK_LOG_COLOR_MAGENTA msg SK_LOG_COLOR_RESET, ##__VA_ARGS__)
+#define SK_LOG_WARN(msg, ...)  TraceLog(LOG_WARNING, SK_LOG_COLOR_YELLOW msg SK_LOG_COLOR_RESET, ##__VA_ARGS__)
+#define SK_LOG_ERROR(msg, ...) TraceLog(LOG_ERROR, SK_LOG_COLOR_RED msg SK_LOG_COLOR_RESET, ##__VA_ARGS__)
