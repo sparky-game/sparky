@@ -23,43 +23,39 @@
 #include <skap_header.h>
 #include <skap_idx_image.h>
 
+#define IMG_COUNT SKAP_ARRLEN(img_paths)
+
 static const char *img_paths[] = {
   "assets/icon.png",
-  "assets/images/loading-controls.png"
+  "assets/images/loading-controls.png",
+  "assets/images/7mm/icon.png",
+  "assets/images/akm/icon.png"
 };
-static Image imgs[SKAP_ARRLEN(img_paths)] = {0};
-static skap_idx_image img_idxs[SKAP_ARRLEN(img_paths)] = {0};
-static usz img_idx_locs[SKAP_ARRLEN(img_paths)] = {0};
+static Image imgs[IMG_COUNT] = {0};
+static skap_idx_image img_idxs[IMG_COUNT] = {0};
+static usz img_idx_locs[IMG_COUNT] = {0};
 
 int main(void) {
   int result = 0;
-  skap_idx_image_loadall(imgs, img_paths, SKAP_ARRLEN(img_paths));
+  skap_idx_image_loadall(imgs, img_paths, IMG_COUNT);
   FILE *fd = skap_file_create();
   skap_header header = skap_header_create();
-  if (!skap_header_append(fd, &header)) {
-    skap_return_defer(1);
-  }
-  for (usz i = 0; i < SKAP_ARRLEN(img_paths); ++i) {
+  if (!skap_header_append(fd, &header)) skap_return_defer(1);
+  for (usz i = 0; i < IMG_COUNT; ++i) {
     img_idxs[i] = skap_idx_image_create(img_paths[i], &imgs[i]);
     img_idx_locs[i] = ftell(fd);
-    if (!skap_idx_image_append(fd, &img_idxs[i])) {
-      skap_return_defer(1);
-    }
+    if (!skap_idx_image_append(fd, &img_idxs[i])) skap_return_defer(1);
   }
-  for (usz i = 0; i < SKAP_ARRLEN(img_paths); ++i) {
+  for (usz i = 0; i < IMG_COUNT; ++i) {
     usz blob_loc = ftell(fd);
     skap_idx_image_link_blob(&img_idxs[i], blob_loc, (usz) imgs[i].width * imgs[i].height);
     fseek(fd, img_idx_locs[i], SEEK_SET);
-    if (!skap_idx_image_append(fd, &img_idxs[i])) {
-      skap_return_defer(1);
-    }
+    if (!skap_idx_image_append(fd, &img_idxs[i])) skap_return_defer(1);
     fseek(fd, blob_loc, SEEK_SET);
-    if (!skap_idx_image_blob_append(fd, img_paths[i], &imgs[i])) {
-      skap_return_defer(1);
-    }
+    if (!skap_idx_image_blob_append(fd, img_paths[i], &imgs[i])) skap_return_defer(1);
   }
  defer:
   skap_file_destroy(fd);
-  skap_idx_image_unloadall(imgs, SKAP_ARRLEN(img_paths));
+  skap_idx_image_unloadall(imgs, IMG_COUNT);
   return result;
 }
