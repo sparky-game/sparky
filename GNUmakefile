@@ -201,6 +201,7 @@ define LUA_CFLAGS
   $(MACOS_SPECIFIC_CFLAGS_OPTS)
 endef
 define CFLAGS
+  --coverage                    \
   -std=gnu11                    \
   -Wall                         \
   -Wextra                       \
@@ -243,6 +244,7 @@ define SKAP_CFLAGS
   $(MACOS_SPECIFIC_CFLAGS_OPTS)
 endef
 define LDFLAGS
+  --coverage                     \
   $(BUILDID_OPTS)                \
   $(STRIP_OPTS)                  \
   $(RELEASE_OPTS)                \
@@ -258,6 +260,7 @@ define LDFLAGS
   $(OPENBSD_SPECIFIC_LDFLAGS_OPTS)
 endef
 define TEST_LDFLAGS
+  --coverage         \
   $(BUILDID_OPTS)    \
   $(STRIP_OPTS)      \
   $(RELEASE_OPTS)    \
