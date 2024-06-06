@@ -224,7 +224,7 @@ sudo pkg_add gmake rust jq
 *** macOS
 
 #+begin_src sh
-brew install rust jq
+brew bundle install --file=Brewfile
 #+end_src
 
 ** Compilation & Linkage
