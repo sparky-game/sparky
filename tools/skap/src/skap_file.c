@@ -34,7 +34,7 @@ FILE *skap_file_create(void) {
     }
   }
   else printf("  TOUCH   " SKAP_FILENAME "\n");
-  return fopen(SKAP_FILENAME, "ab");
+  return fopen(SKAP_FILENAME, "wb");
 }
 
 void skap_file_destroy(FILE *fd) {
