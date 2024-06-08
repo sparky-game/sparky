@@ -20,6 +20,7 @@
 
 
 #include <assert.h>
+#include <string.h>
 #include <skap_idx_image.h>
 
 void skap_idx_image_loadall(Image *imgs, const char **img_paths, usz size) {
@@ -37,9 +38,8 @@ void skap_idx_image_unloadall(Image *imgs, usz size) {
 }
 
 skap_idx_image skap_idx_image_create(const char *name, Image *img) {
-  return (skap_idx_image) {
+  skap_idx_image i = {
     .metadata = (skap_idx_image_md) {
-      .name = name,
       .width = img->width,
       .height = img->height,
       .mipmaps = img->mipmaps,
@@ -48,6 +48,9 @@ skap_idx_image skap_idx_image_create(const char *name, Image *img) {
     .blob_offset = 0,
     .blob_size = 0
   };
+  memset(i.metadata.name, 0, sizeof(i.metadata.name));
+  strncpy(i.metadata.name, name, sizeof(i.metadata.name) - 1);
+  return i;
 }
 
 u8 skap_idx_image_append(FILE *fd, skap_idx_image *i) {

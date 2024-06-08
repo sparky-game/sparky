@@ -25,8 +25,10 @@
 #include <raylib.h>
 #include <skap_defines.h>
 
+#define SKAP_IDX_IMAGE_MD_NAME_MAX_LEN 512
+
 typedef struct {
-  const char *name;
+  char name[SKAP_IDX_IMAGE_MD_NAME_MAX_LEN];
   u32 width;
   u32 height;
   u32 mipmaps;
