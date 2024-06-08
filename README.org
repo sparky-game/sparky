@@ -248,7 +248,13 @@ Execute 'make' or 'make all' to build all targets marked with [*]
 For further info see the ./README.org file
 #+end_example
 
-First, configure the build process for it to suit your needs:
+First, ensure the source tree is absolutely clean. From /Sparky/ we recommend this command to be issued prior to each compilation; do not rely on the source tree being clean after cloning the repository or aafter un-tarring:
+
+#+begin_src sh
+make mrproper
+#+end_src
+
+There are several ways to configure the build process for it to suit your needs. The most user-friendly way to do so is through a menu-driven interface:
 
 #+begin_src sh
 make menuconfig
