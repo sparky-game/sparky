@@ -40,7 +40,7 @@ int main(void) {
   SetTraceLogLevel(LOG_WARNING);
   skap_idx_image_loadall(imgs, img_paths, IMG_COUNT);
   FILE *fd = skap_file_create();
-  skap_header header = skap_header_create();
+  skap_header header = skap_header_create(IMG_COUNT);
   if (!skap_header_append(fd, &header)) skap_return_defer(1);
   for (usz i = 0; i < IMG_COUNT; ++i) {
     img_idxs[i] = skap_idx_image_create(img_paths[i], &imgs[i]);

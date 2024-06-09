@@ -46,11 +46,12 @@ static u64 compute_build_ver(void) {
   return build_ver;
 }
 
-skap_header skap_header_create(void) {
+skap_header skap_header_create(usz idx_image_count) {
   return (skap_header) {
     .signature = { 'S', 'K', 'A', 'P' },
     .fmt_ver = 1,
-    .build_ver = compute_build_ver()
+    .build_ver = compute_build_ver(),
+    .idx_image_count = idx_image_count
   };
 }
 
