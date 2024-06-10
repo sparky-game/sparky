@@ -163,11 +163,12 @@ define LUA_CPPFLAGS
   -isystem $(LUA_SRC_DIR)
 endef
 define CPPFLAGS
-  -D SK_VERSION=$(DIST_VERSION) \
-  $(DISABLE_ASSERTS_OPTS)       \
-  -D _POSIX_C_SOURCE=199309L    \
-  -isystem $(RAYLIB_SRC_DIR)    \
-  -isystem $(LUA_SRC_DIR)       \
+  -D SK_VERSION=$(DIST_VERSION)           \
+  $(DISABLE_ASSERTS_OPTS)                 \
+  -D _POSIX_C_SOURCE=199309L              \
+  -isystem $(RAYLIB_SRC_DIR)              \
+  -isystem $(LUA_SRC_DIR)                 \
+  -I $(TOOLS_DIR)/$(SKAP_NAME)/$(HDR_DIR) \
   -I $(HDR_DIR)
 endef
 define TEST_CPPFLAGS
