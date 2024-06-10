@@ -466,14 +466,12 @@ clean:
 	fi
 
 mrproper: clean
-	@if [ -e $(GAME_NAME) ]; then           \
-	  echo "  $(PPO_CLEAN)   $(GAME_NAME)"; \
-	  rm $(GAME_NAME);                      \
-	fi
-	@if [ -e $(GAME_NAME)_debug ]; then           \
-	  echo "  $(PPO_CLEAN)   $(GAME_NAME)_debug"; \
-	  rm $(GAME_NAME)_debug;                      \
-	fi
+	@for i in $(GAME_NAME) $(GAME_NAME)_debug $(SKAP_ASSETPACK_OUT) $(SKAP_ASSETPACK_OUT).old; do \
+	  if [ -e $$i ]; then                                                                         \
+	    echo "  $(PPO_CLEAN)   $$i";                                                              \
+	    rm $$i;                                                                                   \
+	  fi                                                                                          \
+	done
 
 version:
 	@echo $(FULL_VERSION)
