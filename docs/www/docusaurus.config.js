@@ -72,6 +72,11 @@ const config = {
           to: 'blog',
           position: 'left',
           label: 'Blog'
+        },
+        {
+          to: 'pricing',
+          position: 'left',
+          label: 'Pricing'
         }
       ],
     },
