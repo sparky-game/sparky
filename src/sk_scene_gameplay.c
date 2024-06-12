@@ -43,6 +43,15 @@ void sk_scene_gameplay_draw(sk_state *s) {
   EndMode3D();
   // HUD
   DrawText("Client Version: " sk_xstr(SK_VERSION), GetScreenWidth() - 190, GetScreenHeight() - 20, 14, LIGHTGRAY);
+  const char *ap_version = "N/A";
+#ifdef NDEBUG
+  if (s->ap.fd) ap_version = TextFormat("%lu", s->ap.header.build_ver);
+#endif
+  DrawText(TextFormat("AssetPack %s", ap_version),
+           GetScreenWidth() - 190,
+           GetScreenHeight() - 40,
+           14,
+           LIGHTGRAY);
   DrawFPS(10, 10);
   DrawText(TextFormat("%.4f ms", GetFrameTime() * 1000), 10, 33, 20, LIME);
   if (s->is_online) {
