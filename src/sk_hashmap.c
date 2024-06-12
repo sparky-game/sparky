@@ -55,7 +55,7 @@ u8 sk_hashmap_set(sk_hashmap *hm, const char *name, void *value) {
     SK_LOG_ERROR("sk_hashmap_set :: `hm`, `name` and `value` need to be valid pointers");
     return 0;
   }
-  memcpy((void *) ((u64 *) hm->data + (hash(name, hm->capacity) * hm->element_size)), value, hm->element_size);
+  memcpy((void *) ((u8 *) hm->data + (hash(name, hm->capacity) * hm->element_size)), value, hm->element_size);
   return 1;
 }
 
@@ -64,6 +64,6 @@ u8 sk_hashmap_get(sk_hashmap *hm, const char *name, void *out_value) {
     SK_LOG_ERROR("sk_hashmap_set :: `hm`, `name` and `out_value` need to be valid pointers");
     return 0;
   }
-  memcpy(out_value, (void *) ((u64 *) hm->data + (hash(name, hm->capacity) * hm->element_size)), hm->element_size);
+  memcpy(out_value, (void *) ((u8 *) hm->data + (hash(name, hm->capacity) * hm->element_size)), hm->element_size);
   return 1;
 }
