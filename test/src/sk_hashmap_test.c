@@ -47,5 +47,5 @@ static u8 sk_hashmap_test_set_get_element(void) {
 
 void sk_hashmap_test_register(void) {
   CARBON_REGISTER_TEST(sk_hashmap_test_create_destroy);
-  CARBON_REGISTER_TEST(sk_hashmap_test_set_get_elements);
+  CARBON_REGISTER_TEST(sk_hashmap_test_set_get_element);
 }
