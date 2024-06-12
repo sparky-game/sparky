@@ -71,6 +71,7 @@ u8 sk_assetpack_open(sk_assetpack *ap) {
   }
   ap->blob_section_start_pos = ftell(fd);
   ap->fd = fd;
+  SK_LOG_INFO("sk_assetpack_open :: `assets.skap` loaded successfully");
   return 1;
 }
 
@@ -83,6 +84,7 @@ void sk_assetpack_close(sk_assetpack *ap) {
   fclose(ap->fd);
   *ap = (sk_assetpack) {0};
   ap = 0;
+  SK_LOG_INFO("sk_assetpack_close :: `assets.skap` unloaded successfully");
 }
 
 u8 sk_assetpack_lookup(sk_assetpack *ap, sk_assetpack_blob_kind kind, const char *name, void *out_obj) {
