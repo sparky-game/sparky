@@ -26,6 +26,7 @@
 #include <sk_lobby.h>
 #include <sk_config.h>
 #include <sk_rngbuf.h>
+#include <sk_assetpack.h>
 
 #define SK_STATE_MAX_LOBBIES 256
 
@@ -49,6 +50,9 @@ typedef struct sk_state {
       sk_rngbuf shots_rb;
     };
   };
+#ifdef NDEBUG
+  sk_assetpack ap;
+#endif
 } sk_state;
 
 sk_state_global sk_state_global_create(void);

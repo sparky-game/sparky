@@ -22,6 +22,7 @@
 #include <assert.h>
 #include <sk_log.h>
 #include <sk_state.h>
+#include <sk_image.h>
 #include <sk_renderer.h>
 
 #define MUSIC_PATH_PLACEHOLDER "assets/music/%s.mp3"
@@ -55,20 +56,22 @@ void sk_state_global_assign_lobby(sk_state_global *sg, i8 *lobby_id, i8 *lobby_s
 }
 
 sk_state sk_state_create_offline(void) {
-  sk_config config = sk_config_create();
-  sk_config_load("config.lua", &config);
-  sk_renderer_create(&config);
-  sk_state s = {
-    .is_online = 0,
-    .config = config,
-    .win_icon = LoadImage("assets/icon.png"),
-    .curr_scene = sk_scene_create(SK_SCENE_KIND_INTRO),
-    .menu_music = LoadMusicStream(TextFormat(MUSIC_PATH_PLACEHOLDER, "menu")),
-    .loading_controls = LoadTexture("assets/images/loading-controls.png"),
-    .map = sk_map_create(SK_MAP_TRAINING),
-    .player = sk_player_create(0, 0, SK_PLAYER_KIND_AGENT69, &config),
-    .shots_rb = sk_rngbuf_create(2 << 14, sizeof(sk_shot), 1)
-  };
+  sk_state s = { .is_online = 0 };
+  s.config = sk_config_create();
+  sk_config_load("config.lua", &s.config);
+  sk_renderer_create(&s.config);
+#ifdef NDEBUG
+  s.ap = (sk_assetpack) {0};
+  if (!sk_assetpack_open(&s.ap)) SK_LOG_ERROR("sk_state_create_offline :: unable to load SKAP file (`assets.skap`)");
+  sk_image_init(&s.ap);
+#endif
+  s.win_icon = sk_image_load("assets/icon.png");
+  s.loading_controls = sk_image_gpu_load("assets/images/loading-controls.png");
+  s.curr_scene = sk_scene_create(SK_SCENE_KIND_INTRO);
+  s.menu_music = LoadMusicStream(TextFormat(MUSIC_PATH_PLACEHOLDER, "menu"));
+  s.map = sk_map_create(SK_MAP_TRAINING);
+  s.player = sk_player_create(0, 0, SK_PLAYER_KIND_AGENT69, &s.config);
+  s.shots_rb = sk_rngbuf_create(2 << 14, sizeof(sk_shot), 1);
   assert(IsImageReady(s.win_icon));
   SetWindowIcon(s.win_icon);
   assert(IsTextureReady(s.loading_controls));
@@ -83,8 +86,11 @@ void sk_state_destroy_offline(sk_state *s) {
   UnloadTexture(s->loading_controls);
   UnloadMusicStream(s->menu_music);
   UnloadImage(s->win_icon);
-  sk_config_destroy(&s->config);
+#ifdef NDEBUG
+  sk_assetpack_close(&s->ap);
+#endif
   sk_renderer_destroy();
+  sk_config_destroy(&s->config);
   *s = (sk_state) {0};
   s = 0;
 }
