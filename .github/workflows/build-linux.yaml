@@ -63,6 +63,11 @@ jobs:
         run: make editor -j$(nproc)
       - name: test
         run: make check -j$(nproc)
+      - name: test-results-report
+        if: ${{ always() }}
+        uses: test-summary/action@v2
+        with:
+          paths: carbon_results.xml
       - name: test-coverage-report
         uses: codecov/codecov-action@v4.0.1
         with:
