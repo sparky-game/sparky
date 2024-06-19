@@ -84,7 +84,7 @@ u8 skap_idx_audio_blob_append(FILE *fd, const char *name, Wave *audio) {
     return 0;
   }
   printf("  WRITE   %s >> " SKAP_FILENAME "\n", name);
-  size_t audio_len = audio->frameCount * audio->channels * (audio->sampleSize / 8);
+  usz audio_len = (usz) audio->frameCount * audio->channels * (audio->sampleSize / 8);
   if (fwrite(audio->data, sizeof(u8), audio_len, fd) != audio_len) {
     fprintf(stderr, "ERROR: skap_idx_audio_blob_append :: unable to write to file\n");
     return 0;
