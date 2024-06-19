@@ -32,21 +32,19 @@ void skap_idx_image_loadall(Image *imgs, const char **img_paths, usz size) {
 }
 
 void skap_idx_image_unloadall(Image *imgs, usz size) {
-  for (usz i = 0; i < size; ++i) {
-    UnloadImage(imgs[i]);
-  }
+  for (usz i = 0; i < size; ++i) UnloadImage(imgs[i]);
 }
 
 skap_idx_image skap_idx_image_create(const char *name, Image *img) {
   skap_idx_image i = {
     .metadata = (skap_idx_image_md) {
-      .width = img->width,
-      .height = img->height,
+      .width   = img->width,
+      .height  = img->height,
       .mipmaps = img->mipmaps,
-      .format = img->format
+      .format  = img->format
     },
     .blob_offset = 0,
-    .blob_size = 0
+    .blob_size   = 0
   };
   memset(i.metadata.name, 0, sizeof(i.metadata.name));
   strncpy(i.metadata.name, name, sizeof(i.metadata.name) - 1);
@@ -73,7 +71,7 @@ void skap_idx_image_link_blob(skap_idx_image *i, usz blob_offset, usz blob_size)
   }
   printf("  LINK    skap_idx_image(%s) -> {%zu, %zu}\n", i->metadata.name, blob_offset, blob_size);
   i->blob_offset = blob_offset;
-  i->blob_size = blob_size;
+  i->blob_size   = blob_size;
 }
 
 u8 skap_idx_image_blob_append(FILE *fd, const char *name, Image *img) {
