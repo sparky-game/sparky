@@ -183,7 +183,6 @@ define MCONF_CPPFLAGS
   -I $(TOOLS_DIR)/$(MCONF_NAME)/$(HDR_DIR)
 endef
 define SKAP_CPPFLAGS
-  $(DISABLE_ASSERTS_OPTS)    \
   -isystem $(RAYLIB_SRC_DIR) \
   -I $(TOOLS_DIR)/$(SKAP_NAME)/$(HDR_DIR)
 endef
