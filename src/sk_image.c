@@ -30,6 +30,7 @@ Image sk_image_load(const char *filename) {
 #ifndef NDEBUG
   return LoadImage(filename);
 #else
+  if (!skap) SK_LOG_ERROR("sk_image_load :: SKAP was not initialized (maybe forgot to exec `sk_image_init` ?)");
   Image img = {0};
   if (!sk_assetpack_lookup(skap, SK_ASSETPACK_BLOB_KIND_IMAGE, filename, &img)) {
     SK_LOG_ERROR("sk_image_load :: unable to retrieve image from SKAP file");
