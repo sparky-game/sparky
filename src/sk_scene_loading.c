@@ -32,7 +32,7 @@ void sk_scene_loading_update(sk_state *s) {
   s->curr_scene.kind = SK_SCENE_KIND_GAMEPLAY;
   s->curr_scene.update = sk_scene_gameplay_update;
   s->curr_scene.draw = sk_scene_gameplay_draw;
-  StopMusicStream(s->menu_music);
+  if (IsMusicReady(s->menu_music)) StopMusicStream(s->menu_music);
   sk_player_load(&s->player);
   sk_map_load(&s->map);
   SetExitKey(KEY_ESCAPE);
