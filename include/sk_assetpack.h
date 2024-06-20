@@ -27,6 +27,7 @@
 
 typedef enum {
   SK_ASSETPACK_BLOB_KIND_IMAGE,
+  SK_ASSETPACK_BLOB_KIND_AUDIO,
   SK_ASSETPACK_BLOB_KIND_COUNT
 } sk_assetpack_blob_kind;
 

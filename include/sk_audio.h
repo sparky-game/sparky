@@ -21,16 +21,11 @@
 
 #pragma once
 
-#include <skap_defines.h>
+#include <raylib.h>
+#include <sk_assetpack.h>
 
-typedef struct {
-  char signature[4];
-  u8 fmt_ver;
-  u64 build_ver;
-  usz idx_image_count;
-  usz idx_audio_count;
-} skap_header;
+void sk_audio_init(sk_assetpack *ap);
 
-skap_header skap_header_create(usz idx_image_count, usz idx_audio_count);
+Sound sk_audio_load(const char *filename);
 
-u8 skap_header_append(FILE *fd, skap_header *h);
+Music sk_audio_stream_load(const char *filename);

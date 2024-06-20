@@ -24,6 +24,7 @@
 #include <sk_log.h>
 #include <sk_assetpack.h>
 #include <skap_idx_image.h>
+#include <skap_idx_audio.h>
 
 u8 sk_assetpack_open(sk_assetpack *ap) {
   if (!ap) {
@@ -63,6 +64,26 @@ u8 sk_assetpack_open(sk_assetpack *ap) {
     if (!sk_hashmap_set(&ap->idxs[SK_ASSETPACK_BLOB_KIND_IMAGE], img_idx.metadata.name, &img_idx)) {
       SK_LOG_ERROR("sk_assetpack_open :: unable to insert idx_image #%zu in hashmap", i + 1);
       sk_hashmap_destroy(&ap->idxs[SK_ASSETPACK_BLOB_KIND_IMAGE]);
+      *ap = (sk_assetpack) {0};
+      ap = 0;
+      fclose(fd);
+      return 0;
+    }
+  }
+  ap->idxs[SK_ASSETPACK_BLOB_KIND_AUDIO] = sk_hashmap_create(ap->header.idx_audio_count, sizeof(skap_idx_audio));
+  for (usz i = 0; i < ap->header.idx_audio_count; ++i) {
+    skap_idx_audio audio_idx = {0};
+    if (fread(&audio_idx, sizeof(skap_idx_audio), 1, fd) != 1) {
+      SK_LOG_ERROR("sk_assetpack_open :: unable to load idx_audio #%zu", i + 1);
+      sk_hashmap_destroy(&ap->idxs[SK_ASSETPACK_BLOB_KIND_AUDIO]);
+      *ap = (sk_assetpack) {0};
+      ap = 0;
+      fclose(fd);
+      return 0;
+    }
+    if (!sk_hashmap_set(&ap->idxs[SK_ASSETPACK_BLOB_KIND_AUDIO], audio_idx.metadata.name, &audio_idx)) {
+      SK_LOG_ERROR("sk_assetpack_open :: unable to insert idx_audio #%zu in hashmap", i + 1);
+      sk_hashmap_destroy(&ap->idxs[SK_ASSETPACK_BLOB_KIND_AUDIO]);
       *ap = (sk_assetpack) {0};
       ap = 0;
       fclose(fd);
@@ -114,6 +135,32 @@ u8 sk_assetpack_lookup(sk_assetpack *ap, sk_assetpack_blob_kind kind, const char
       SK_LOG_ERROR("sk_assetpack_lookup :: resulting parsed image (`%s`) is not valid");
       free(((Image *) out_obj)->data);
       *((Image *) out_obj) = (Image) {0};
+      return 0;
+    }
+    fseek(ap->fd, ap->blob_section_start_pos, SEEK_SET);
+  }
+  else if (kind == SK_ASSETPACK_BLOB_KIND_AUDIO) {
+    skap_idx_audio audio_idx = {0};
+    if (!sk_hashmap_get(&ap->idxs[kind], name, &audio_idx)) {
+      SK_LOG_ERROR("sk_assetpack_lookup :: unable to retrieve idx_audio `%s` from hashmap", name);
+      return 0;
+    }
+    fseek(ap->fd, audio_idx.blob_offset, SEEK_SET);
+    ((Wave *) out_obj)->frameCount = audio_idx.metadata.frame_count;
+    ((Wave *) out_obj)->sampleRate = audio_idx.metadata.sample_rate;
+    ((Wave *) out_obj)->sampleSize = audio_idx.metadata.sample_size;
+    ((Wave *) out_obj)->channels = audio_idx.metadata.channels;
+    ((Wave *) out_obj)->data = malloc(sizeof(u8) * audio_idx.blob_size);
+    if (fread(((Wave *) out_obj)->data, sizeof(u8), audio_idx.blob_size, ap->fd) != audio_idx.blob_size) {
+      SK_LOG_ERROR("sk_assetpack_lookup :: unable to load audio blob (`%s`) from SKAP file", name);
+      free(((Wave *) out_obj)->data);
+      *((Wave *) out_obj) = (Wave) {0};
+      return 0;
+    }
+    if (!IsWaveReady(*((Wave *) out_obj))) {
+      SK_LOG_ERROR("sk_assetpack_lookup :: resulting parsed audio (`%s`) is not valid");
+      free(((Wave *) out_obj)->data);
+      *((Wave *) out_obj) = (Wave) {0};
       return 0;
     }
     fseek(ap->fd, ap->blob_section_start_pos, SEEK_SET);
