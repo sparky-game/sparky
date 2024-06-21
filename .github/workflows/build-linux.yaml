@@ -46,7 +46,9 @@ jobs:
         with:
           submodules: recursive
       - name: install-dependencies
-        run: xargs sudo apt-get install -y < Aptfile
+        run: |
+          xargs sudo apt-get install -y < Aptfile
+          sudo modprobe snd-dummy
       - name: setup-rust-cache
         uses: Swatinem/rust-cache@v2
         with:

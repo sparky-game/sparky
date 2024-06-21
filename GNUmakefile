@@ -108,11 +108,12 @@ SKAP_OBJS      := $(patsubst $(TOOLS_DIR)/$(SKAP_NAME)/$(SRC_DIR)/%.c, $(SKAP_BU
 SKAP_ASSETS    := $(shell find $(ASSETS_DIR) -type f 2>/dev/null)
 
 # Build flags
+CC = gcc
+AR = ar -rc
 MAKEFLAGS_JOBS := $(patsubst -j%, %, $(filter -j%, $(MAKEFLAGS)))
 ifndef MAKEFLAGS_JOBS
   CARGO_JOBS = -j1
 endif
-CC = gcc
 ifeq ($(shell uname), Darwin)
   CC = clang
   MACOS_SPECIFIC_CFLAGS_OPTS  = -x objective-c
@@ -123,7 +124,6 @@ else ifeq ($(shell uname), OpenBSD)
   CC = clang
   OPENBSD_SPECIFIC_LDFLAGS_OPTS = -lc++abi
 endif
-AR = ar -rc
 ifdef Q_RSC
   CARGO_QUIET_OPTS = -q --message-format=json
 endif
