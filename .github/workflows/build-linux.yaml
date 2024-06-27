@@ -4,6 +4,7 @@ on:
   push:
     branches: [master]
     paths:
+      - '.github/workflows/build-linux.yaml'
       - 'include/**'
       - 'src/**'
       - 'test/**'
@@ -18,6 +19,7 @@ on:
     branches: [master]
     types: [opened, synchronize]
     paths:
+      - '.github/workflows/build-linux.yaml'
       - 'include/**'
       - 'src/**'
       - 'test/**'
@@ -46,9 +48,21 @@ jobs:
         with:
           submodules: recursive
       - name: install-dependencies
+        run: xargs sudo apt-get install -y < Aptfile
+      - name: setup-audio-dev
         run: |
-          xargs sudo apt-get install -y < Aptfile
-          sudo apt-get install -y pulseaudio
+          sudo apt-get install -y pulseaudio alsa-utils
+          pulseaudio --start
+          pacmd load-module module-null-sink sink_name=DummyOutput sink_properties=device.description=DummyOutput
+          pacmd set-default-sink DummyOutput
+          echo "pcm.!default {
+            type pulse
+          }
+          ctl.!default {
+            type pulse
+          }" > ~/.asoundrc
+          sudo usermod -aG audio $USER
+          pulseaudio --kill && pulseaudio --start
       - name: setup-rust-cache
         uses: Swatinem/rust-cache@v2
         with:
@@ -60,7 +74,8 @@ jobs:
           config: |
             paths-ignore: [vendor]
       - name: build
-        run: make -j$(nproc)
+        run: |
+          sudo -s -u ${USER} bash -c "PULSE_SERVER=\"unix:/run/user/$(id -u)/pulse/native\" make -j$(nproc)"
       - name: build-editor
         run: make editor -j$(nproc)
       - name: test
