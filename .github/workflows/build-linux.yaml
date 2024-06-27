@@ -48,9 +48,7 @@ jobs:
       - name: install-dependencies
         run: |
           xargs sudo apt-get install -y < Aptfile
-          sudo apt-get install -y linux-modules-extra-$(uname -r)
-          sudo depmod
-          sudo modprobe snd-dummy || true
+          sudo apt-get install -y pulseaudio
       - name: setup-rust-cache
         uses: Swatinem/rust-cache@v2
         with:
