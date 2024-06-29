@@ -22,15 +22,16 @@
 #include <assert.h>
 #include <sk_config.h>
 #include <sk_client.h>
+#include <sk_engine.h>
 #include <sk_renderer.h>
 
 void sk_renderer_create(sk_config *config) {
   SetConfigFlags(FLAG_MSAA_4X_HINT);
   SetConfigFlags(FLAG_BORDERLESS_WINDOWED_MODE);
   SetConfigFlags(FLAG_WINDOW_MOUSE_PASSTHROUGH);
-  InitWindow(config->video.win_width,
-             config->video.win_height,
-             SK_CLIENT_NAME);
+  sk_engine_init_window(config->video.win_width,
+                        config->video.win_height,
+                        SK_CLIENT_NAME);
   assert(IsWindowReady());
   InitAudioDevice();
   assert(IsAudioDeviceReady());
