@@ -302,6 +302,7 @@ ifndef D
   SKAP_OUT           = $(SKAP_BUILD_DIR)/$(SKAP_NAME)
   SKAP_ASSETPACK_OUT = $(ASSETS_DIR).$(SKAP_NAME)
 endif
+MRPROPER_TARGETS = $(GAME_NAME) $(GAME_NAME)_debug $(SKAP_ASSETPACK_OUT) $(SKAP_ASSETPACK_OUT).old carbon_results.xml
 
 
 ###################
@@ -465,11 +466,11 @@ clean:
 	fi
 
 mrproper: clean
-	@for i in $(GAME_NAME) $(GAME_NAME)_debug $(SKAP_ASSETPACK_OUT) $(SKAP_ASSETPACK_OUT).old; do \
-	  if [ -e $$i ]; then                                                                         \
-	    echo "  $(PPO_CLEAN)   $$i";                                                              \
-	    rm $$i;                                                                                   \
-	  fi                                                                                          \
+	@for i in $(MRPROPER_TARGETS); do \
+	  if [ -e $$i ]; then             \
+	    echo "  $(PPO_CLEAN)   $$i";  \
+	    rm $$i;                       \
+	  fi                              \
 	done
 
 version:
