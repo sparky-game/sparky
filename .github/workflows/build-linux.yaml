@@ -17,7 +17,7 @@ on:
       - 'config.mk'
   pull_request:
     branches: [master]
-    types: [opened, synchronize]
+    types: [opened, synchronize, ready_for_review]
     paths:
       - '.github/workflows/build-linux.yaml'
       - 'include/**'
